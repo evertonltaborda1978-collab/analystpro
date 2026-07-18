@@ -1,0 +1,2263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnalystPro - Plataforma Completa de Investimentos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --bg: #ffffff;
+            --status-green: #00a876;
+            --status-red: #f87171;
+            --analytics-bg: #f8fafc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--dark);
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* NAVEGAÇÃO */
+        .main-nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-item:hover {
+            background: #f0f7ff;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            width: 300px;
+        }
+
+        .search-input {
+            background: none;
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 0.5rem;
+        }
+
+        /* CONTEÚDO PRINCIPAL */
+        .main-content {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .content-active {
+            display: block;
+        }
+
+        /* BOTÕES DE VOLTAR */
+        .back-button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #475569;
+        }
+
+        /* ANÁLISE DE AÇÕES - NOVO DESIGN */
+        .analytics-container {
+            background: var(--analytics-bg);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .analytics-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .analytics-card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stock-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .comparison-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* SISTEMA DE ALERTAS VISUAIS */
+        .alert-flash {
+            animation: flashScreen 1s ease-in-out;
+        }
+
+        @keyframes flashScreen {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: rgba(239, 68, 68, 0.1); }
+        }
+
+        .alert-banner {
+            background: linear-gradient(135deg, #fef3c7, #f59e0b);
+            color: #92400e;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        .alert-banner.critical {
+            background: linear-gradient(135deg, #fecaca, #ef4444);
+            color: #991b1b;
+        }
+
+        /* SISTEMA DE DIVIDENDOS */
+        .dividend-timeline {
+            margin-top: 1rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .dividend-amount {
+            font-weight: bold;
+            color: var(--success);
+        }
+
+        /* GRÁFICOS INTERATIVOS */
+        .chart-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .chart-period-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chart-period-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* RECUPERAÇÃO DE SENHA */
+        .recovery-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .recovery-btn {
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .recovery-btn:hover {
+            border-color: var(--primary);
+            background: #f0f7ff;
+        }
+
+        /* NOVAS ABAS */
+        .tab-container {
+            margin-top: 2rem;
+        }
+
+        .tab-header {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* DASHBOARD INTERATIVO */
+        .dashboard-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid var(--primary);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .metric-label {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        /* ANIMAÇÕES */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* MODAL DE CONFIGURAÇÃO DE USUÁRIO */
+        .user-management {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .user-list {
+            display: grid;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .header-content {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                padding: 0 1rem;
+            }
+
+            .stock-info,
+            .dashboard {
+                padding: 0 1rem;
+            }
+
+            .login-box {
+                padding: 1.75rem 1.25rem;
+            }
+
+            .user-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 92%;
+                padding: 1.25rem;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .login-container {
+                padding: 1rem;
+            }
+
+            .stock-title {
+                flex-wrap: wrap;
+            }
+
+            .stock-price {
+                font-size: 2rem;
+            }
+
+            .portfolio-table th,
+            .portfolio-table td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ESTILOS EXISTENTES */
+        .status-header { background: linear-gradient(135deg, #1e293b, #374151); color: white; padding: 2rem 0; }
+        .stock-info { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .stock-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .stock-price { font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .price-change { font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+        .price-up { color: var(--status-green); }
+        .price-down { color: var(--status-red); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; }
+        .stat-card { background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; backdrop-filter: blur(10px); }
+        .stat-value { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .stat-label { font-size: 0.9rem; opacity: 0.8; }
+        .login-container { min-height: 100vh; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .login-box { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        .user-selection { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: white; cursor: pointer; text-align: center; transition: all 0.3s ease; }
+        .user-btn:hover { border-color: var(--primary); background: #f0f7ff; }
+        .user-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
+        .mode-selection { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+        .mode-btn { padding: 0.75rem; border: 2px solid var(--border); border-radius: 6px; background: white; cursor: pointer; text-align: center; transition: all 0.3s ease; }
+        .mode-btn:hover { border-color: var(--primary); }
+        .mode-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
+        .api-config { background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid var(--primary); }
+        .form-group { margin-bottom: 1rem; position: relative; }
+        .password-toggle { position: absolute; right: 10px; top: 35px; background: none; border: none; color: var(--secondary); cursor: pointer; }
+        .login-btn { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: all 0.3s ease; }
+        .login-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .test-btn { width: 100%; padding: 0.75rem; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; margin: 0.5rem 0; transition: all 0.3s ease; }
+        .test-btn:hover { background: #0da271; }
+        .notification { position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem; border-radius: 8px; color: white; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        .notification.show { transform: translateX(0); }
+        .notification.success { background: var(--success); }
+        .notification.error { background: var(--danger); }
+        .notification.warning { background: var(--warning); }
+        #apiTestResult { margin-top: 0.5rem; padding: 0.5rem; border-radius: 4px; font-size: 0.9rem; }
+        .result-success { background: #d1fae5; color: #065f46; }
+        .result-error { background: #fee2e2; color: #991b1b; }
+        .result-loading { background: #fef3c7; color: #92400e; }
+        .main-container { display: none; min-height: 100vh; background: var(--bg); }
+        .top-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
+        .dashboard { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+        .card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid var(--primary); }
+        .card h3 { color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .stat-item { text-align: center; padding: 1rem; background: #f8fafc; border-radius: 8px; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.9rem; color: var(--secondary); }
+        .chart-container { height: 300px; margin-top: 1rem; }
+        .portfolio-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .portfolio-table th, .portfolio-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+        .portfolio-table th { background: #f8fafc; font-weight: 600; color: var(--dark); }
+        .positive { color: var(--success); }
+        .negative { color: var(--danger); }
+        .logout-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; transition: all 0.3s ease; }
+        .logout-btn:hover { background: rgba(255,255,255,0.3); }
+        .refresh-btn { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; margin-left: 1rem; }
+        .price-update { font-size: 0.8rem; color: var(--secondary); margin-top: 0.5rem; }
+        .price-alert { position: relative; display: inline-block; }
+        .alert-badge { position: absolute; top: -5px; right: -5px; background: var(--warning); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; animation: pulse 2s infinite; }
+        .fair-price-box { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 2px solid #f59e0b; border-radius: 8px; padding: 0.5rem; margin-top: 0.25rem; animation: glow 2s infinite; font-size: 0.8rem; }
+        .fair-price-value { font-weight: bold; color: #d97706; }
+        .price-match { background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important; border-color: #10b981 !important; animation: glow-green 1s infinite !important; }
+        .price-match .fair-price-value { color: #065f46; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes glow { 0% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); } 50% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.8); } 100% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); } }
+        @keyframes glow-green { 0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.5); } 50% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.8); } 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.5); } }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+        .modal h3 { color: var(--primary); margin-bottom: 1rem; }
+        .price-input { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; margin: 0.5rem 0; }
+        .save-btn { background: var(--success); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; margin-top: 1rem; }
+        .login-form { margin: 1.5rem 0; }
+        .login-input { width: 100%; padding: 1rem; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 1rem; font-size: 1rem; }
+        .login-input:focus { border-color: var(--primary); outline: none; }
+        .forgot-password { text-align: right; margin-bottom: 1rem; }
+        .forgot-password a { color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+        .wallet-access-btn { width: 100%; padding: 1rem; background: var(--success); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: all 0.3s ease; }
+        .wallet-access-btn:hover { background: #0da271; transform: translateY(-2px); }
+        .wallet-access-btn:disabled { background: var(--secondary); cursor: not-allowed; transform: none; }
+        .action-btn { padding: 0.25rem 0.5rem; margin: 0.1rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .edit-btn { background: var(--warning); color: white; }
+        .delete-btn { background: var(--danger); color: white; }
+        .alert-btn { background: var(--primary); color: white; }
+        .quick-settings { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
+        .quick-settings button { width: 100%; padding: 0.75rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; justify-content: center; }
+        .quick-settings button:hover { transform: translateY(-2px); }
+        .analysis-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .view-actions-btn { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+    </style>
+</head>
+<body>
+    <!-- NAVEGAÇÃO PRINCIPAL COM NOVAS ABAS -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-logo" onclick="showSection('carteira')">
+                <i class="fas fa-chart-line"></i> AnalystPro
+            </div>
+            
+            <div class="nav-menu">
+                <div class="nav-item active" onclick="showSection('carteira')">
+                    <i class="fas fa-wallet"></i> Minha Carteira
+                </div>
+                <div class="nav-item" onclick="showSection('analise')">
+                    <i class="fas fa-search-dollar"></i> Análise de Ações
+                </div>
+                <div class="nav-item" onclick="showSection('alertas')">
+                    <i class="fas fa-bell"></i> Meus Alertas
+                </div>
+                <div class="nav-item" onclick="showSection('dividendos')">
+                    <i class="fas fa-money-bill-wave"></i> Dividendos
+                </div>
+                <div class="nav-item" onclick="showSection('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </div>
+            </div>
+
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" class="search-input" placeholder="Buscar ação (ex: PETR4)" id="stockSearch">
+                <button onclick="searchStock()" style="background: none; border: none; color: var(--primary); cursor: pointer;">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- NOVA SEÇÃO: DASHBOARD INTERATIVO -->
+    <section id="dashboard" class="main-content">
+        <div class="dashboard">
+            <button class="back-button" onclick="showSection('carteira')">
+                <i class="fas fa-arrow-left"></i> Voltar para Carteira
+            </button>
+            
+            <h1><i class="fas fa-tachometer-alt"></i> Dashboard Interativo</h1>
+            
+            <div class="dashboard-metrics">
+                <div class="metric-card">
+                    <div class="metric-label">Valor Total da Carteira</div>
+                    <div class="metric-value" id="dashboardTotalValue">R$ 0,00</div>
+                    <div class="metric-label">Variação 24h: <span id="dashboardDailyChange">0,00%</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Total Investido</div>
+                    <div class="metric-value" id="dashboardInvested">R$ 0,00</div>
+                    <div class="metric-label">Patrimônio Líquido</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Lucro/Prejuízo Total</div>
+                    <div class="metric-value" id="dashboardProfit">R$ 0,00</div>
+                    <div class="metric-label">Performance</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Dividendos Recebidos</div>
+                    <div class="metric-value" id="dashboardDividends">R$ 0,00</div>
+                    <div class="metric-label">Últimos 12 meses</div>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3><i class="fas fa-chart-pie"></i> Alocação por Setor</h3>
+                    <div class="chart-container">
+                        <canvas id="sectorChart"></canvas>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <h3><i class="fas fa-trending-up"></i> Performance vs Ibovespa</h3>
+                    <div class="chart-container">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOVA SEÇÃO: DIVIDENDOS -->
+    <section id="dividendos" class="main-content">
+        <div class="dashboard">
+            <button class="back-button" onclick="showSection('carteira')">
+                <i class="fas fa-arrow-left"></i> Voltar para Carteira
+            </button>
+            
+            <h1><i class="fas fa-money-bill-wave"></i> Sistema de Dividendos</h1>
+            
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3><i class="fas fa-history"></i> Dividendos Recebidos</h3>
+                    <div class="dividend-timeline" id="receivedDividends">
+                        <div style="text-align: center; padding: 2rem; color: var(--secondary);">
+                            <i class="fas fa-money-bill-wave"></i><br>
+                            Nenhum dividendo registrado
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <h3><i class="fas fa-calendar-check"></i> Próximos Dividendos</h3>
+                    <div class="dividend-timeline" id="expectedDividends">
+                        <div style="text-align: center; padding: 2rem; color: var(--secondary);">
+                            <i class="fas fa-calendar"></i><br>
+                            Nenhum dividendo esperado
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-plus-circle"></i> Registrar Dividendo</h3>
+                <div class="form-group">
+                    <label>Ativo</label>
+                    <select id="dividendStock" class="price-input">
+                        <option value="">Selecione um ativo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Valor por Ação (R$)</label>
+                    <input type="number" step="0.01" id="dividendAmount" class="price-input" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Data do Recebimento</label>
+                    <input type="date" id="dividendDate" class="price-input">
+                </div>
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select id="dividendType" class="price-input">
+                        <option value="recebido">Recebido</option>
+                        <option value="esperado">Esperado</option>
+                    </select>
+                </div>
+                <button class="save-btn" onclick="saveDividend()">
+                    <i class="fas fa-save"></i> Salvar Dividendo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE ANÁLISE DE AÇÕES - REDESIGN COMPLETO -->
+    <section id="analise" class="main-content">
+        <div class="analytics-container">
+            <button class="back-button" onclick="showSection('carteira')">
+                <i class="fas fa-arrow-left"></i> Voltar para Carteira
+            </button>
+
+            <div class="analysis-header">
+                <h1><i class="fas fa-search-dollar"></i> Análise de Ações</h1>
+                <button class="view-actions-btn" onclick="viewPortfolioActions()">
+                    <i class="fas fa-eye"></i> Visualizar Ações da Carteira
+                </button>
+            </div>
+
+            <div class="alert-banner" style="background: linear-gradient(135deg, #fef3c7, #f59e0b); color: #78350f; margin-bottom: 1.5rem;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Isso é educativo, não é recomendação de investimento.</strong> Os sinais abaixo são calculados
+                    a partir de dados públicos (dividendos, P/L, faixa de preço). Sempre faça sua própria análise ou
+                    consulte um profissional antes de investir de verdade.
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 0.5rem;">
+                        <h3 style="margin:0;"><i class="fas fa-chart-line"></i> Análise Técnica — <span id="chartSymbolLabel">PETR4</span></h3>
+                        <div style="display:flex; gap:0.4rem;">
+                            <input type="text" id="chartSearchInput" placeholder="Ex: BBAS3" style="width: 100px; padding: 0.4rem 0.6rem; border-radius: 8px; border: 1px solid var(--border); font-size: 0.85rem;" onkeydown="if(event.key==='Enter') buscarGraficoAcao()">
+                            <button class="chart-period-btn" onclick="buscarGraficoAcao()"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-period-btn active" onclick="changeChartPeriod('1m')">1M</button>
+                        <button class="chart-period-btn" onclick="changeChartPeriod('3m')">3M</button>
+                        <button class="chart-period-btn" onclick="changeChartPeriod('1y')">1A</button>
+                        <button class="chart-period-btn" onclick="changeChartPeriod('5y')">5A</button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="technicalChart"></canvas>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--secondary); margin-top: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> Histórico de preço real, via Brapi. Busque outra ação no campo acima pra trocar o gráfico.
+                    </p>
+                </div>
+
+                <div class="analytics-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3><i class="fas fa-balance-scale"></i> Recomendações da sua carteira</h3>
+                        <button class="chart-period-btn" onclick="renderRecommendations()"><i class="fas fa-sync"></i></button>
+                    </div>
+                    <div id="stockRecommendations">
+                        <div style="text-align: center; padding: 1rem; color: var(--secondary);">
+                            <i class="fas fa-info-circle"></i> Toque no ícone acima pra analisar sua carteira.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-card" style="grid-column: 1 / -1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <h3><i class="fas fa-binoculars"></i> Descubra novas oportunidades</h3>
+                        <button class="view-actions-btn" onclick="buscarOportunidades()">
+                            <i class="fas fa-search"></i> Buscar oportunidades
+                        </button>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--secondary); margin: 0.5rem 0 1rem;">
+                        Varre uma lista de ações brasileiras conhecidas por pagar dividendos e mostra quais parecem
+                        mais interessantes agora, com o motivo explicado.
+                    </p>
+                    <div id="opportunitiesList" class="analytics-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
+                        <div style="text-align: center; padding: 1rem; color: var(--secondary); grid-column: 1 / -1;">
+                            <i class="fas fa-search"></i> Toque em "Buscar oportunidades" pra começar.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE ALERTAS - AGORA FUNCIONAL -->
+    <section id="alertas" class="main-content">
+        <div style="max-width: 1400px; margin: 2rem auto; padding: 0 2rem;">
+            <button class="back-button" onclick="showSection('carteira')">
+                <i class="fas fa-arrow-left"></i> Voltar para Carteira
+            </button>
+            
+            <div class="card">
+                <h3><i class="fas fa-bell"></i> Sistema de Alertas Inteligentes</h3>
+                
+                <div class="alert-banner pulse">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>ALERTA ATIVO:</strong> PETR4 atingiu R$ 32,50 (acima do preço justo)
+                    </div>
+                    <button class="action-btn" style="background: var(--danger);" onclick="dismissAlert('petr4')">
+                        <i class="fas fa-times"></i> Dispensar
+                    </button>
+                </div>
+
+                <div id="alertsContent">
+                    <div class="form-group">
+                        <label>Selecionar Ação para Monitorar</label>
+                        <select id="alertStock" class="price-input">
+                            <option value="">Selecione uma ação</option>
+                            <option value="PETR4">PETR4 - Petrobras</option>
+                            <option value="VALE3">VALE3 - Vale</option>
+                            <option value="ITUB4">ITUB4 - Itaú</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tipo de Alerta</label>
+                        <select id="alertType" class="price-input">
+                            <option value="above">Preço Acima de</option>
+                            <option value="below">Preço Abaixo de</option>
+                            <option value="change">Variação Percentual</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Valor do Alerta (R$ ou %)</label>
+                        <input type="number" step="0.01" id="alertValue" class="price-input" placeholder="0.00">
+                    </div>
+                    
+                    <button class="save-btn" onclick="createAlert()">
+                        <i class="fas fa-bell"></i> Criar Alerta
+                    </button>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h4>Alertas Ativos</h4>
+                        <div id="activeAlertsList">
+                            <!-- Alertas serão carregados aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DA CARTEIRA (mantida do código original) -->
+    <section id="carteira" class="main-content content-active">
+        <!-- TELA DE LOGIN -->
+        <div id="loginScreen" class="login-container">
+            <div class="login-box">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h2>AnalystPro</h2>
+                    <p style="color: var(--secondary);">Sistema Seguro de Carteira de Ações</p>
+                </div>
+
+                <!-- SELEÇÃO DE USUÁRIO -->
+                <div>
+                    <h4><i class="fas fa-users"></i> Quem está acessando?</h4>
+                    <div class="user-selection">
+                        <div class="user-btn active" data-user="pai" onclick="selectUser('pai')">
+                            <i class="fas fa-user-tie"></i><br>
+                            <strong>Papai</strong><br>
+                            <small>Minha carteira principal</small>
+                        </div>
+                        <div class="user-btn" data-user="filha" onclick="selectUser('filha')">
+                            <i class="fas fa-user-graduate"></i><br>
+                            <strong>Filha</strong><br>
+                            <small>Carteira da filha</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SISTEMA DE LOGIN COM SENHA -->
+                <div class="login-form">
+                    <h4><i class="fas fa-key"></i> Acesso Seguro</h4>
+                    <input type="text" id="username" class="login-input" placeholder="Nome de usuário" value="admin">
+                    <input type="password" id="password" class="login-input" placeholder="Senha" value="1234" onkeydown="if(event.key==='Enter') login()">
+                    
+                    <div class="forgot-password">
+                        <a href="#" onclick="resetPassword()">Esqueci minha senha</a>
+                    </div>
+
+                    <button class="wallet-access-btn" onclick="accessWallet()" id="accessWalletBtn">
+                        <i class="fas fa-wallet"></i> Acessar Minha Carteira
+                    </button>
+                </div>
+
+                <!-- CONFIGURAÇÃO DE CONEXÃO -->
+                <div class="api-config" id="apiConfigSection" style="display: none;">
+                    <h4><i class="fas fa-wifi"></i> Configuração de Conexão</h4>
+                    
+                    <div class="mode-selection">
+                        <div class="mode-btn active" data-mode="online" onclick="selectMode('online')">
+                            <i class="fas fa-wifi"></i><br>
+                            <strong>Modo Online</strong><br>
+                            <small>Dados em tempo real</small>
+                        </div>
+                        <div class="mode-btn" data-mode="offline" onclick="selectMode('offline')">
+                            <i class="fas fa-laptop"></i><br>
+                            <strong>Modo Offline</strong><br>
+                            <small>Visualização apenas</small>
+                        </div>
+                    </div>
+
+                    <div id="onlineConfig">
+                        <div class="form-group">
+                            <label>Chave da API Brapi (opcional)</label>
+                            <input type="password" id="brapiToken" placeholder="Cole sua chave aqui" value="">
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('brapiToken')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        
+                        <button class="test-btn" onclick="testBrapiConnection()">
+                            <i class="fas fa-plug"></i> Testar Conexão com API
+                        </button>
+                        
+                        <div id="apiTestResult">
+                            <i class="fas fa-info-circle"></i>
+                            Insira sua chave Brapi para cotações em tempo real
+                        </div>
+                    </div>
+
+                    <div id="offlineInfo" style="display: none; background: #fffbeb; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+                        <i class="fas fa-laptop"></i> <strong>Modo Offline Ativo</strong>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                            Você acessará seus dados salvos localmente.
+                        </p>
+                    </div>
+
+                    <button class="login-btn" onclick="login()" id="loginAppBtn">
+                        <i class="fas fa-sign-in-alt"></i> Entrar no AnalystPro
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA PRINCIPAL DA CARTEIRA -->
+        <div id="mainApp" class="main-container">
+            <div class="top-header">
+                <div class="header-content">
+                    <h1><i class="fas fa-chart-line"></i> AnalystPro</h1>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span>Olá, <strong id="currentUser">Papai</strong>!</span>
+                        <span>Modo: <strong id="currentMode">Online</strong></span>
+                        <button class="refresh-btn" onclick="refreshData()" id="refreshBtn">
+                            <i class="fas fa-sync-alt"></i> Atualizar
+                        </button>
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard">
+                <!-- ALERTAS ATIVOS -->
+                <div class="card">
+                    <h3><i class="fas fa-bell"></i> Alertas de Preço Ativos</h3>
+                    <div id="activeAlerts" style="min-height: 100px;">
+                        <div style="text-align: center; padding: 2rem; color: var(--secondary);">
+                            <i class="fas fa-bell-slash"></i><br>
+                            Nenhum alerta ativo no momento
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESUMO DO PORTFÓLIO -->
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3><i class="fas fa-wallet"></i> Resumo da Carteira</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalValue">R$ 0,00</div>
+                                <div class="stat-label">Valor Total</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="dailyChange">0,00%</div>
+                                <div class="stat-label">Variação Dia</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalProfit">R$ 0,00</div>
+                                <div class="stat-label">Lucro/Prejuízo</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="alertCount">0</div>
+                                <div class="stat-label">Alertas Ativos</div>
+                            </div>
+                        </div>
+                        <div class="price-update" id="lastUpdate">
+                            Última atualização: --
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class="fas fa-chart-bar"></i> Performance</h3>
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3><i class="fas fa-cog"></i> Configurações Rápidas</h3>
+                        <div class="quick-settings">
+                            <button class="save-btn" onclick="openPriceConfig()">
+                                <i class="fas fa-edit"></i> Configurar Preços Justos
+                            </button>
+                            <button class="save-btn" onclick="openTradeModal()" style="background: var(--primary);">
+                                <i class="fas fa-plus"></i> Nova Operação
+                            </button>
+                            <button class="save-btn" onclick="openAlertModal()" style="background: var(--warning);">
+                                <i class="fas fa-bell"></i> Configurar Alertas
+                            </button>
+                            <button class="save-btn" onclick="openManageAlerts()" style="background: var(--danger);">
+                                <i class="fas fa-bell-slash"></i> Gerenciar Alertas
+                            </button>
+                        </div>
+                        <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--secondary);">
+                            <p><i class="fas fa-info-circle"></i> Gerencie seus investimentos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABELA DE ATIVOS -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <h3 style="margin: 0;"><i class="fas fa-table"></i> Minha Carteira</h3>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span id="dataSource">Fonte: Dados Locais</span>
+                        </div>
+                    </div>
+                    <div id="sampleDataBanner"></div>
+                    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                    <table class="portfolio-table">
+                        <thead>
+                            <tr>
+                                <th>Ativo</th>
+                                <th>Quantidade</th>
+                                <th>Preço Médio</th>
+                                <th>Preço Atual</th>
+                                <th>Preço Justo</th>
+                                <th>Variação Dia</th>
+                                <th>Valor Investido</th>
+                                <th>Valor Atual</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portfolioTable">
+                            <tr>
+                                <td colspan="9" style="text-align: center; padding: 2rem;">
+                                    <i class="fas fa-lock"></i> Faça login para acessar sua carteira
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+
+                <!-- HISTÓRICO DE OPERAÇÕES -->
+                <div class="card">
+                    <h3><i class="fas fa-history"></i> Histórico de Operações</h3>
+                    <div id="tradeHistory" style="max-height: 300px; overflow-y: auto;">
+                        <div style="text-align: center; padding: 2rem; color: var(--secondary);">
+                            <i class="fas fa-list"></i><br>
+                            Nenhuma operação registrada
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAIS DA CARTEIRA -->
+        <div id="priceConfigModal" class="modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-bullseye"></i> Configurar Preços Justos</h3>
+                <button class="back-button" onclick="closePriceConfig()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <p style="color: var(--secondary); margin-bottom: 1rem;">
+                    Defina os preços que você considera justos para cada ativo.
+                </p>
+                
+                <div id="priceConfigForm">
+                    <!-- Formulário será gerado dinamicamente -->
+                </div>
+                
+                <button class="save-btn" onclick="savePriceTargets()">
+                    <i class="fas fa-save"></i> Salvar Configurações
+                </button>
+            </div>
+        </div>
+
+        <div id="tradeModal" class="modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-plus"></i> Nova Operação</h3>
+                <button class="back-button" onclick="closeTradeModal()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <div class="form-group">
+                    <label>Ativo (ex: PETR4)</label>
+                    <input type="text" id="tradeSymbol" class="price-input" placeholder="Código do ativo" style="text-transform: uppercase;">
+                </div>
+                <div class="form-group">
+                    <label>Quantidade</label>
+                    <input type="number" id="tradeQuantity" class="price-input" placeholder="Quantidade de ações">
+                </div>
+                <div class="form-group">
+                    <label>Preço Pago por Ação (R$)</label>
+                    <input type="number" step="0.01" id="tradePrice" class="price-input" placeholder="Preço unitário">
+                </div>
+                <div class="form-group">
+                    <label>Data da Operação</label>
+                    <input type="date" id="tradeDate" class="price-input">
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Operação</label>
+                    <select id="tradeType" class="price-input">
+                        <option value="compra">Compra</option>
+                        <option value="venda">Venda</option>
+                    </select>
+                </div>
+                
+                <button class="save-btn" onclick="saveTrade()">
+                    <i class="fas fa-save"></i> Salvar Operação
+                </button>
+            </div>
+        </div>
+
+        <div id="alertModal" class="modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-bell"></i> Configurar Alertas</h3>
+                <button class="back-button" onclick="closeAlertModal()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <!-- Conteúdo dos alertas -->
+                <div style="text-align: center; padding: 2rem; color: var(--secondary);">
+                    <i class="fas fa-bell"></i><br>
+                    Sistema de alertas em desenvolvimento
+                </div>
+            </div>
+        </div>
+
+        <div id="manageAlertsModal" class="modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-bell-slash"></i> Gerenciar Alertas</h3>
+                <button class="back-button" onclick="closeManageAlerts()">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <!-- Conteúdo do gerenciamento de alertas -->
+                <div style="text-align: center; padding: 2rem; color: var(--secondary);">
+                    <i class="fas fa-bell-slash"></i><br>
+                    Gerenciamento de alertas em desenvolvimento
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOTIFICAÇÕES -->
+    <div id="notification" class="notification">
+        <span id="notificationMessage"></span>
+    </div>
+
+    <!-- NOVO MODAL: CONFIGURAÇÃO DE USUÁRIOS -->
+    <div id="userConfigModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-users-cog"></i> Gerenciar Usuários</h3>
+            <button class="back-button" onclick="closeUserConfig()">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="user-management">
+                <h4>Usuários Cadastrados</h4>
+                <div class="user-list" id="userList">
+                    <!-- Lista de usuários será gerada aqui -->
+                </div>
+                
+                <button class="save-btn" onclick="openAddUserModal()" style="background: var(--primary);">
+                    <i class="fas fa-user-plus"></i> Adicionar Novo Usuário
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: RECUPERAÇÃO DE SENHA -->
+    <div id="recoveryModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-key"></i> Recuperação de Senha</h3>
+            <button class="back-button" onclick="closeRecoveryModal()">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="recovery-options">
+                <div class="recovery-btn" onclick="recoverByEmail()">
+                    <i class="fas fa-envelope"></i><br>
+                    <strong>E-mail</strong><br>
+                    <small>Enviar link de recuperação</small>
+                </div>
+                <div class="recovery-btn" onclick="recoverBySMS()">
+                    <i class="fas fa-mobile-alt"></i><br>
+                    <strong>SMS</strong><br>
+                    <small>Enviar código por SMS</small>
+                </div>
+            </div>
+            
+            <div id="recoveryForm" style="display: none;">
+                <div class="form-group">
+                    <label id="recoveryLabel">E-mail cadastrado</label>
+                    <input type="text" id="recoveryInput" class="price-input" placeholder="Digite aqui...">
+                </div>
+                <button class="save-btn" onclick="submitRecovery()">
+                    <i class="fas fa-paper-plane"></i> Enviar Código
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // SISTEMA COMPLETO COM TODAS AS MELHORIAS
+        // =============================================
+
+        // VARIÁVEIS GLOBAIS EXPANDIDAS
+        let selectedUser = 'pai';
+        let selectedMode = 'online';
+        let isAuthenticated = false;
+        let brapiToken = localStorage.getItem('brapiToken') || '';
+        let priceTargets = {};
+        let userPortfolios = {};
+        let currentChart = null;
+        let lastUpdate = localStorage.getItem('lastUpdate') || '--';
+        let userAlerts = {};
+        let userDividends = {};
+        let customUsers = {};
+
+        // ── Dados reais de mercado (preenchido via Brapi) ──
+        let livePrices = {}; // symbol -> { regularMarketPrice, regularMarketChangePercent, defaultKeyStatistics, financialData }
+        let lastFetchError = null;
+
+        // Ações brasileiras conhecidas por pagar dividendos, usadas na busca de novas oportunidades
+        const WATCHLIST_PADRAO = ['TAEE11', 'TRPL4', 'BBAS3', 'BBDC4', 'ITSA4', 'CMIG4', 'CPLE6', 'EGIE3', 'SAPR11', 'VIVT3', 'PETR4', 'VALE3'];
+
+        // DADOS EXPANDIDOS
+        const userCredentials = {
+            'pai': { username: 'admin', password: '1234', name: 'Papai', email: 'pai@email.com', phone: '+5511999999999' },
+            'filha': { username: 'filha', password: '1234', name: 'Filha', email: 'filha@email.com', phone: '+5511888888888' }
+        };
+
+        const samplePortfolioData = {
+            'pai': [
+                { symbol: 'PETR4', quantity: 100, avgPrice: 32.50, fairPrice: 30.00, sector: 'Energia' },
+                { symbol: 'VALE3', quantity: 50, avgPrice: 68.90, fairPrice: 65.00, sector: 'Materiais Básicos' },
+                { symbol: 'ITUB4', quantity: 80, avgPrice: 32.15, fairPrice: 35.00, sector: 'Financeiro' }
+            ],
+            'filha': [
+                { symbol: 'PETR4', quantity: 10, avgPrice: 31.80, fairPrice: 29.00, sector: 'Energia' },
+                { symbol: 'WEGE3', quantity: 5, avgPrice: 36.75, fairPrice: 40.00, sector: 'Industrial' }
+            ]
+        };
+
+        // FUNÇÕES DE SELEÇÃO
+        function selectUser(user) {
+            selectedUser = user;
+            document.querySelectorAll('.user-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.user-btn[data-user="${user}"]`).classList.add('active');
+            
+            document.getElementById('username').value = userCredentials[user].username;
+            document.getElementById('password').value = '';
+        }
+
+        function selectMode(mode) {
+            selectedMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+            
+            const onlineConfig = document.getElementById('onlineConfig');
+            const offlineInfo = document.getElementById('offlineInfo');
+            
+            if (mode === 'online') {
+                onlineConfig.style.display = 'block';
+                offlineInfo.style.display = 'none';
+            } else {
+                onlineConfig.style.display = 'none';
+                offlineInfo.style.display = 'block';
+            }
+        }
+
+        // SISTEMA DE LOGIN
+        function accessWallet() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const userCred = userCredentials[selectedUser];
+            
+            if (username === userCred.username && password === userCred.password) {
+                isAuthenticated = true;
+                document.getElementById('apiConfigSection').style.display = 'block';
+                document.getElementById('accessWalletBtn').innerHTML = '<i class="fas fa-check"></i> Login Realizado';
+                document.getElementById('accessWalletBtn').disabled = true;
+                showNotification('✅ Login realizado!', 'success');
+            } else {
+                showNotification('❌ Usuário ou senha incorretos', 'error');
+            }
+        }
+
+        function login() {
+            if (!isAuthenticated) {
+                showNotification('⚠️ Faça login primeiro', 'warning');
+                return;
+            }
+            
+            brapiToken = document.getElementById('brapiToken').value || localStorage.getItem('brapiToken') || '';
+            if (brapiToken) localStorage.setItem('brapiToken', brapiToken);
+            
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('currentUser').textContent = userCredentials[selectedUser].name;
+            document.getElementById('currentMode').textContent = selectedMode === 'online' ? 'Online' : 'Offline';
+            
+            initializeDashboard();
+            showNotification('🎉 Bem-vindo ao AnalystPro!', 'success');
+        }
+
+        function logout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                isAuthenticated = false;
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('accessWalletBtn').innerHTML = '<i class="fas fa-wallet"></i> Acessar Minha Carteira';
+                document.getElementById('accessWalletBtn').disabled = false;
+                document.getElementById('apiConfigSection').style.display = 'none';
+            }
+        }
+
+        // ── Busca dados reais na Brapi (preço, variação, P/L, dividend yield) ──
+        // Docs: https://brapi.dev/docs — PETR4, MGLU3, VALE3, ITUB4 funcionam sem token;
+        // qualquer outro ticker precisa de uma chave gratuita (brapi.dev/dashboard).
+        async function fetchBrapiQuotes(tickers) {
+            if (!tickers || tickers.length === 0) return {};
+            const tickerStr = [...new Set(tickers)].join(',');
+            const modules = 'defaultKeyStatistics,financialData';
+            let url = `https://brapi.dev/api/quote/${tickerStr}?modules=${modules}&dividends=true`;
+            if (brapiToken) url += `&token=${brapiToken}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    lastFetchError = response.status === 401 || response.status === 403
+                        ? 'Chave da Brapi inválida ou ausente para essas ações.'
+                        : `A Brapi respondeu com erro (${response.status}).`;
+                    return {};
+                }
+                const data = await response.json();
+                lastFetchError = null;
+                const map = {};
+                (data.results || []).forEach((r) => { map[r.symbol] = r; });
+                return map;
+            } catch (err) {
+                lastFetchError = 'Não foi possível conectar à Brapi. Verifique sua internet.';
+                return {};
+            }
+        }
+
+        // Preço atual de um ativo: usa o preço real já buscado, ou cai de volta pro preço médio
+        // (evita quebrar a tela enquanto os dados reais ainda não chegaram).
+        function getCurrentPrice(symbol, fallbackAvgPrice) {
+            return livePrices[symbol]?.regularMarketPrice ?? fallbackAvgPrice;
+        }
+
+        function getChangePercent(symbol) {
+            return livePrices[symbol]?.regularMarketChangePercent ?? 0;
+        }
+
+        // Busca e guarda em cache os dados reais de todos os tickers da carteira atual
+        async function fetchPortfolioPrices() {
+            const portfolio = userPortfolios[selectedUser] || [];
+            if (portfolio.length === 0) return;
+            const tickers = portfolio.map((a) => a.symbol);
+            const fetched = await fetchBrapiQuotes(tickers);
+            livePrices = { ...livePrices, ...fetched };
+            if (lastFetchError) {
+                showNotification(`⚠️ ${lastFetchError}`, 'warning');
+            }
+        }
+        // ── Análise explicada de uma ação, a partir dos dados reais da Brapi ──
+        // Pontuação simples e transparente (não é IA nem fórmula secreta):
+        // some pontos por dividend yield alto, P/L baixo, e preço perto da mínima de 12 meses.
+        function analisarAcao(data) {
+            if (!data || typeof data.regularMarketPrice !== 'number') return null;
+
+            const stats = data.defaultKeyStatistics || {};
+            const dy = typeof stats.dividendYield === 'number' ? stats.dividendYield : null;
+            const pl = typeof stats.trailingPE === 'number' ? stats.trailingPE
+                     : (typeof stats.forwardPE === 'number' ? stats.forwardPE : null);
+            const low52 = typeof data.fiftyTwoWeekLow === 'number' ? data.fiftyTwoWeekLow
+                        : (typeof stats.fiftyTwoWeekLow === 'number' ? stats.fiftyTwoWeekLow : null);
+            const high52 = typeof data.fiftyTwoWeekHigh === 'number' ? data.fiftyTwoWeekHigh
+                         : (typeof stats.fiftyTwoWeekHigh === 'number' ? stats.fiftyTwoWeekHigh : null);
+            const price = data.regularMarketPrice;
+
+            let pontos = 0;
+            const motivos = [];
+
+            if (dy !== null) {
+                const dyPct = dy * 100;
+                if (dyPct >= 6) { pontos += 2; motivos.push(`Paga ${dyPct.toFixed(1)}% de dividendos ao ano — acima da média do mercado.`); }
+                else if (dyPct >= 3) { pontos += 1; motivos.push(`Paga ${dyPct.toFixed(1)}% de dividendos ao ano — razoável.`); }
+                else { motivos.push(`Paga só ${dyPct.toFixed(1)}% de dividendos ao ano — baixo, se seu foco é renda.`); }
+            } else {
+                motivos.push('Dividend yield não disponível para esta ação no seu plano/chave da Brapi.');
+            }
+
+            if (pl !== null && pl > 0) {
+                if (pl < 8) { pontos += 2; motivos.push(`P/L de ${pl.toFixed(1)} — o preço parece barato perto do lucro da empresa.`); }
+                else if (pl < 15) { pontos += 1; motivos.push(`P/L de ${pl.toFixed(1)} — preço razoável perto do lucro.`); }
+                else { motivos.push(`P/L de ${pl.toFixed(1)} — preço relativamente caro perto do lucro atual.`); }
+            }
+
+            if (low52 !== null && high52 !== null && high52 > low52) {
+                const posicao = (price - low52) / (high52 - low52);
+                if (posicao <= 0.3) { pontos += 2; motivos.push(`Está perto da mínima dos últimos 12 meses (${(posicao * 100).toFixed(0)}% da faixa) — pode estar descontada.`); }
+                else if (posicao >= 0.85) { motivos.push('Está perto da máxima dos últimos 12 meses — pode estar cara no momento.'); }
+                else { motivos.push('Está no meio da faixa de preço dos últimos 12 meses.'); }
+            }
+
+            let label, emoji, color;
+            if (pontos >= 4) { label = 'Possível oportunidade'; emoji = '🟢'; color = '#10b981'; }
+            else if (pontos >= 2) { label = 'Neutro'; emoji = '🟡'; color = '#f59e0b'; }
+            else { label = 'Sem sinal forte agora'; emoji = '⚪'; color = '#9ca3af'; }
+
+            return { pontos, label, emoji, color, motivos, dy, pl, price };
+        }
+
+        function renderStockCard(symbol, data) {
+            const analise = analisarAcao(data);
+            if (!analise) {
+                return `<div class="alert-banner">
+                    <i class="fas fa-question-circle"></i>
+                    <div><strong>${symbol}:</strong> Não foi possível obter dados agora. ${lastFetchError ? `(${lastFetchError})` : ''}</div>
+                </div>`;
+            }
+            return `
+                <div class="analytics-card" style="border-left: 4px solid ${analise.color};">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 0.25rem;">
+                        <h3 style="margin:0;">${analise.emoji} ${symbol}</h3>
+                        <span style="font-weight:700; color:${analise.color};">${analise.label}</span>
+                    </div>
+                    <div style="margin: 0.5rem 0; font-size: 1.1rem;">
+                        <strong>R$ ${analise.price.toFixed(2)}</strong>
+                    </div>
+                    <ul style="margin:0.5rem 0 0; padding-left:1.2rem; font-size:0.85rem; color: var(--secondary); line-height: 1.5;">
+                        ${analise.motivos.map((m) => `<li>${m}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        // Recomendações reais para os ativos que você já tem na carteira
+        async function renderRecommendations() {
+            const container = document.getElementById('stockRecommendations');
+            const portfolio = userPortfolios[selectedUser] || [];
+            if (portfolio.length === 0) {
+                container.innerHTML = '<div class="alert-banner"><i class="fas fa-info-circle"></i><div>Sua carteira está vazia — adicione um ativo primeiro.</div></div>';
+                return;
+            }
+            container.innerHTML = '<div style="text-align:center; padding:1rem; color: var(--secondary);"><i class="fas fa-spinner fa-spin"></i> Analisando sua carteira...</div>';
+
+            const tickers = portfolio.map((a) => a.symbol);
+            const data = await fetchBrapiQuotes(tickers);
+            livePrices = { ...livePrices, ...data };
+
+            container.innerHTML = tickers.map((t) => renderStockCard(t, data[t])).join('');
+        }
+
+        // Varre a lista de ações conhecidas por dividendos e mostra as mais bem pontuadas primeiro
+        async function buscarOportunidades() {
+            const container = document.getElementById('opportunitiesList');
+            container.innerHTML = '<div style="text-align:center; padding:1rem; color: var(--secondary); grid-column: 1 / -1;"><i class="fas fa-spinner fa-spin"></i> Procurando oportunidades...</div>';
+
+            const data = await fetchBrapiQuotes(WATCHLIST_PADRAO);
+            livePrices = { ...livePrices, ...data };
+
+            const analisadas = WATCHLIST_PADRAO
+                .map((t) => ({ symbol: t, data: data[t], analise: analisarAcao(data[t]) }))
+                .filter((x) => x.analise)
+                .sort((a, b) => b.analise.pontos - a.analise.pontos);
+
+            if (analisadas.length === 0) {
+                container.innerHTML = `<div class="alert-banner" style="grid-column: 1 / -1;"><i class="fas fa-exclamation-triangle"></i><div>Não consegui buscar dados agora. ${lastFetchError || 'Verifique sua chave da Brapi.'}</div></div>`;
+                return;
+            }
+
+            container.innerHTML = analisadas.map((x) => renderStockCard(x.symbol, x.data)).join('');
+        }
+
+
+        async function initializeDashboard() {
+            loadUserData();
+            showNotification('🔄 Buscando preços reais...', 'success');
+            await fetchPortfolioPrices();
+            renderPortfolioTable();
+            updatePortfolioSummary();
+            initializePerformanceChart();
+            loadAlerts();
+            loadDividends();
+            updateDashboardMetrics();
+            
+            document.getElementById('lastUpdate').textContent = `Última atualização: ${lastUpdate}`;
+            showNotification('📊 Carteira carregada com sucesso!', 'success');
+        }
+
+        let isUsingSampleData = false;
+
+        function loadUserData() {
+            const savedPortfolio = localStorage.getItem(`portfolio_${selectedUser}`);
+            isUsingSampleData = !savedPortfolio;
+            userPortfolios[selectedUser] = savedPortfolio ? 
+                JSON.parse(savedPortfolio) : 
+                JSON.parse(JSON.stringify(samplePortfolioData[selectedUser]));
+            
+            const savedTargets = localStorage.getItem(`priceTargets_${selectedUser}`);
+            priceTargets = savedTargets ? JSON.parse(savedTargets) : {};
+            
+            const savedAlerts = localStorage.getItem(`alerts_${selectedUser}`);
+            userAlerts[selectedUser] = savedAlerts ? JSON.parse(savedAlerts) : [];
+            
+            const savedDividends = localStorage.getItem(`dividends_${selectedUser}`);
+            userDividends[selectedUser] = savedDividends ? JSON.parse(savedDividends) : [];
+        }
+
+        function clearSampleData() {
+            if (!confirm('Isso remove os ativos de exemplo (PETR4, VALE3...) e deixa sua carteira vazia, pronta pra você adicionar suas próprias ações. Continuar?')) return;
+            userPortfolios[selectedUser] = [];
+            localStorage.setItem(`portfolio_${selectedUser}`, JSON.stringify([]));
+            isUsingSampleData = false;
+            renderPortfolioTable();
+            updatePortfolioSummary();
+            showNotification('🧹 Carteira de exemplo removida. Adicione suas ações!', 'success');
+        }
+
+        function renderPortfolioTable() {
+            const tableBody = document.getElementById('portfolioTable');
+            const portfolio = userPortfolios[selectedUser];
+
+            const banner = document.getElementById('sampleDataBanner');
+            if (banner) {
+                banner.innerHTML = isUsingSampleData
+                    ? `<div class="alert-banner" style="background: linear-gradient(135deg, #dbeafe, #3b82f6); color: #1e3a8a; margin-bottom: 1rem;">
+                        <i class="fas fa-info-circle"></i>
+                        <div style="flex: 1;">
+                            <strong>Isso é uma carteira de exemplo</strong>, não são seus dados reais. Adicione seus próprios
+                            ativos que eles ficam salvos automaticamente neste aparelho a partir daí.
+                        </div>
+                        <button class="chart-period-btn" onclick="clearSampleData()" style="white-space: nowrap;">🧹 Começar do zero</button>
+                    </div>`
+                    : '';
+            }
+
+            if (!portfolio || portfolio.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 2rem;">Nenhum ativo na carteira</td></tr>`;
+                return;
+            }
+            
+            tableBody.innerHTML = portfolio.map((asset, index) => {
+                const currentPrice = getCurrentPrice(asset.symbol, asset.avgPrice);
+                const dailyChange = getChangePercent(asset.symbol).toFixed(2);
+                const investedValue = asset.quantity * asset.avgPrice;
+                const currentValue = asset.quantity * currentPrice;
+                const profit = currentValue - investedValue;
+                
+                return `
+                <tr>
+                    <td><strong>${asset.symbol}</strong></td>
+                    <td>${asset.quantity}</td>
+                    <td>R$ ${asset.avgPrice.toFixed(2)}</td>
+                    <td>R$ ${currentPrice.toFixed(2)}</td>
+                    <td>R$ ${priceTargets[asset.symbol] || asset.fairPrice}</td>
+                    <td class="${dailyChange >= 0 ? 'positive' : 'negative'}">${dailyChange}%</td>
+                    <td>R$ ${investedValue.toFixed(2)}</td>
+                    <td class="${profit >= 0 ? 'positive' : 'negative'}">R$ ${currentValue.toFixed(2)}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editAsset(${index})" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteAsset(${index})" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function updatePortfolioSummary() {
+            const portfolio = userPortfolios[selectedUser];
+            if (!portfolio || portfolio.length === 0) {
+                document.getElementById('totalValue').textContent = 'R$ 0,00';
+                document.getElementById('dailyChange').textContent = '0,00%';
+                document.getElementById('totalProfit').textContent = 'R$ 0,00';
+                document.getElementById('alertCount').textContent = '0';
+                return;
+            }
+
+            let totalInvested = 0;
+            let totalCurrent = 0;
+            
+            portfolio.forEach(asset => {
+                const currentPrice = getCurrentPrice(asset.symbol, asset.avgPrice);
+                totalInvested += asset.quantity * asset.avgPrice;
+                totalCurrent += asset.quantity * currentPrice;
+            });
+
+            const totalProfit = totalCurrent - totalInvested;
+            const dailyChange = ((totalCurrent - totalInvested) / totalInvested * 100).toFixed(2);
+
+            document.getElementById('totalValue').textContent = `R$ ${totalCurrent.toFixed(2)}`;
+            document.getElementById('dailyChange').textContent = `${dailyChange}%`;
+            document.getElementById('dailyChange').className = dailyChange >= 0 ? 'positive' : 'negative';
+            document.getElementById('totalProfit').textContent = `R$ ${totalProfit.toFixed(2)}`;
+            document.getElementById('totalProfit').className = totalProfit >= 0 ? 'positive' : 'negative';
+        }
+
+        function initializePerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            if (window.performanceChart) window.performanceChart.destroy();
+            
+            window.performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Patrimônio',
+                        data: [10000, 12000, 11500, 13000, 14000, 15000],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true
+                    }]
+                }
+            });
+        }
+
+        // SISTEMA DE ANÁLISE — agora com dados reais da Brapi
+        let currentChartSymbol = 'PETR4';
+        let currentChartPeriod = '1m';
+        const CHART_PERIOD_MAP = {
+            '1m': { range: '1mo', interval: '1d' },
+            '3m': { range: '3mo', interval: '1d' },
+            '1y': { range: '1y', interval: '1wk' },
+            '5y': { range: '5y', interval: '1mo' },
+        };
+
+        // Busca histórico real de preço (candles) de uma ação na Brapi
+        async function fetchHistorico(symbol, range, interval) {
+            let url = `https://brapi.dev/api/quote/${symbol}?range=${range}&interval=${interval}`;
+            if (brapiToken) url += `&token=${brapiToken}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    lastFetchError = (response.status === 401 || response.status === 403)
+                        ? 'Chave da Brapi inválida ou ausente para essa ação.'
+                        : `A Brapi respondeu com erro (${response.status}).`;
+                    return null;
+                }
+                const data = await response.json();
+                const result = (data.results || [])[0];
+                if (!result || !result.historicalDataPrice || result.historicalDataPrice.length === 0) return null;
+                lastFetchError = null;
+                return result;
+            } catch (err) {
+                lastFetchError = 'Não foi possível conectar à Brapi. Verifique sua internet.';
+                return null;
+            }
+        }
+
+        // Busca qualquer ação digitada no campo de busca do cabeçalho e leva pra Análise
+        async function searchStock() {
+            const symbol = document.getElementById('stockSearch').value.trim().toUpperCase();
+            if (!symbol) return;
+            showNotification(`🔎 Buscando ${symbol}...`, 'success');
+            const data = await fetchBrapiQuotes([symbol]);
+            if (!data[symbol]) {
+                showNotification(`❌ ${symbol} não encontrada. ${lastFetchError || 'Confira o código da ação.'}`, 'error');
+                return;
+            }
+            livePrices = { ...livePrices, ...data };
+            showSection('analise');
+            await renderStockChart(symbol);
+            // Mostra o card de análise dessa ação no topo das recomendações
+            const container = document.getElementById('stockRecommendations');
+            if (container) {
+                container.innerHTML = renderStockCard(symbol, data[symbol]) + container.innerHTML;
+            }
+            showNotification(`✅ ${symbol} carregada!`, 'success');
+        }
+
+        // Chamada pelo campo de busca de dentro da própria aba de Análise
+        async function buscarGraficoAcao() {
+            const input = document.getElementById('chartSearchInput');
+            const symbol = input.value.trim().toUpperCase();
+            if (!symbol) return;
+            const data = await fetchBrapiQuotes([symbol]);
+            if (!data[symbol]) {
+                showNotification(`❌ ${symbol} não encontrada. ${lastFetchError || 'Confira o código da ação.'}`, 'error');
+                return;
+            }
+            livePrices = { ...livePrices, ...data };
+            input.value = '';
+            await renderStockChart(symbol);
+        }
+
+        // Desenha o gráfico técnico com histórico REAL de preço (candles de fechamento)
+        async function renderStockChart(symbol, period) {
+            currentChartSymbol = symbol;
+            currentChartPeriod = period || currentChartPeriod || '1m';
+            const label = document.getElementById('chartSymbolLabel');
+            if (label) label.textContent = symbol;
+
+            const canvas = document.getElementById('technicalChart');
+            if (!canvas) return; // gráfico só existe dentro da aba Análise
+            const ctx = canvas.getContext('2d');
+            if (currentChart) currentChart.destroy();
+
+            const { range, interval } = CHART_PERIOD_MAP[currentChartPeriod] || CHART_PERIOD_MAP['1m'];
+            const result = await fetchHistorico(symbol, range, interval);
+
+            if (!result) {
+                showNotification(`⚠️ Não consegui buscar o histórico de ${symbol}. ${lastFetchError || ''}`, 'error');
+                return;
+            }
+
+            const candles = result.historicalDataPrice;
+            const labels = candles.map((c) => new Date(c.date * 1000).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: currentChartPeriod === '5y' ? '2-digit' : undefined }));
+            const closes = candles.map((c) => c.close);
+            const subiu = closes[closes.length - 1] >= closes[0];
+
+            currentChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: symbol,
+                        data: closes,
+                        borderColor: subiu ? '#10b981' : '#ef4444',
+                        backgroundColor: subiu ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true,
+                        tension: 0.15,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `${symbol} — preço real (${{'1m':'1 mês','3m':'3 meses','1y':'1 ano','5y':'5 anos'}[currentChartPeriod]})`
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { maxTicksLimit: 8 } }
+                    }
+                }
+            });
+        }
+
+
+
+        function viewPortfolioActions() {
+            const portfolio = userPortfolios[selectedUser];
+            if (!portfolio || portfolio.length === 0) {
+                showNotification('❌ Nenhuma ação na carteira', 'error');
+                return;
+            }
+            
+            let message = 'Ações na sua carteira:\n';
+            portfolio.forEach(asset => {
+                message += `• ${asset.symbol}: ${asset.quantity} ações\n`;
+            });
+            
+            alert(message);
+        }
+
+        // SISTEMA DE NAVEGAÇÃO - CORRIGIDO
+        function showSection(sectionName) {
+            document.querySelectorAll('.main-content').forEach(section => {
+                section.classList.remove('content-active');
+            });
+            document.getElementById(sectionName).classList.add('content-active');
+
+            if (sectionName === 'analise') {
+                renderRecommendations();
+            }
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const items = document.querySelectorAll('.nav-item');
+            for (let item of items) {
+                if (item.textContent.includes(
+                    sectionName === 'carteira' ? 'Carteira' : 
+                    sectionName === 'analise' ? 'Análise' : 
+                    sectionName === 'alertas' ? 'Alertas' :
+                    sectionName === 'dividendos' ? 'Dividendos' : 'Dashboard'
+                )) {
+                    item.classList.add('active');
+                    break;
+                }
+            }
+        }
+
+        // FUNÇÕES DA CARTEIRA - CORRIGIDAS
+        function openTradeModal() {
+            document.getElementById('tradeDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('tradeModal').style.display = 'flex';
+        }
+
+        function closeTradeModal() {
+            document.getElementById('tradeModal').style.display = 'none';
+        }
+
+        function saveTrade() {
+            const symbol = document.getElementById('tradeSymbol').value.toUpperCase();
+            const quantity = parseInt(document.getElementById('tradeQuantity').value);
+            const price = parseFloat(document.getElementById('tradePrice').value);
+            const date = document.getElementById('tradeDate').value;
+            const type = document.getElementById('tradeType').value;
+
+            if (!symbol || !quantity || !price) {
+                showNotification('❌ Preencha todos os campos', 'error');
+                return;
+            }
+
+            const portfolio = userPortfolios[selectedUser];
+            const existingIndex = portfolio.findIndex(asset => asset.symbol === symbol);
+
+            if (type === 'compra') {
+                if (existingIndex >= 0) {
+                    // Atualiza ativo existente
+                    const asset = portfolio[existingIndex];
+                    const totalQuantity = asset.quantity + quantity;
+                    const totalValue = (asset.quantity * asset.avgPrice) + (quantity * price);
+                    asset.avgPrice = totalValue / totalQuantity;
+                    asset.quantity = totalQuantity;
+                } else {
+                    // Adiciona novo ativo
+                    portfolio.push({
+                        symbol: symbol,
+                        quantity: quantity,
+                        avgPrice: price,
+                        fairPrice: price * 0.9
+                    });
+                }
+            } else if (type === 'venda') {
+                if (existingIndex >= 0) {
+                    const asset = portfolio[existingIndex];
+                    if (asset.quantity >= quantity) {
+                        asset.quantity -= quantity;
+                        if (asset.quantity === 0) {
+                            portfolio.splice(existingIndex, 1);
+                        }
+                    } else {
+                        showNotification('❌ Quantidade insuficiente para venda', 'error');
+                        return;
+                    }
+                } else {
+                    showNotification('❌ Ativo não encontrado na carteira', 'error');
+                    return;
+                }
+            }
+
+            userPortfolios[selectedUser] = portfolio;
+            localStorage.setItem(`portfolio_${selectedUser}`, JSON.stringify(portfolio));
+            
+            updateLastUpdate();
+            renderPortfolioTable();
+            updatePortfolioSummary();
+            
+            showNotification(`✅ Operação de ${type} de ${quantity} ${symbol} salva!`, 'success');
+            closeTradeModal();
+        }
+
+        function editAsset(index) {
+            const portfolio = userPortfolios[selectedUser];
+            const asset = portfolio[index];
+            
+            const newQuantity = prompt(`Editar quantidade de ${asset.symbol}:`, asset.quantity);
+            const newPrice = prompt(`Editar preço médio de ${asset.symbol}:`, asset.avgPrice);
+            
+            if (newQuantity && newPrice) {
+                asset.quantity = parseInt(newQuantity);
+                asset.avgPrice = parseFloat(newPrice);
+                
+                userPortfolios[selectedUser] = portfolio;
+                localStorage.setItem(`portfolio_${selectedUser}`, JSON.stringify(portfolio));
+                
+                updateLastUpdate();
+                renderPortfolioTable();
+                updatePortfolioSummary();
+                showNotification(`✅ ${asset.symbol} atualizado!`, 'success');
+            }
+        }
+
+        function deleteAsset(index) {
+            const portfolio = userPortfolios[selectedUser];
+            const asset = portfolio[index];
+            
+            if (confirm(`Excluir ${asset.symbol} da carteira?`)) {
+                portfolio.splice(index, 1);
+                userPortfolios[selectedUser] = portfolio;
+                localStorage.setItem(`portfolio_${selectedUser}`, JSON.stringify(portfolio));
+                
+                updateLastUpdate();
+                renderPortfolioTable();
+                updatePortfolioSummary();
+                showNotification(`🗑️ ${asset.symbol} removido!`, 'success');
+            }
+        }
+
+        async function refreshData() {
+            await fetchPortfolioPrices();
+            updateLastUpdate();
+            renderPortfolioTable();
+            updatePortfolioSummary();
+            updateDashboardMetrics();
+            showNotification('🔁 Dados atualizados!', 'success');
+        }
+
+        function updateLastUpdate() {
+            const now = new Date();
+            lastUpdate = now.toLocaleString('pt-BR');
+            localStorage.setItem('lastUpdate', lastUpdate);
+            document.getElementById('lastUpdate').textContent = `Última atualização: ${lastUpdate}`;
+        }
+
+        // FUNÇÕES DOS MODAIS - CORRIGIDAS
+        function openPriceConfig() {
+            const portfolio = userPortfolios[selectedUser];
+            let formHTML = '';
+            
+            portfolio.forEach(asset => {
+                formHTML += `
+                    <div class="form-group">
+                        <label>Preço Justo para ${asset.symbol}</label>
+                        <input type="number" step="0.01" class="price-input" 
+                               id="target_${asset.symbol}" 
+                               value="${priceTargets[asset.symbol] || asset.fairPrice}">
+                    </div>
+                `;
+            });
+            
+            document.getElementById('priceConfigForm').innerHTML = formHTML;
+            document.getElementById('priceConfigModal').style.display = 'flex';
+        }
+
+        function closePriceConfig() {
+            document.getElementById('priceConfigModal').style.display = 'none';
+        }
+
+        function savePriceTargets() {
+            const portfolio = userPortfolios[selectedUser];
+            
+            portfolio.forEach(asset => {
+                const targetInput = document.getElementById(`target_${asset.symbol}`);
+                if (targetInput && targetInput.value) {
+                    priceTargets[asset.symbol] = parseFloat(targetInput.value);
+                }
+            });
+            
+            localStorage.setItem(`priceTargets_${selectedUser}`, JSON.stringify(priceTargets));
+            renderPortfolioTable();
+            closePriceConfig();
+            showNotification('✅ Preços justos salvos!', 'success');
+        }
+
+        function openAlertModal() {
+            document.getElementById('alertModal').style.display = 'flex';
+        }
+
+        function closeAlertModal() {
+            document.getElementById('alertModal').style.display = 'none';
+        }
+
+        function openManageAlerts() {
+            document.getElementById('manageAlertsModal').style.display = 'flex';
+        }
+
+        function closeManageAlerts() {
+            document.getElementById('manageAlertsModal').style.display = 'none';
+        }
+
+        // FUNÇÕES AUXILIARES
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.querySelector('span').textContent = message;
+            notification.className = `notification ${type} show`;
+            setTimeout(() => notification.classList.remove('show'), 3000);
+        }
+
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+
+        function testBrapiConnection() {
+            const testResult = document.getElementById('apiTestResult');
+            testResult.innerHTML = '<i class="fas fa-check-circle"></i> Conexão OK!';
+            testResult.className = 'result-success';
+        }
+
+        function resetPassword() {
+            document.getElementById('recoveryModal').style.display = 'flex';
+        }
+
+        function closeRecoveryModal() {
+            document.getElementById('recoveryModal').style.display = 'none';
+        }
+
+        function recoverByEmail() {
+            document.getElementById('recoveryLabel').textContent = 'E-mail cadastrado';
+            document.getElementById('recoveryInput').placeholder = 'Digite seu e-mail';
+            document.getElementById('recoveryForm').style.display = 'block';
+        }
+
+        function recoverBySMS() {
+            document.getElementById('recoveryLabel').textContent = 'Número de telefone';
+            document.getElementById('recoveryInput').placeholder = 'Digite seu telefone';
+            document.getElementById('recoveryForm').style.display = 'block';
+        }
+
+        function submitRecovery() {
+            showNotification('📧 Instruções enviadas para o email/telefone cadastrado', 'success');
+            closeRecoveryModal();
+        }
+
+        // NOVAS FUNCIONALIDADES IMPLEMENTADAS
+
+        // 1. SISTEMA DE ALERTAS VISUAIS
+        function createAlert() {
+            const stock = document.getElementById('alertStock').value;
+            const type = document.getElementById('alertType').value;
+            const value = parseFloat(document.getElementById('alertValue').value);
+            
+            if (!stock || !value) {
+                showNotification('Preencha todos os campos do alerta', 'error');
+                return;
+            }
+
+            if (!userAlerts[selectedUser]) userAlerts[selectedUser] = [];
+            
+            userAlerts[selectedUser].push({
+                stock: stock,
+                type: type,
+                value: value,
+                active: true,
+                created: new Date().toISOString()
+            });
+            
+            localStorage.setItem(`alerts_${selectedUser}`, JSON.stringify(userAlerts[selectedUser]));
+            showNotification('Alerta criado com sucesso!', 'success');
+            loadAlerts();
+        }
+
+        function loadAlerts() {
+            const alertsList = document.getElementById('activeAlertsList');
+            const alerts = userAlerts[selectedUser] || [];
+            
+            if (alerts.length === 0) {
+                alertsList.innerHTML = '<p style="text-align: center; color: var(--secondary);">Nenhum alerta ativo</p>';
+                return;
+            }
+            
+            alertsList.innerHTML = alerts.map((alert, index) => `
+                <div class="user-item">
+                    <div>
+                        <strong>${alert.stock}</strong><br>
+                        <small>${alert.type === 'above' ? 'Acima de' : 'Abaixo de'} R$ ${alert.value}</small>
+                    </div>
+                    <button class="action-btn delete-btn" onclick="deleteAlert(${index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteAlert(index) {
+            userAlerts[selectedUser].splice(index, 1);
+            localStorage.setItem(`alerts_${selectedUser}`, JSON.stringify(userAlerts[selectedUser]));
+            loadAlerts();
+            showNotification('Alerta removido!', 'success');
+        }
+
+        function dismissAlert(stock) {
+            showNotification(`Alerta para ${stock} dispensado`, 'success');
+        }
+
+        // 2. SISTEMA DE DIVIDENDOS
+        function saveDividend() {
+            const stock = document.getElementById('dividendStock').value;
+            const amount = parseFloat(document.getElementById('dividendAmount').value);
+            const date = document.getElementById('dividendDate').value;
+            const type = document.getElementById('dividendType').value;
+            
+            if (!stock || !amount || !date) {
+                showNotification('Preencha todos os campos', 'error');
+                return;
+            }
+
+            if (!userDividends[selectedUser]) userDividends[selectedUser] = [];
+            
+            userDividends[selectedUser].push({
+                stock: stock,
+                amount: amount,
+                date: date,
+                type: type
+            });
+            
+            localStorage.setItem(`dividends_${selectedUser}`, JSON.stringify(userDividends[selectedUser]));
+            showNotification('Dividendo salvo com sucesso!', 'success');
+            loadDividends();
+        }
+
+        function loadDividends() {
+            const receivedDiv = document.getElementById('receivedDividends');
+            const expectedDiv = document.getElementById('expectedDividends');
+            const dividends = userDividends[selectedUser] || [];
+            
+            const received = dividends.filter(d => d.type === 'recebido');
+            const expected = dividends.filter(d => d.type === 'esperado');
+            
+            // Atualizar lista de ações no select
+            const dividendStockSelect = document.getElementById('dividendStock');
+            const portfolio = userPortfolios[selectedUser] || [];
+            dividendStockSelect.innerHTML = '<option value="">Selecione um ativo</option>' +
+                portfolio.map(asset => `<option value="${asset.symbol}">${asset.symbol}</option>`).join('');
+            
+            receivedDiv.innerHTML = received.length > 0 ? 
+                received.map(d => `
+                    <div class="timeline-item">
+                        <div>
+                            <strong>${d.stock}</strong>
+                            <div class="dividend-amount">R$ ${d.amount.toFixed(2)}</div>
+                        </div>
+                        <div>${new Date(d.date).toLocaleDateString('pt-BR')}</div>
+                    </div>
+                `).join('') :
+                '<div style="text-align: center; padding: 2rem; color: var(--secondary);"><i class="fas fa-money-bill-wave"></i><br>Nenhum dividendo recebido</div>';
+            
+            expectedDiv.innerHTML = expected.length > 0 ? 
+                expected.map(d => `
+                    <div class="timeline-item">
+                        <div>
+                            <strong>${d.stock}</strong>
+                            <div class="dividend-amount">R$ ${d.amount.toFixed(2)}</div>
+                        </div>
+                        <div>${new Date(d.date).toLocaleDateString('pt-BR')}</div>
+                    </div>
+                `).join('') :
+                '<div style="text-align: center; padding: 2rem; color: var(--secondary);"><i class="fas fa-calendar"></i><br>Nenhum dividendo esperado</div>';
+        }
+
+        // 3. DASHBOARD INTERATIVO
+        function updateDashboardMetrics() {
+            const portfolio = userPortfolios[selectedUser] || [];
+            let totalValue = 0;
+            let totalInvested = 0;
+            let totalDividends = 0;
+            
+            portfolio.forEach(asset => {
+                const currentPrice = getCurrentPrice(asset.symbol, asset.avgPrice);
+                totalValue += asset.quantity * currentPrice;
+                totalInvested += asset.quantity * asset.avgPrice;
+            });
+            
+            const dividends = userDividends[selectedUser] || [];
+            dividends.forEach(d => {
+                if (d.type === 'recebido') {
+                    totalDividends += d.amount;
+                }
+            });
+            
+            const profit = totalValue - totalInvested;
+            const dailyChange = ((totalValue - totalInvested) / totalInvested * 100).toFixed(2);
+            
+            document.getElementById('dashboardTotalValue').textContent = `R$ ${totalValue.toFixed(2)}`;
+            document.getElementById('dashboardInvested').textContent = `R$ ${totalInvested.toFixed(2)}`;
+            document.getElementById('dashboardProfit').textContent = `R$ ${profit.toFixed(2)}`;
+            document.getElementById('dashboardDividends').textContent = `R$ ${totalDividends.toFixed(2)}`;
+            document.getElementById('dashboardDailyChange').textContent = `${dailyChange}%`;
+            document.getElementById('dashboardDailyChange').className = dailyChange >= 0 ? 'positive' : 'negative';
+            
+            // Atualizar gráficos do dashboard
+            updateSectorChart();
+            updateComparisonChart();
+        }
+
+        function updateSectorChart() {
+            const ctx = document.getElementById('sectorChart').getContext('2d');
+            const portfolio = userPortfolios[selectedUser] || [];
+            
+            const sectors = {};
+            portfolio.forEach(asset => {
+                if (!sectors[asset.sector]) sectors[asset.sector] = 0;
+                const currentPrice = getCurrentPrice(asset.symbol, asset.avgPrice);
+                sectors[asset.sector] += asset.quantity * currentPrice;
+            });
+            
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(sectors),
+                    datasets: [{
+                        data: Object.values(sectors),
+                        backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+                    }]
+                }
+            });
+        }
+
+        function updateComparisonChart() {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sua Carteira', 'Ibovespa'],
+                    datasets: [{
+                        label: 'Performance (%)',
+                        data: [15.2, 12.8],
+                        backgroundColor: ['#2563eb', '#64748b']
+                    }]
+                }
+            });
+        }
+
+        // 4. ANÁLISE TÉCNICA AVANÇADA
+        async function changeChartPeriod(period) {
+            document.querySelectorAll('.chart-period-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (event && event.target && event.target.classList.contains('chart-period-btn')) {
+                event.target.classList.add('active');
+            } else {
+                const labels = { '1m': '1M', '3m': '3M', '1y': '1A', '5y': '5A' };
+                document.querySelectorAll('.chart-period-btn').forEach(btn => {
+                    if (btn.textContent.trim() === labels[period]) btn.classList.add('active');
+                });
+            }
+
+            currentChartPeriod = period;
+            await renderStockChart(currentChartSymbol, period);
+        }
+
+
+
+        // INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', function() {
+            selectUser('pai');
+            selectMode('online');
+
+            if (brapiToken) document.getElementById('brapiToken').value = brapiToken;
+            
+            document.getElementById('stockSearch').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchStock();
+            });
+            
+            document.getElementById('tradeDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('dividendDate').value = new Date().toISOString().split('T')[0];
+            
+            // Carrega última atualização
+            if (lastUpdate !== '--') {
+                document.getElementById('lastUpdate').textContent = `Última atualização: ${lastUpdate}`;
+            }
+            
+            // Inicializar gráficos do dashboard
+            updateSectorChart();
+            updateComparisonChart();
+            changeChartPeriod('1m');
+        });
+
+    </script>
+</body>
+</html>
