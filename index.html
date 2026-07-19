@@ -857,14 +857,10 @@
                     <div class="forgot-password">
                         <a href="#" onclick="resetPassword()">Esqueci minha senha</a>
                     </div>
-
-                    <button class="wallet-access-btn" onclick="accessWallet()" id="accessWalletBtn">
-                        <i class="fas fa-wallet"></i> Acessar Minha Carteira
-                    </button>
                 </div>
 
                 <!-- CONFIGURAÇÃO DE CONEXÃO -->
-                <div class="api-config" id="apiConfigSection" style="display: none;">
+                <div class="api-config" id="apiConfigSection">
                     <h4><i class="fas fa-wifi"></i> Configuração de Conexão</h4>
                     
                     <div class="mode-selection">
@@ -1267,36 +1263,27 @@
         }
 
         // SISTEMA DE LOGIN
-        function accessWallet() {
+        // Login em um passo só: valida usuário/senha e já entra, usando a chave da Brapi
+        // salva anteriormente (não obriga colar a chave de novo toda vez).
+        function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const userCred = userCredentials[selectedUser];
-            
-            if (username === userCred.username && password === userCred.password) {
-                isAuthenticated = true;
-                document.getElementById('apiConfigSection').style.display = 'block';
-                document.getElementById('accessWalletBtn').innerHTML = '<i class="fas fa-check"></i> Login Realizado';
-                document.getElementById('accessWalletBtn').disabled = true;
-                showNotification('✅ Login realizado!', 'success');
-            } else {
-                showNotification('❌ Usuário ou senha incorretos', 'error');
-            }
-        }
 
-        function login() {
-            if (!isAuthenticated) {
-                showNotification('⚠️ Faça login primeiro', 'warning');
+            if (username !== userCred.username || password !== userCred.password) {
+                showNotification('❌ Usuário ou senha incorretos', 'error');
                 return;
             }
-            
+
+            isAuthenticated = true;
             brapiToken = document.getElementById('brapiToken').value || localStorage.getItem('brapiToken') || '';
             if (brapiToken) localStorage.setItem('brapiToken', brapiToken);
-            
+
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('currentUser').textContent = userCredentials[selectedUser].name;
             document.getElementById('currentMode').textContent = selectedMode === 'online' ? 'Online' : 'Offline';
-            
+
             initializeDashboard();
             showNotification('🎉 Bem-vindo ao AnalystPro!', 'success');
         }
@@ -1306,9 +1293,6 @@
                 isAuthenticated = false;
                 document.getElementById('mainApp').style.display = 'none';
                 document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('accessWalletBtn').innerHTML = '<i class="fas fa-wallet"></i> Acessar Minha Carteira';
-                document.getElementById('accessWalletBtn').disabled = false;
-                document.getElementById('apiConfigSection').style.display = 'none';
             }
         }
 
