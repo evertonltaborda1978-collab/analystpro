@@ -1966,10 +1966,31 @@
             field.type = field.type === 'password' ? 'text' : 'password';
         }
 
-        function testBrapiConnection() {
+        async function testBrapiConnection() {
             const testResult = document.getElementById('apiTestResult');
-            testResult.innerHTML = '<i class="fas fa-check-circle"></i> Conexão OK!';
-            testResult.className = 'result-success';
+            const token = document.getElementById('brapiToken').value || localStorage.getItem('brapiToken') || '';
+            testResult.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testando...';
+            testResult.className = '';
+
+            let url = 'https://brapi.dev/api/quote/PETR4';
+            if (token) url += `?token=${token}`;
+
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    testResult.innerHTML = '<i class="fas fa-check-circle"></i> Conexão OK! Sua chave funciona.';
+                    testResult.className = 'result-success';
+                } else if (response.status === 401 || response.status === 403) {
+                    testResult.innerHTML = '<i class="fas fa-times-circle"></i> Chave inválida. Confira se colou certo.';
+                    testResult.className = 'result-error';
+                } else {
+                    testResult.innerHTML = `<i class="fas fa-times-circle"></i> A Brapi respondeu com erro (${response.status}).`;
+                    testResult.className = 'result-error';
+                }
+            } catch (err) {
+                testResult.innerHTML = '<i class="fas fa-times-circle"></i> Sem conexão com a internet.';
+                testResult.className = 'result-error';
+            }
         }
 
         function resetPassword() {
