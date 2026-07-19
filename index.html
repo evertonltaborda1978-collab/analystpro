@@ -455,10 +455,15 @@
         .stat-label { font-size: 0.9rem; opacity: 0.8; }
         .login-container { min-height: 100vh; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; padding: 2rem; }
         .login-box { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
-        .user-selection { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
-        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: white; cursor: pointer; text-align: center; transition: all 0.3s ease; }
+        .user-selection { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: white; cursor: pointer; text-align: center; transition: all 0.3s ease; position: relative; }
         .user-btn:hover { border-color: var(--primary); background: #f0f7ff; }
         .user-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
+        .user-btn.add-portfolio-btn { border-style: dashed; color: var(--secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .user-btn.add-portfolio-btn:hover { color: var(--primary); }
+        .portfolio-manage-icons { position: absolute; top: 4px; right: 6px; display: flex; gap: 4px; }
+        .portfolio-manage-icons i { font-size: 0.75rem; opacity: 0.6; padding: 2px; }
+        .portfolio-manage-icons i:hover { opacity: 1; }
         .mode-selection { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
         .mode-btn { padding: 0.75rem; border: 2px solid var(--border); border-radius: 6px; background: white; cursor: pointer; text-align: center; transition: all 0.3s ease; }
         .mode-btn:hover { border-color: var(--primary); }
@@ -831,21 +836,10 @@
                     <p style="color: var(--secondary);">Sistema Seguro de Carteira de Ações</p>
                 </div>
 
-                <!-- SELEÇÃO DE USUÁRIO -->
+                <!-- SELEÇÃO DE CARTEIRA -->
                 <div>
-                    <h4><i class="fas fa-users"></i> Quem está acessando?</h4>
-                    <div class="user-selection">
-                        <div class="user-btn active" data-user="pai" onclick="selectUser('pai')">
-                            <i class="fas fa-user-tie"></i><br>
-                            <strong>Papai</strong><br>
-                            <small>Minha carteira principal</small>
-                        </div>
-                        <div class="user-btn" data-user="filha" onclick="selectUser('filha')">
-                            <i class="fas fa-user-graduate"></i><br>
-                            <strong>Filha</strong><br>
-                            <small>Carteira da filha</small>
-                        </div>
-                    </div>
+                    <h4><i class="fas fa-users"></i> Qual carteira você quer acessar?</h4>
+                    <div class="user-selection" id="userSelectionGrid"></div>
                 </div>
 
                 <!-- SISTEMA DE LOGIN COM SENHA -->
@@ -857,11 +851,15 @@
                     <div class="forgot-password">
                         <a href="#" onclick="resetPassword()">Esqueci minha senha</a>
                     </div>
+
+                    <button class="login-btn" onclick="login()" id="loginAppBtn">
+                        <i class="fas fa-sign-in-alt"></i> Entrar no AnalystPro
+                    </button>
                 </div>
 
                 <!-- CONFIGURAÇÃO DE CONEXÃO -->
                 <div class="api-config" id="apiConfigSection">
-                    <h4><i class="fas fa-wifi"></i> Configuração de Conexão</h4>
+                    <h4><i class="fas fa-wifi"></i> Configuração de Conexão <small style="font-weight: 400; color: var(--secondary);">(opcional — sua chave já fica salva)</small></h4>
                     
                     <div class="mode-selection">
                         <div class="mode-btn active" data-mode="online" onclick="selectMode('online')">
@@ -901,10 +899,6 @@
                             Você acessará seus dados salvos localmente.
                         </p>
                     </div>
-
-                    <button class="login-btn" onclick="login()" id="loginAppBtn">
-                        <i class="fas fa-sign-in-alt"></i> Entrar no AnalystPro
-                    </button>
                 </div>
             </div>
         </div>
@@ -1214,34 +1208,98 @@
         const WATCHLIST_PADRAO = ['TAEE11', 'TRPL4', 'BBAS3', 'BBDC4', 'ITSA4', 'CMIG4', 'CPLE6', 'EGIE3', 'SAPR11', 'VIVT3', 'PETR4', 'VALE3'];
 
         // DADOS EXPANDIDOS
-        const userCredentials = {
-            'pai': { username: 'admin', password: '1234', name: 'Papai', email: 'pai@email.com', phone: '+5511999999999' },
-            'filha': { username: 'filha', password: '1234', name: 'Filha', email: 'filha@email.com', phone: '+5511888888888' }
-        };
+        // Todas as carteiras compartilham o mesmo login (é uso pessoal/familiar, não contas
+        // separadas de verdade) — o que muda entre elas é só o nome e os ativos guardados.
+        const MASTER_CREDENTIALS = { username: 'admin', password: '1234' };
+
+        function getUserCredentials(id) {
+            const portfolio = portfolioList.find((p) => p.id === id);
+            return { ...MASTER_CREDENTIALS, name: portfolio ? portfolio.name : id };
+        }
 
         const samplePortfolioData = {
             'pai': [
                 { symbol: 'PETR4', quantity: 100, avgPrice: 32.50, fairPrice: 30.00, sector: 'Energia' },
                 { symbol: 'VALE3', quantity: 50, avgPrice: 68.90, fairPrice: 65.00, sector: 'Materiais Básicos' },
                 { symbol: 'ITUB4', quantity: 80, avgPrice: 32.15, fairPrice: 35.00, sector: 'Financeiro' }
-            ],
-            'filha': [
-                { symbol: 'PETR4', quantity: 10, avgPrice: 31.80, fairPrice: 29.00, sector: 'Energia' },
-                { symbol: 'WEGE3', quantity: 5, avgPrice: 36.75, fairPrice: 40.00, sector: 'Industrial' }
             ]
         };
+
+        // Lista de carteiras disponíveis — guardada no localStorage, começa só com a principal
+        let portfolioList = JSON.parse(localStorage.getItem('portfolio_list') || 'null') || [
+            { id: 'pai', name: 'Minha Carteira Principal', icon: 'fa-briefcase' }
+        ];
+
+        function savePortfolioList() {
+            localStorage.setItem('portfolio_list', JSON.stringify(portfolioList));
+        }
+
+        function renderUserSelection() {
+            const grid = document.getElementById('userSelectionGrid');
+            if (!grid) return;
+            grid.innerHTML = portfolioList.map((p) => `
+                <div class="user-btn${p.id === selectedUser ? ' active' : ''}" data-user="${p.id}" onclick="selectUser('${p.id}')">
+                    ${portfolioList.length > 1 ? `
+                        <div class="portfolio-manage-icons">
+                            <i class="fas fa-pen" title="Renomear" onclick="event.stopPropagation(); renamePortfolio('${p.id}')"></i>
+                            <i class="fas fa-trash" title="Remover" onclick="event.stopPropagation(); removePortfolio('${p.id}')"></i>
+                        </div>
+                    ` : ''}
+                    <i class="fas ${p.icon || 'fa-briefcase'}"></i><br>
+                    <strong>${p.name}</strong>
+                </div>
+            `).join('') + `
+                <div class="user-btn add-portfolio-btn" onclick="addPortfolio()">
+                    <i class="fas fa-plus" style="font-size: 1.3rem; margin-bottom: 0.3rem;"></i>
+                    <strong>Adicionar carteira</strong>
+                </div>
+            `;
+        }
+
+        function addPortfolio() {
+            const name = prompt('Nome da nova carteira (ex: Aposentadoria, Filho, Longo Prazo):');
+            if (!name || !name.trim()) return;
+            const id = 'cart_' + Date.now();
+            portfolioList.push({ id, name: name.trim(), icon: 'fa-wallet' });
+            savePortfolioList();
+            localStorage.setItem(`portfolio_${id}`, JSON.stringify([]));
+            renderUserSelection();
+            showNotification(`✅ Carteira "${name.trim()}" criada!`, 'success');
+        }
+
+        function renamePortfolio(id) {
+            const portfolio = portfolioList.find((p) => p.id === id);
+            if (!portfolio) return;
+            const newName = prompt('Novo nome da carteira:', portfolio.name);
+            if (!newName || !newName.trim()) return;
+            portfolio.name = newName.trim();
+            savePortfolioList();
+            renderUserSelection();
+            if (selectedUser === id) document.getElementById('currentUser').textContent = newName.trim();
+        }
+
+        function removePortfolio(id) {
+            if (portfolioList.length <= 1) {
+                showNotification('⚠️ Precisa manter pelo menos uma carteira.', 'warning');
+                return;
+            }
+            const portfolio = portfolioList.find((p) => p.id === id);
+            if (!confirm(`Remover a carteira "${portfolio.name}"? Os ativos dela serão apagados também.`)) return;
+            portfolioList = portfolioList.filter((p) => p.id !== id);
+            savePortfolioList();
+            localStorage.removeItem(`portfolio_${id}`);
+            if (selectedUser === id) selectUser(portfolioList[0].id);
+            renderUserSelection();
+        }
 
         // FUNÇÕES DE SELEÇÃO
         function selectUser(user) {
             selectedUser = user;
-            document.querySelectorAll('.user-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`.user-btn[data-user="${user}"]`).classList.add('active');
-            
-            document.getElementById('username').value = userCredentials[user].username;
+            renderUserSelection();
+            document.getElementById('username').value = getUserCredentials(user).username;
             document.getElementById('password').value = '';
         }
+
 
         function selectMode(mode) {
             selectedMode = mode;
@@ -1268,7 +1326,7 @@
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const userCred = userCredentials[selectedUser];
+            const userCred = getUserCredentials(selectedUser);
 
             if (username !== userCred.username || password !== userCred.password) {
                 showNotification('❌ Usuário ou senha incorretos', 'error');
@@ -1281,7 +1339,7 @@
 
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
-            document.getElementById('currentUser').textContent = userCredentials[selectedUser].name;
+            document.getElementById('currentUser').textContent = getUserCredentials(selectedUser).name;
             document.getElementById('currentMode').textContent = selectedMode === 'online' ? 'Online' : 'Offline';
 
             initializeDashboard();
@@ -1480,7 +1538,7 @@
             isUsingSampleData = !savedPortfolio;
             userPortfolios[selectedUser] = savedPortfolio ? 
                 JSON.parse(savedPortfolio) : 
-                JSON.parse(JSON.stringify(samplePortfolioData[selectedUser]));
+                JSON.parse(JSON.stringify(samplePortfolioData[selectedUser] || []));
             
             const savedTargets = localStorage.getItem(`priceTargets_${selectedUser}`);
             priceTargets = savedTargets ? JSON.parse(savedTargets) : {};
@@ -2240,7 +2298,7 @@
 
         // INICIALIZAÇÃO
         document.addEventListener('DOMContentLoaded', function() {
-            selectUser('pai');
+            selectUser(portfolioList[0].id);
             selectMode('online');
 
             if (brapiToken) document.getElementById('brapiToken').value = brapiToken;
