@@ -419,6 +419,32 @@
                 width: 92%;
                 padding: 1.25rem;
             }
+
+            .recovery-options {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem 1rem;
+            }
+
+            .nav-item {
+                font-size: 0.85rem;
+            }
+
+            .top-header h1 {
+                font-size: 1.3rem;
+            }
+
+            .stats-grid {
+                gap: 0.75rem;
+            }
         }
 
         @media (max-width: 420px) {
@@ -438,6 +464,16 @@
             .portfolio-table td {
                 padding: 0.5rem;
                 font-size: 0.85rem;
+            }
+
+            .stats-grid,
+            .mode-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content > div {
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
 
@@ -539,6 +575,10 @@
     </style>
 </head>
 <body>
+    <div id="updateBanner" style="display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: #1e293b; color: #fff; text-align: center; padding: 10px 12px; font-size: 13px; font-weight: 700; cursor: pointer;" onclick="applyUpdate()">
+        🔄 Nova versão disponível — toque para atualizar
+    </div>
+
     <!-- NAVEGAÇÃO PRINCIPAL COM NOVAS ABAS -->
     <nav class="main-nav">
         <div class="nav-container">
@@ -1186,6 +1226,36 @@
         // =============================================
         // SISTEMA COMPLETO COM TODAS AS MELHORIAS
         // =============================================
+
+        // ── Verificação de nova versão ──
+        // Esse número muda toda vez que uma atualização nova é entregue. O app compara
+        // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
+        // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
+        const APP_BUILD = '2026-07-19-02';
+
+        async function checkForUpdate() {
+            try {
+                const res = await fetch(`${location.pathname}?_=${Date.now()}`, { cache: 'no-store' });
+                if (!res.ok) return;
+                const html = await res.text();
+                const match = html.match(/const APP_BUILD = '([^']+)'/);
+                if (match && match[1] !== APP_BUILD) {
+                    document.getElementById('updateBanner').style.display = 'block';
+                }
+            } catch (err) {
+                // sem internet ou erro de rede: falha silenciosa
+            }
+        }
+
+        function applyUpdate() {
+            location.reload();
+        }
+
+        checkForUpdate();
+        setInterval(checkForUpdate, 10 * 60 * 1000);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') checkForUpdate();
+        });
 
         // VARIÁVEIS GLOBAIS EXPANDIDAS
         let selectedUser = 'pai';
