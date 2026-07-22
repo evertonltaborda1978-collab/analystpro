@@ -392,6 +392,9 @@
         .stat-label { font-size: 0.9rem; opacity: 0.8; }
         .login-container { min-height: 100vh; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; padding: 2rem; }
         .login-box { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        .login-header-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+        .login-section { margin-bottom: 1rem; }
         .user-selection { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
         .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: white; cursor: pointer; text-align: center; transition: all 0.3s ease; position: relative; }
         .user-btn:hover { border-color: var(--primary); background: #f0f7ff; }
@@ -567,12 +570,47 @@
                 padding: 1.75rem 1.25rem;
             }
 
+            .login-header {
+                margin-bottom: 1rem;
+            }
+
+            .login-header-icon {
+                font-size: 1.75rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .login-box h2 {
+                font-size: 1.3rem;
+                margin-bottom: 0.15rem;
+            }
+
+            .login-box .login-header p {
+                font-size: 0.85rem;
+            }
+
+            .login-section {
+                margin-bottom: 0.5rem;
+            }
+
+            .login-section h4,
+            .login-form h4,
+            .api-config h4 {
+                font-size: 0.95rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .login-form {
+                margin-top: 0.5rem;
+            }
+
             .login-container {
                 padding: 1rem;
             }
 
             .user-selection {
                 grid-template-columns: 1fr;
+                gap: 0.6rem;
+                margin: 0.75rem 0;
             }
 
             .modal-content {
@@ -943,8 +981,8 @@
         <!-- TELA DE LOGIN -->
         <div id="loginScreen" class="login-container">
             <div class="login-box">
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">
+                <div class="login-header">
+                    <div class="login-header-icon">
                         <i class="fas fa-lock"></i>
                     </div>
                     <h2>AnalystPro</h2>
@@ -952,7 +990,7 @@
                 </div>
 
                 <!-- SELEÇÃO DE CARTEIRA -->
-                <div>
+                <div class="login-section">
                     <h4><i class="fas fa-users"></i> Qual carteira você quer acessar?</h4>
                     <div class="user-selection" id="userSelectionGrid"></div>
                 </div>
@@ -1310,7 +1348,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-03';
+        const APP_BUILD = '2026-07-22-04';
 
         async function checkForUpdate() {
             try {
