@@ -30,6 +30,7 @@
             color: var(--dark);
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         /* NAVEGAÇÃO */
@@ -225,6 +226,7 @@
             display: flex;
             gap: 1rem;
             margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
 
         .chart-period-btn {
@@ -364,119 +366,6 @@
             border: 1px solid var(--border);
         }
 
-        /* RESPONSIVIDADE */
-        @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .nav-menu {
-                gap: 1rem;
-            }
-
-            .search-box {
-                width: 100%;
-            }
-
-            .search-input {
-                width: 100%;
-            }
-
-            .analytics-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-metrics {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .header-content {
-                flex-wrap: wrap;
-                gap: 0.75rem;
-                padding: 0 1rem;
-            }
-
-            .stock-info,
-            .dashboard {
-                padding: 0 1rem;
-            }
-
-            .login-box {
-                padding: 1.75rem 1.25rem;
-            }
-
-            .user-selection {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                width: 92%;
-                padding: 1.25rem;
-            }
-
-            .recovery-options {
-                grid-template-columns: 1fr;
-            }
-
-            .card {
-                padding: 1rem;
-            }
-
-            .nav-menu {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 0.5rem 1rem;
-            }
-
-            .nav-item {
-                font-size: 0.85rem;
-            }
-
-            .top-header h1 {
-                font-size: 1.3rem;
-            }
-
-            .stats-grid {
-                gap: 0.75rem;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .login-container {
-                padding: 1rem;
-            }
-
-            .stock-title {
-                flex-wrap: wrap;
-            }
-
-            .stock-price {
-                font-size: 2rem;
-            }
-
-            .portfolio-table th,
-            .portfolio-table td {
-                padding: 0.5rem;
-                font-size: 0.85rem;
-            }
-
-            .stats-grid,
-            .mode-selection {
-                grid-template-columns: 1fr;
-            }
-
-            .header-content > div {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-        }
-
         /* ESTILOS EXISTENTES */
         .status-header { background: linear-gradient(135deg, #1e293b, #374151); color: white; padding: 2rem 0; }
         .stock-info { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
@@ -572,6 +461,127 @@
         .quick-settings button:hover { transform: translateY(-2px); }
         .analysis-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .view-actions-btn { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .header-content {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                padding: 0 1rem;
+            }
+
+            .stock-info,
+            .dashboard {
+                padding: 0 1rem;
+            }
+
+            .login-box {
+                padding: 1.75rem 1.25rem;
+            }
+
+            .user-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 92%;
+                padding: 1.25rem;
+            }
+
+            .recovery-options {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem 1rem;
+            }
+
+            .nav-item {
+                font-size: 0.85rem;
+            }
+
+            .top-header h1 {
+                font-size: 1.3rem;
+            }
+
+            .stats-grid {
+                gap: 0.75rem;
+            }
+
+            .analytics-container {
+                padding: 1rem;
+            }
+
+            .analytics-card {
+                padding: 1.25rem;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .login-container {
+                padding: 1rem;
+            }
+
+            .stock-title {
+                flex-wrap: wrap;
+            }
+
+            .stock-price {
+                font-size: 2rem;
+            }
+
+            .portfolio-table th,
+            .portfolio-table td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .stats-grid,
+            .mode-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content > div {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -1231,7 +1241,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-19-02';
+        const APP_BUILD = '2026-07-22-01';
 
         async function checkForUpdate() {
             try {
