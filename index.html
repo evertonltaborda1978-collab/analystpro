@@ -1139,15 +1139,9 @@
             <div class="card">
                 <h3><i class="fas fa-bell"></i> Sistema de Alertas Inteligentes</h3>
                 
-                <div class="alert-banner pulse">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div>
-                        <strong>ALERTA ATIVO:</strong> PETR4 atingiu R$ 32,50 (acima do preço justo)
-                    </div>
-                    <button class="action-btn" style="background: var(--danger);" onclick="dismissAlert('petr4')">
-                        <i class="fas fa-times"></i> Dispensar
-                    </button>
-                </div>
+                <div id="triggeredAlertsContainer"></div>
+
+                <div id="autoSignalsContainer"></div>
 
                 <div id="alertsContent">
                     <div class="form-group">
@@ -1562,7 +1556,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-10';
+        const APP_BUILD = '2026-07-22-11';
 
         async function checkForUpdate() {
             try {
@@ -1938,6 +1932,28 @@
             const percent = analise.percent;
             const markerLeft = 100 - percent;
 
+            // Aviso de queda/mínima de 12 meses — só aparece combinado com a nota geral (nunca sozinho),
+            // pra deixar claro que preço em queda por si só não é motivo de compra.
+            let sinalHtml = '';
+            const changePercent = data.regularMarketChangePercent;
+            const low52 = data.fiftyTwoWeekLow;
+            const high52 = data.fiftyTwoWeekHigh;
+            const caiuForte = typeof changePercent === 'number' && changePercent <= -3;
+            let pertoMinima = false;
+            if (typeof low52 === 'number' && typeof high52 === 'number' && high52 > low52) {
+                pertoMinima = ((data.regularMarketPrice - low52) / (high52 - low52)) * 100 <= 10;
+            }
+            if ((caiuForte || pertoMinima) && percent >= 40) {
+                const motivo = caiuForte
+                    ? `caiu ${changePercent.toFixed(2)}% hoje`
+                    : 'está perto da mínima de 12 meses';
+                sinalHtml = `
+                    <div style="margin-top:0.6rem; padding:0.6rem 0.75rem; background:rgba(59,130,246,0.1); border-radius:6px; font-size:0.8rem; color: var(--primary);">
+                        <i class="fas fa-info-circle"></i> ${symbol} ${motivo}, e os fundamentos acima ainda parecem razoáveis — vale olhar com mais atenção (não é indicação de compra).
+                    </div>
+                `;
+            }
+
             return `
                 <div class="analytics-card" style="border-left: 4px solid ${analise.color};">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 0.25rem;">
@@ -1956,6 +1972,8 @@
                     <ul style="margin:0.75rem 0 0; padding-left:1.2rem; font-size:0.85rem; color: var(--secondary); line-height: 1.5;">
                         ${analise.motivos.map((m) => `<li>${m}</li>`).join('')}
                     </ul>
+
+                    ${sinalHtml}
                 </div>
             `;
         }
@@ -2007,6 +2025,8 @@
             updatePortfolioSummary();
             initializePerformanceChart();
             loadAlerts();
+            checkTriggeredAlerts();
+            renderAutoSignals();
             loadDividends();
             updateDashboardMetrics();
             
@@ -2382,6 +2402,12 @@
             if (sectionName === 'analise') {
                 renderRecommendations();
             }
+
+            if (sectionName === 'alertas') {
+                loadAlerts();
+                checkTriggeredAlerts();
+                renderAutoSignals();
+            }
             
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
@@ -2678,6 +2704,7 @@
             localStorage.setItem(`alerts_${selectedUser}`, JSON.stringify(userAlerts[selectedUser]));
             showNotification('Alerta criado com sucesso!', 'success');
             loadAlerts();
+            checkTriggeredAlerts();
         }
 
         function loadAlerts() {
@@ -2693,7 +2720,7 @@
                 <div class="user-item">
                     <div>
                         <strong>${alert.stock}</strong><br>
-                        <small>${alert.type === 'above' ? 'Acima de' : 'Abaixo de'} R$ ${alert.value}</small>
+                        <small>${alert.type === 'above' ? 'Acima de R$ ' + alert.value : alert.type === 'below' ? 'Abaixo de R$ ' + alert.value : 'Variação de ' + alert.value + '%'}</small>
                     </div>
                     <button class="action-btn delete-btn" onclick="deleteAlert(${index})">
                         <i class="fas fa-trash"></i>
@@ -2706,11 +2733,110 @@
             userAlerts[selectedUser].splice(index, 1);
             localStorage.setItem(`alerts_${selectedUser}`, JSON.stringify(userAlerts[selectedUser]));
             loadAlerts();
+            checkTriggeredAlerts();
             showNotification('Alerta removido!', 'success');
         }
 
-        function dismissAlert(stock) {
-            showNotification(`Alerta para ${stock} dispensado`, 'success');
+        // Alertas que o usuário já dispensou nesta sessão (evita ficar repetindo o mesmo aviso)
+        let dismissedAlertKeys = new Set();
+
+        // Confere os alertas configurados manualmente pelo usuário contra o preço/variação atual
+        function checkTriggeredAlerts() {
+            const container = document.getElementById('triggeredAlertsContainer');
+            if (!container) return;
+
+            const alerts = userAlerts[selectedUser] || [];
+            const triggered = [];
+
+            alerts.forEach((alert, index) => {
+                const currentPrice = livePrices[alert.stock]?.regularMarketPrice;
+                const changePercent = livePrices[alert.stock]?.regularMarketChangePercent;
+                if (currentPrice === undefined) return;
+
+                const key = `${alert.stock}-${alert.type}-${alert.value}`;
+                if (dismissedAlertKeys.has(key)) return;
+
+                let hit = false;
+                let mensagem = '';
+
+                if (alert.type === 'above' && currentPrice >= alert.value) {
+                    hit = true;
+                    mensagem = `${alert.stock} atingiu R$ ${currentPrice.toFixed(2)} — acima do valor configurado (R$ ${alert.value.toFixed(2)}).`;
+                } else if (alert.type === 'below' && currentPrice <= alert.value) {
+                    hit = true;
+                    mensagem = `${alert.stock} caiu para R$ ${currentPrice.toFixed(2)} — abaixo do valor configurado (R$ ${alert.value.toFixed(2)}).`;
+                } else if (alert.type === 'change' && typeof changePercent === 'number' && Math.abs(changePercent) >= alert.value) {
+                    hit = true;
+                    mensagem = `${alert.stock} variou ${changePercent.toFixed(2)}% hoje — acima do limite configurado (${alert.value}%).`;
+                }
+
+                if (hit) triggered.push({ key, mensagem });
+            });
+
+            container.innerHTML = triggered.map(t => `
+                <div class="alert-banner pulse">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div><strong>ALERTA:</strong> ${t.mensagem}</div>
+                    <button class="action-btn" style="background: var(--danger);" onclick="dismissAlert('${t.key}')">
+                        <i class="fas fa-times"></i> Dispensar
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Sinais automáticos e informativos: aponta ações da carteira que caíram bastante no dia
+        // ou estão perto da mínima de 12 meses. Isso NÃO é uma recomendação de compra — é só um
+        // ponto de atenção; a decisão de comprar ou não depende de outros fatores (veja Análise de Ações).
+        function renderAutoSignals() {
+            const container = document.getElementById('autoSignalsContainer');
+            if (!container) return;
+
+            const portfolio = userPortfolios[selectedUser] || [];
+            const sinais = [];
+
+            portfolio.forEach((asset) => {
+                const quote = livePrices[asset.symbol];
+                if (!quote || typeof quote.regularMarketPrice !== 'number') return;
+
+                const changePercent = quote.regularMarketChangePercent;
+                const price = quote.regularMarketPrice;
+                const low52 = quote.fiftyTwoWeekLow;
+                const high52 = quote.fiftyTwoWeekHigh;
+
+                const caiuForte = typeof changePercent === 'number' && changePercent <= -3;
+                let pertoMinima = false;
+                let posicaoPct = null;
+                if (typeof low52 === 'number' && typeof high52 === 'number' && high52 > low52) {
+                    posicaoPct = ((price - low52) / (high52 - low52)) * 100;
+                    pertoMinima = posicaoPct <= 10;
+                }
+
+                if (caiuForte || pertoMinima) {
+                    const motivos = [];
+                    if (caiuForte) motivos.push(`caiu ${changePercent.toFixed(2)}% hoje`);
+                    if (pertoMinima) motivos.push(`está a ${posicaoPct.toFixed(0)}% da faixa de 52 semanas (perto da mínima)`);
+                    sinais.push({ symbol: asset.symbol, texto: motivos.join(' e ') });
+                }
+            });
+
+            if (sinais.length === 0) { container.innerHTML = ''; return; }
+
+            container.innerHTML = `
+                <div class="alert-banner" style="background: linear-gradient(135deg, #dbeafe, #3b82f6); color: #1e3a8a;">
+                    <i class="fas fa-info-circle"></i>
+                    <div style="flex: 1;">
+                        <strong>Pontos de atenção na sua carteira</strong> (não é recomendação de compra, só um sinal a mais pra você avaliar):
+                        <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem;">
+                            ${sinais.map(s => `<li><strong>${s.symbol}</strong> ${s.texto}. Veja a análise completa na aba Análise de Ações antes de decidir.</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function dismissAlert(key) {
+            dismissedAlertKeys.add(key);
+            checkTriggeredAlerts();
         }
 
         // 2. SISTEMA DE DIVIDENDOS
