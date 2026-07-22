@@ -58,6 +58,18 @@
             cursor: pointer;
         }
 
+        .nav-top-row {
+            display: contents;
+        }
+
+        .nav-collapsible {
+            display: contents;
+        }
+
+        .nav-toggle {
+            display: none;
+        }
+
         .nav-menu {
             display: flex;
             gap: 2rem;
@@ -394,6 +406,9 @@
         .mode-btn:hover { border-color: var(--primary); }
         .mode-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
         .api-config { background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid var(--primary); }
+        .api-config-toggle { display: none; align-items: center; gap: 0.5rem; margin: 1.5rem 0 0; padding: 0.6rem 0; background: none; border: none; color: var(--primary); font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+        .api-config-toggle:hover { text-decoration: underline; }
+        .api-config.collapsed { display: none; }
         .form-group { margin-bottom: 1rem; position: relative; }
         .password-toggle { position: absolute; right: 10px; top: 35px; background: none; border: none; color: var(--secondary); cursor: pointer; }
         .login-btn { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: all 0.3s ease; }
@@ -465,11 +480,55 @@
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 0.85rem 1.25rem;
+            }
+
+            .nav-top-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+
+            .nav-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--light);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                color: var(--primary);
+                font-size: 1.2rem;
+                width: 42px;
+                height: 42px;
+                cursor: pointer;
+            }
+
+            .nav-collapsible {
+                display: none;
+                flex-direction: column;
                 gap: 1rem;
+                width: 100%;
+                margin-top: 1rem;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+
+            .nav-collapsible.open {
+                display: flex;
             }
 
             .nav-menu {
-                gap: 1rem;
+                flex-direction: column;
+                gap: 0.35rem;
+                width: 100%;
+            }
+
+            .nav-item {
+                width: 100%;
+                padding: 0.85rem 1rem;
             }
 
             .search-box {
@@ -508,6 +567,10 @@
                 padding: 1.75rem 1.25rem;
             }
 
+            .login-container {
+                padding: 1rem;
+            }
+
             .user-selection {
                 grid-template-columns: 1fr;
             }
@@ -525,14 +588,8 @@
                 padding: 1rem;
             }
 
-            .nav-menu {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 0.5rem 1rem;
-            }
-
             .nav-item {
-                font-size: 0.85rem;
+                font-size: 0.9rem;
             }
 
             .top-header h1 {
@@ -592,34 +649,42 @@
     <!-- NAVEGAÇÃO PRINCIPAL COM NOVAS ABAS -->
     <nav class="main-nav">
         <div class="nav-container">
-            <div class="nav-logo" onclick="showSection('carteira')">
-                <i class="fas fa-chart-line"></i> AnalystPro
-            </div>
-            
-            <div class="nav-menu">
-                <div class="nav-item active" onclick="showSection('carteira')">
-                    <i class="fas fa-wallet"></i> Minha Carteira
+            <div class="nav-top-row">
+                <div class="nav-logo" onclick="showSection('carteira')">
+                    <i class="fas fa-chart-line"></i> AnalystPro
                 </div>
-                <div class="nav-item" onclick="showSection('analise')">
-                    <i class="fas fa-search-dollar"></i> Análise de Ações
-                </div>
-                <div class="nav-item" onclick="showSection('alertas')">
-                    <i class="fas fa-bell"></i> Meus Alertas
-                </div>
-                <div class="nav-item" onclick="showSection('dividendos')">
-                    <i class="fas fa-money-bill-wave"></i> Dividendos
-                </div>
-                <div class="nav-item" onclick="showSection('dashboard')">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </div>
+
+                <button class="nav-toggle" id="navToggleBtn" onclick="toggleMobileNav()" aria-label="Abrir menu">
+                    <i class="fas fa-bars" id="navToggleIcon"></i>
+                </button>
             </div>
 
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" class="search-input" placeholder="Buscar ação (ex: PETR4)" id="stockSearch">
-                <button onclick="searchStock()" style="background: none; border: none; color: var(--primary); cursor: pointer;">
-                    <i class="fas fa-arrow-right"></i>
-                </button>
+            <div class="nav-collapsible" id="navCollapsible">
+                <div class="nav-menu">
+                    <div class="nav-item active" onclick="showSection('carteira')">
+                        <i class="fas fa-wallet"></i> Minha Carteira
+                    </div>
+                    <div class="nav-item" onclick="showSection('analise')">
+                        <i class="fas fa-search-dollar"></i> Análise de Ações
+                    </div>
+                    <div class="nav-item" onclick="showSection('alertas')">
+                        <i class="fas fa-bell"></i> Meus Alertas
+                    </div>
+                    <div class="nav-item" onclick="showSection('dividendos')">
+                        <i class="fas fa-money-bill-wave"></i> Dividendos
+                    </div>
+                    <div class="nav-item" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" placeholder="Buscar ação (ex: PETR4)" id="stockSearch">
+                    <button onclick="searchStock()" style="background: none; border: none; color: var(--primary); cursor: pointer;">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -908,6 +973,10 @@
                 </div>
 
                 <!-- CONFIGURAÇÃO DE CONEXÃO -->
+                <button type="button" class="api-config-toggle" id="apiConfigToggle" onclick="toggleApiConfig()" style="display:none;">
+                    <i class="fas fa-cog"></i> Configurações de conexão
+                </button>
+
                 <div class="api-config" id="apiConfigSection">
                     <h4><i class="fas fa-wifi"></i> Configuração de Conexão <small style="font-weight: 400; color: var(--secondary);">(opcional — sua chave já fica salva)</small></h4>
                     
@@ -1241,7 +1310,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-01';
+        const APP_BUILD = '2026-07-22-03';
 
         async function checkForUpdate() {
             try {
@@ -1883,6 +1952,37 @@
         }
 
         // SISTEMA DE NAVEGAÇÃO - CORRIGIDO
+        function toggleApiConfig() {
+            const section = document.getElementById('apiConfigSection');
+            const toggleBtn = document.getElementById('apiConfigToggle');
+            section.classList.toggle('collapsed');
+            if (section.classList.contains('collapsed')) {
+                toggleBtn.innerHTML = '<i class="fas fa-cog"></i> Configurações de conexão';
+            } else {
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i> Fechar configurações';
+            }
+        }
+
+        function toggleMobileNav() {
+            const collapsible = document.getElementById('navCollapsible');
+            const icon = document.getElementById('navToggleIcon');
+            collapsible.classList.toggle('open');
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+        }
+
+        function closeMobileNav() {
+            const collapsible = document.getElementById('navCollapsible');
+            const icon = document.getElementById('navToggleIcon');
+            if (collapsible) collapsible.classList.remove('open');
+            if (icon) {
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            }
+        }
+
         function showSection(sectionName) {
             document.querySelectorAll('.main-content').forEach(section => {
                 section.classList.remove('content-active');
@@ -1909,6 +2009,8 @@
                     break;
                 }
             }
+
+            closeMobileNav();
         }
 
         // FUNÇÕES DA CARTEIRA - CORRIGIDAS
@@ -2382,9 +2484,24 @@
             selectMode('online');
 
             if (brapiToken) document.getElementById('brapiToken').value = brapiToken;
+
+            const apiConfigSection = document.getElementById('apiConfigSection');
+            const apiConfigToggle = document.getElementById('apiConfigToggle');
+            if (brapiToken && apiConfigSection && apiConfigToggle) {
+                apiConfigSection.classList.add('collapsed');
+                apiConfigToggle.style.display = 'flex';
+            }
             
             document.getElementById('stockSearch').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') searchStock();
+            });
+
+            document.addEventListener('click', function(e) {
+                const nav = document.querySelector('.main-nav');
+                const collapsible = document.getElementById('navCollapsible');
+                if (collapsible && collapsible.classList.contains('open') && nav && !nav.contains(e.target)) {
+                    closeMobileNav();
+                }
             });
             
             document.getElementById('tradeDate').value = new Date().toISOString().split('T')[0];
