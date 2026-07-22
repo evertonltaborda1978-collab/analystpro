@@ -21,9 +21,35 @@
             --light: #f8fafc;
             --border: #e2e8f0;
             --bg: #ffffff;
+            --card-bg: #ffffff;
             --status-green: #00a876;
             --status-red: #f87171;
             --analytics-bg: #f8fafc;
+        }
+
+        [data-theme="dark"] {
+            --primary: #4f8ff7;
+            --primary-dark: #2563eb;
+            --secondary: #9aa1ab;
+            --success: #00c076;
+            --danger: #ff5252;
+            --warning: #f5a623;
+            --dark: #e5e7eb;
+            --light: #1c1f28;
+            --border: #2a2e39;
+            --bg: #0f1115;
+            --card-bg: #171a21;
+            --status-green: #00c076;
+            --status-red: #ff5252;
+            --analytics-bg: #171a21;
+        }
+
+        [data-theme="dark"] .login-container {
+            background: linear-gradient(135deg, #0f1115, #1c1f28);
+        }
+
+        [data-theme="dark"] ::placeholder {
+            color: #6b7280;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,9 +62,77 @@
             overflow-x: hidden;
         }
 
+        input[type="text"], input[type="password"], input[type="number"], input[type="date"], select, textarea {
+            background: var(--card-bg);
+            color: var(--dark);
+        }
+
+        .stock-list { display: none; }
+
+        .stock-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 0.25rem;
+            border-bottom: 1px solid var(--border);
+            gap: 0.75rem;
+        }
+
+        .stock-row:last-child { border-bottom: none; }
+
+        .stock-row-left { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+        .stock-row-ticker { font-weight: 700; color: var(--dark); font-size: 0.95rem; }
+        .stock-row-sub { font-size: 0.75rem; color: var(--secondary); white-space: nowrap; }
+
+        .stock-row-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0; }
+        .stock-row-price { font-weight: 700; color: var(--dark); font-size: 0.95rem; }
+
+        .stock-row-change {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.1rem 0.45rem;
+            border-radius: 5px;
+        }
+
+        .stock-row-change.positive { color: var(--status-green); background: rgba(0, 192, 118, 0.12); }
+        .stock-row-change.negative { color: var(--status-red); background: rgba(255, 82, 82, 0.12); }
+
+        .stock-row-actions { display: flex; gap: 0.5rem; margin-left: 0.5rem; }
+
+        .stock-gauge-wrap {
+            margin: 0.75rem 0 0.25rem;
+        }
+
+        .stock-gauge-percent {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .stock-gauge-track {
+            position: relative;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, var(--status-green), var(--warning), var(--status-red));
+            margin-top: 0.6rem;
+        }
+
+        .stock-gauge-marker {
+            position: absolute;
+            top: -8px;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            line-height: 1;
+        }
+
+        .stock-gauge-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 0.4rem;
+        }
+
         /* NAVEGAÇÃO */
         .main-nav {
-            background: white;
+            background: var(--card-bg);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
@@ -73,6 +167,24 @@
             display: none;
         }
 
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--primary);
+            font-size: 1.1rem;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            display: none;
+        }
+
         .nav-menu {
             display: flex;
             gap: 2rem;
@@ -100,7 +212,7 @@
         .search-box {
             display: flex;
             align-items: center;
-            background: #f8fafc;
+            background: var(--light);
             border-radius: 25px;
             padding: 0.5rem 1rem;
             width: 300px;
@@ -158,7 +270,7 @@
         }
 
         .analytics-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 2rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -182,7 +294,7 @@
         .comparison-item {
             text-align: center;
             padding: 1rem;
-            background: #f8fafc;
+            background: var(--light);
             border-radius: 8px;
             border-left: 4px solid var(--primary);
         }
@@ -250,7 +362,7 @@
         .chart-period-btn {
             padding: 0.5rem 1rem;
             border: 1px solid var(--border);
-            background: white;
+            background: var(--card-bg);
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -274,7 +386,7 @@
             padding: 1rem;
             border: 2px solid var(--border);
             border-radius: 8px;
-            background: white;
+            background: var(--card-bg);
             cursor: pointer;
             text-align: center;
             transition: all 0.3s ease;
@@ -329,7 +441,7 @@
         }
 
         .metric-card {
-            background: white;
+            background: var(--card-bg);
             padding: 1.5rem;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -362,7 +474,7 @@
 
         /* MODAL DE CONFIGURAÇÃO DE USUÁRIO */
         .user-management {
-            background: #f8fafc;
+            background: var(--light);
             padding: 1.5rem;
             border-radius: 8px;
             margin: 1rem 0;
@@ -381,7 +493,7 @@
             flex-wrap: wrap;
             gap: 0.5rem;
             padding: 1rem;
-            background: white;
+            background: var(--card-bg);
             border-radius: 6px;
             border: 1px solid var(--border);
         }
@@ -399,12 +511,12 @@
         .stat-value { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem; }
         .stat-label { font-size: 0.9rem; opacity: 0.8; }
         .login-container { min-height: 100vh; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; padding: 2rem; }
-        .login-box { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        .login-box { background: var(--card-bg); padding: 3rem; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
         .login-header { text-align: center; margin-bottom: 2rem; }
         .login-header-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
         .login-section { margin-bottom: 1rem; }
         .user-selection { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: white; cursor: pointer; text-align: center; transition: all 0.3s ease; position: relative; }
+        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; position: relative; }
         .user-btn:hover { border-color: var(--primary); background: #f0f7ff; }
         .user-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
         .user-btn.add-portfolio-btn { border-style: dashed; color: var(--secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -413,10 +525,10 @@
         .portfolio-manage-icons i { font-size: 0.75rem; opacity: 0.6; padding: 2px; }
         .portfolio-manage-icons i:hover { opacity: 1; }
         .mode-selection { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-        .mode-btn { padding: 0.75rem; border: 2px solid var(--border); border-radius: 6px; background: white; cursor: pointer; text-align: center; transition: all 0.3s ease; }
+        .mode-btn { padding: 0.75rem; border: 2px solid var(--border); border-radius: 6px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; }
         .mode-btn:hover { border-color: var(--primary); }
         .mode-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
-        .api-config { background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid var(--primary); }
+        .api-config { background: var(--light); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid var(--primary); }
         .api-config-toggle { display: none; align-items: center; gap: 0.5rem; margin: 1.5rem 0 0; padding: 0.6rem 0; background: none; border: none; color: var(--primary); font-size: 0.9rem; font-weight: 600; cursor: pointer; }
         .api-config-toggle:hover { text-decoration: underline; }
         .api-config.collapsed { display: none; }
@@ -440,16 +552,16 @@
         .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
         .dashboard { max-width: 1400px; margin: 0 auto; padding: 2rem; }
         .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
-        .card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid var(--primary); }
+        .card { background: var(--card-bg); padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid var(--primary); }
         .card h3 { color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .stat-item { text-align: center; padding: 1rem; background: #f8fafc; border-radius: 8px; }
+        .stat-item { text-align: center; padding: 1rem; background: var(--light); border-radius: 8px; }
         .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
         .stat-label { font-size: 0.9rem; color: var(--secondary); }
         .chart-container { height: 300px; margin-top: 1rem; }
         .portfolio-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
         .portfolio-table th, .portfolio-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
-        .portfolio-table th { background: #f8fafc; font-weight: 600; color: var(--dark); }
+        .portfolio-table th { background: var(--light); font-weight: 600; color: var(--dark); }
         .positive { color: var(--success); }
         .negative { color: var(--danger); }
         .logout-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; transition: all 0.3s ease; }
@@ -466,7 +578,7 @@
         @keyframes glow { 0% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); } 50% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.8); } 100% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); } }
         @keyframes glow-green { 0% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.5); } 50% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.8); } 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.5); } }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+        .modal-content { background: var(--card-bg); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
         .modal h3 { color: var(--primary); margin-bottom: 1rem; }
         .price-input { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; margin: 0.5rem 0; }
         .save-btn { background: var(--success); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; margin-top: 1rem; }
@@ -537,6 +649,60 @@
                 width: 100%;
             }
 
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-collapsible {
+                margin-top: 0.5rem;
+            }
+
+            body {
+                padding-bottom: 64px;
+            }
+
+            .bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                border-top: 1px solid var(--border);
+                z-index: 1500;
+                padding-bottom: env(safe-area-inset-bottom, 0);
+            }
+
+            .bottom-nav-item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 0.2rem;
+                padding: 0.5rem 0.25rem;
+                color: var(--secondary);
+                font-size: 0.65rem;
+                cursor: pointer;
+                text-align: center;
+            }
+
+            .bottom-nav-item i {
+                font-size: 1.1rem;
+            }
+
+            .bottom-nav-item.active {
+                color: var(--primary);
+            }
+
+            .portfolio-table-wrap {
+                display: none;
+            }
+
+            .stock-list {
+                display: block;
+            }
+
             .nav-item {
                 width: 100%;
                 padding: 0.85rem 1rem;
@@ -583,17 +749,17 @@
             }
 
             .login-header-icon {
-                font-size: 1.75rem;
-                margin-bottom: 0.4rem;
+                font-size: 1.4rem;
+                margin-bottom: 0.3rem;
             }
 
             .login-box h2 {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
                 margin-bottom: 0.15rem;
             }
 
             .login-box .login-header p {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
             }
 
             .login-section {
@@ -603,8 +769,17 @@
             .login-section h4,
             .login-form h4,
             .api-config h4 {
-                font-size: 0.95rem;
-                margin-bottom: 0.5rem;
+                font-size: 0.85rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .user-btn {
+                padding: 0.7rem;
+                font-size: 0.85rem;
+            }
+
+            .user-btn i {
+                font-size: 1.1rem;
             }
 
             .login-form {
@@ -700,9 +875,15 @@
                     <i class="fas fa-chart-line"></i> AnalystPro
                 </div>
 
-                <button class="nav-toggle" id="navToggleBtn" onclick="toggleMobileNav()" aria-label="Abrir menu">
-                    <i class="fas fa-bars" id="navToggleIcon"></i>
-                </button>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Alternar tema">
+                        <i class="fas fa-moon" id="themeToggleIcon"></i>
+                    </button>
+
+                    <button class="nav-toggle" id="navToggleBtn" onclick="toggleMobileNav()" aria-label="Abrir menu">
+                        <i class="fas fa-bars" id="navToggleIcon"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="nav-collapsible" id="navCollapsible">
@@ -732,6 +913,30 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </nav>
+
+    <!-- MENU INFERIOR (estilo app nativo, aparece só no celular) -->
+    <nav class="bottom-nav" id="bottomNav">
+        <div class="bottom-nav-item active" data-section="carteira" onclick="showSection('carteira')">
+            <i class="fas fa-wallet"></i>
+            <span>Carteira</span>
+        </div>
+        <div class="bottom-nav-item" data-section="analise" onclick="showSection('analise')">
+            <i class="fas fa-search-dollar"></i>
+            <span>Análise</span>
+        </div>
+        <div class="bottom-nav-item" data-section="alertas" onclick="showSection('alertas')">
+            <i class="fas fa-bell"></i>
+            <span>Alertas</span>
+        </div>
+        <div class="bottom-nav-item" data-section="dividendos" onclick="showSection('dividendos')">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Dividendos</span>
+        </div>
+        <div class="bottom-nav-item" data-section="dashboard" onclick="showSection('dashboard')">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
         </div>
     </nav>
 
@@ -1163,7 +1368,7 @@
                         </div>
                     </div>
                     <div id="sampleDataBanner"></div>
-                    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;" class="portfolio-table-wrap">
                     <table class="portfolio-table">
                         <thead>
                             <tr>
@@ -1187,6 +1392,7 @@
                         </tbody>
                     </table>
                     </div>
+                    <div id="portfolioMobileList" class="stock-list"></div>
                 </div>
 
                 <!-- HISTÓRICO DE OPERAÇÕES -->
@@ -1356,7 +1562,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-06';
+        const APP_BUILD = '2026-07-22-09';
 
         async function checkForUpdate() {
             try {
@@ -1606,6 +1812,8 @@
             if (!data || typeof data.regularMarketPrice !== 'number') return null;
 
             const stats = data.defaultKeyStatistics || {};
+            const fin = data.financialData || {};
+
             const dy = typeof stats.dividendYield === 'number' ? stats.dividendYield : null;
             const pl = typeof stats.trailingPE === 'number' ? stats.trailingPE
                      : (typeof stats.forwardPE === 'number' ? stats.forwardPE : null);
@@ -1615,38 +1823,93 @@
                          : (typeof stats.fiftyTwoWeekHigh === 'number' ? stats.fiftyTwoWeekHigh : null);
             const price = data.regularMarketPrice;
 
+            const roe = typeof fin.returnOnEquity === 'number' ? fin.returnOnEquity : null;
+            const profitMargin = typeof fin.profitMargins === 'number' ? fin.profitMargins : null;
+            const revenueGrowth = typeof fin.revenueGrowth === 'number' ? fin.revenueGrowth : null;
+            const debtToEquity = typeof fin.debtToEquity === 'number' ? fin.debtToEquity : null;
+            const currentRatio = typeof fin.currentRatio === 'number' ? fin.currentRatio : null;
+
             let pontos = 0;
+            let maxPontos = 0;
             const motivos = [];
 
+            // ── VALUATION (a ação está cara ou barata?) ──
             if (dy !== null) {
+                maxPontos += 2;
                 const dyPct = dy * 100;
-                if (dyPct >= 6) { pontos += 2; motivos.push(`Paga ${dyPct.toFixed(1)}% de dividendos ao ano — acima da média do mercado.`); }
-                else if (dyPct >= 3) { pontos += 1; motivos.push(`Paga ${dyPct.toFixed(1)}% de dividendos ao ano — razoável.`); }
-                else { motivos.push(`Paga só ${dyPct.toFixed(1)}% de dividendos ao ano — baixo, se seu foco é renda.`); }
+                if (dyPct >= 6) { pontos += 2; motivos.push(`💰 Paga ${dyPct.toFixed(1)}% de dividendos ao ano — acima da média do mercado.`); }
+                else if (dyPct >= 3) { pontos += 1; motivos.push(`💰 Paga ${dyPct.toFixed(1)}% de dividendos ao ano — razoável.`); }
+                else { motivos.push(`💰 Paga só ${dyPct.toFixed(1)}% de dividendos ao ano — baixo, se seu foco é renda.`); }
             } else {
-                motivos.push('Dividend yield não disponível para esta ação no seu plano/chave da Brapi.');
+                motivos.push('💰 Dividend yield não disponível para esta ação.');
             }
 
             if (pl !== null && pl > 0) {
-                if (pl < 8) { pontos += 2; motivos.push(`P/L de ${pl.toFixed(1)} — o preço parece barato perto do lucro da empresa.`); }
-                else if (pl < 15) { pontos += 1; motivos.push(`P/L de ${pl.toFixed(1)} — preço razoável perto do lucro.`); }
-                else { motivos.push(`P/L de ${pl.toFixed(1)} — preço relativamente caro perto do lucro atual.`); }
+                maxPontos += 2;
+                if (pl < 8) { pontos += 2; motivos.push(`📊 P/L de ${pl.toFixed(1)} — o preço parece barato perto do lucro da empresa.`); }
+                else if (pl < 15) { pontos += 1; motivos.push(`📊 P/L de ${pl.toFixed(1)} — preço razoável perto do lucro.`); }
+                else { motivos.push(`📊 P/L de ${pl.toFixed(1)} — preço relativamente caro perto do lucro atual.`); }
             }
 
             if (low52 !== null && high52 !== null && high52 > low52) {
+                maxPontos += 2;
                 const posicao = (price - low52) / (high52 - low52);
-                if (posicao <= 0.3) { pontos += 2; motivos.push(`Está perto da mínima dos últimos 12 meses (${(posicao * 100).toFixed(0)}% da faixa) — pode estar descontada.`); }
-                else if (posicao >= 0.85) { motivos.push('Está perto da máxima dos últimos 12 meses — pode estar cara no momento.'); }
-                else { motivos.push('Está no meio da faixa de preço dos últimos 12 meses.'); }
+                if (posicao <= 0.3) { pontos += 2; motivos.push(`📉 Está perto da mínima dos últimos 12 meses (${(posicao * 100).toFixed(0)}% da faixa) — pode estar descontada.`); }
+                else if (posicao >= 0.85) { motivos.push('📈 Está perto da máxima dos últimos 12 meses — pode estar cara no momento.'); }
+                else { motivos.push('↔️ Está no meio da faixa de preço dos últimos 12 meses.'); }
             }
 
+            // ── QUALIDADE (a empresa é bem administrada?) ──
+            if (roe !== null) {
+                maxPontos += 2;
+                const roePct = roe * 100;
+                if (roePct >= 15) { pontos += 2; motivos.push(`⭐ ROE de ${roePct.toFixed(1)}% — a empresa é bem eficiente gerando lucro com o capital dos acionistas.`); }
+                else if (roePct >= 8) { pontos += 1; motivos.push(`⭐ ROE de ${roePct.toFixed(1)}% — rentabilidade razoável sobre o patrimônio.`); }
+                else { motivos.push(`⭐ ROE de ${roePct.toFixed(1)}% — rentabilidade sobre o patrimônio abaixo do ideal.`); }
+            }
+
+            if (profitMargin !== null) {
+                maxPontos += 1;
+                const pmPct = profitMargin * 100;
+                if (pmPct >= 15) { pontos += 1; motivos.push(`🏭 Margem líquida de ${pmPct.toFixed(1)}% — converte bem receita em lucro.`); }
+                else { motivos.push(`🏭 Margem líquida de ${pmPct.toFixed(1)}%.`); }
+            }
+
+            // ── CRESCIMENTO (o negócio está expandindo?) ──
+            if (revenueGrowth !== null) {
+                maxPontos += 1;
+                const rgPct = revenueGrowth * 100;
+                if (rgPct >= 10) { pontos += 1; motivos.push(`🚀 Receita crescendo ${rgPct.toFixed(1)}% — bom sinal de expansão do negócio.`); }
+                else if (rgPct < 0) { motivos.push(`⚠️ Receita caindo ${Math.abs(rgPct).toFixed(1)}% — vale acompanhar de perto.`); }
+                else { motivos.push(`🚀 Receita crescendo ${rgPct.toFixed(1)}%.`); }
+            }
+
+            // ── SEGURANÇA FINANCEIRA (risco de dívida/caixa) ──
+            if (debtToEquity !== null) {
+                maxPontos += 1;
+                if (debtToEquity <= 50) { pontos += 1; motivos.push(`🛡️ Dívida/Patrimônio de ${debtToEquity.toFixed(0)}% — nível de endividamento saudável.`); }
+                else if (debtToEquity <= 100) { motivos.push(`🛡️ Dívida/Patrimônio de ${debtToEquity.toFixed(0)}% — endividamento moderado.`); }
+                else { motivos.push(`🛡️ Dívida/Patrimônio de ${debtToEquity.toFixed(0)}% — endividamento alto, vale atenção.`); }
+            }
+
+            if (currentRatio !== null) {
+                maxPontos += 1;
+                if (currentRatio >= 1.5) { pontos += 1; motivos.push(`💧 Liquidez corrente de ${currentRatio.toFixed(2)} — boa folga para pagar dívidas de curto prazo.`); }
+                else if (currentRatio >= 1) { motivos.push(`💧 Liquidez corrente de ${currentRatio.toFixed(2)} — consegue cobrir as dívidas de curto prazo.`); }
+                else { motivos.push(`💧 Liquidez corrente de ${currentRatio.toFixed(2)} — abaixo de 1, pode ter aperto de caixa no curto prazo.`); }
+            }
+
+            if (maxPontos === 0) maxPontos = 1;
+            const percent = Math.round((pontos / maxPontos) * 100);
+
             let label, emoji, color;
-            if (pontos >= 4) { label = 'Possível oportunidade'; emoji = '🟢'; color = '#10b981'; }
-            else if (pontos >= 2) { label = 'Neutro'; emoji = '🟡'; color = '#f59e0b'; }
+            if (percent >= 65) { label = 'Possível oportunidade'; emoji = '🟢'; color = '#10b981'; }
+            else if (percent >= 40) { label = 'Neutro'; emoji = '🟡'; color = '#f59e0b'; }
             else { label = 'Sem sinal forte agora'; emoji = '⚪'; color = '#9ca3af'; }
 
-            return { pontos, label, emoji, color, motivos, dy, pl, price };
+            return { pontos, maxPontos, percent, label, emoji, color, motivos, dy, pl, price };
         }
+
 
         function renderStockCard(symbol, data) {
             const analise = analisarAcao(data);
@@ -1656,16 +1919,28 @@
                     <div><strong>${symbol}:</strong> Não foi possível obter dados agora. ${lastFetchError ? `(${lastFetchError})` : ''}</div>
                 </div>`;
             }
+
+            // Converte a pontuação (0 a 6) num "termômetro" visual: mais pontos = mais perto do lado
+            // barato/oportunidade (verde); menos pontos = mais perto do lado caro/sem sinal (vermelho).
+            const percent = analise.percent;
+            const markerLeft = 100 - percent;
+
             return `
                 <div class="analytics-card" style="border-left: 4px solid ${analise.color};">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 0.25rem;">
                         <h3 style="margin:0;">${analise.emoji} ${symbol}</h3>
-                        <span style="font-weight:700; color:${analise.color};">${analise.label}</span>
+                        <strong style="font-size: 1.1rem;">R$ ${analise.price.toFixed(2)}</strong>
                     </div>
-                    <div style="margin: 0.5rem 0; font-size: 1.1rem;">
-                        <strong>R$ ${analise.price.toFixed(2)}</strong>
+
+                    <div class="stock-gauge-wrap">
+                        <span class="stock-gauge-percent" style="color:${analise.color};">${percent}%</span>
+                        <div class="stock-gauge-track">
+                            <div class="stock-gauge-marker" style="left:${markerLeft}%;">▼</div>
+                        </div>
+                        <div class="stock-gauge-label" style="color:${analise.color};">${analise.label}</div>
                     </div>
-                    <ul style="margin:0.5rem 0 0; padding-left:1.2rem; font-size:0.85rem; color: var(--secondary); line-height: 1.5;">
+
+                    <ul style="margin:0.75rem 0 0; padding-left:1.2rem; font-size:0.85rem; color: var(--secondary); line-height: 1.5;">
                         ${analise.motivos.map((m) => `<li>${m}</li>`).join('')}
                     </ul>
                 </div>
@@ -1757,6 +2032,7 @@
 
         function renderPortfolioTable() {
             const tableBody = document.getElementById('portfolioTable');
+            const mobileList = document.getElementById('portfolioMobileList');
             const portfolio = userPortfolios[selectedUser];
 
             const banner = document.getElementById('sampleDataBanner');
@@ -1775,6 +2051,7 @@
 
             if (!portfolio || portfolio.length === 0) {
                 tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 2rem;">Nenhum ativo na carteira</td></tr>`;
+                if (mobileList) mobileList.innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--secondary);">Nenhum ativo na carteira</div>`;
                 return;
             }
             
@@ -1806,6 +2083,37 @@
                 </tr>
                 `;
             }).join('');
+
+            if (mobileList) {
+                mobileList.innerHTML = portfolio.map((asset, index) => {
+                    const currentPrice = getCurrentPrice(asset.symbol, asset.avgPrice);
+                    const dailyChange = getChangePercent(asset.symbol).toFixed(2);
+                    const isUp = dailyChange >= 0;
+
+                    return `
+                    <div class="stock-row">
+                        <div class="stock-row-left">
+                            <div class="stock-row-ticker">${asset.symbol}</div>
+                            <div class="stock-row-sub">${asset.quantity} un · PM R$ ${asset.avgPrice.toFixed(2)}</div>
+                        </div>
+                        <div class="stock-row-right">
+                            <div class="stock-row-price">R$ ${currentPrice.toFixed(2)}</div>
+                            <div class="stock-row-change ${isUp ? 'positive' : 'negative'}">
+                                <i class="fas fa-caret-${isUp ? 'up' : 'down'}"></i> ${dailyChange}%
+                            </div>
+                        </div>
+                        <div class="stock-row-actions">
+                            <button class="action-btn edit-btn" onclick="editAsset(${index})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteAsset(${index})" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+            }
         }
 
         function updatePortfolioSummary() {
@@ -2009,6 +2317,29 @@
             }
         }
 
+        function applyTheme(theme) {
+            const icon = document.getElementById('themeToggleIcon');
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const next = isDark ? 'light' : 'dark';
+            localStorage.setItem('analystpro_theme', next);
+            applyTheme(next);
+        }
+
+        (function initTheme() {
+            const saved = localStorage.getItem('analystpro_theme');
+            if (saved === 'dark') applyTheme('dark');
+        })();
+
         function toggleMobileNav() {
             const collapsible = document.getElementById('navCollapsible');
             const icon = document.getElementById('navToggleIcon');
@@ -2055,6 +2386,10 @@
                     break;
                 }
             }
+
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.classList.toggle('active', item.getAttribute('data-section') === sectionName);
+            });
 
             closeMobileNav();
         }
