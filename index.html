@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>AnalystPro - Plataforma Completa de Investimentos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1353,7 +1356,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-05';
+        const APP_BUILD = '2026-07-22-06';
 
         async function checkForUpdate() {
             try {
@@ -1370,7 +1373,7 @@
         }
 
         function applyUpdate() {
-            location.reload();
+            location.href = `${location.pathname}?_=${Date.now()}`;
         }
 
         checkForUpdate();
