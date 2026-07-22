@@ -1562,7 +1562,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-09';
+        const APP_BUILD = '2026-07-22-10';
 
         async function checkForUpdate() {
             try {
@@ -1758,30 +1758,43 @@
         // ── Busca dados reais na Brapi (preço, variação, P/L, dividend yield) ──
         // Docs: https://brapi.dev/docs — PETR4, MGLU3, VALE3, ITUB4 funcionam sem token;
         // qualquer outro ticker precisa de uma chave gratuita (brapi.dev/dashboard).
+        // OBS: o plano gratuito da Brapi só aceita 1 ticker por requisição, então buscamos
+        // cada ação separadamente (em paralelo) em vez de mandar todas juntas numa só chamada.
         async function fetchBrapiQuotes(tickers) {
             if (!tickers || tickers.length === 0) return {};
-            const tickerStr = [...new Set(tickers)].join(',');
+            const uniqueTickers = [...new Set(tickers)];
             const modules = 'defaultKeyStatistics,financialData';
-            let url = `https://brapi.dev/api/quote/${tickerStr}?modules=${modules}&dividends=true`;
-            if (brapiToken) url += `&token=${brapiToken}`;
 
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    lastFetchError = response.status === 401 || response.status === 403
-                        ? 'Chave da Brapi inválida ou ausente para essas ações.'
-                        : `A Brapi respondeu com erro (${response.status}).`;
-                    return {};
+            const results = await Promise.all(uniqueTickers.map(async (ticker) => {
+                let url = `https://brapi.dev/api/quote/${ticker}?modules=${modules}&dividends=true`;
+                if (brapiToken) url += `&token=${brapiToken}`;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        return {
+                            ticker,
+                            error: response.status === 401 || response.status === 403
+                                ? 'Chave da Brapi inválida ou ausente para essas ações.'
+                                : `A Brapi respondeu com erro (${response.status}) para ${ticker}.`
+                        };
+                    }
+                    const data = await response.json();
+                    const found = (data.results || [])[0];
+                    return found ? { ticker, quote: found } : { ticker, error: `Ticker ${ticker} não encontrado na Brapi.` };
+                } catch (err) {
+                    return { ticker, error: 'Não foi possível conectar à Brapi. Verifique sua internet.' };
                 }
-                const data = await response.json();
-                lastFetchError = null;
-                const map = {};
-                (data.results || []).forEach((r) => { map[r.symbol] = r; });
-                return map;
-            } catch (err) {
-                lastFetchError = 'Não foi possível conectar à Brapi. Verifique sua internet.';
-                return {};
-            }
+            }));
+
+            const map = {};
+            let firstError = null;
+            results.forEach((r) => {
+                if (r.quote) map[r.ticker] = r.quote;
+                else if (r.error && !firstError) firstError = r.error;
+            });
+
+            lastFetchError = Object.keys(map).length === 0 ? firstError : null;
+            return map;
         }
 
         // Preço atual de um ativo: usa o preço real já buscado, ou cai de volta pro preço médio
