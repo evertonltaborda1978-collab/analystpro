@@ -202,6 +202,7 @@
             margin: 1rem 0;
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 1rem;
             animation: pulse 2s infinite;
         }
@@ -220,6 +221,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             padding: 1rem;
             border-bottom: 1px solid var(--border);
         }
@@ -372,6 +375,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             padding: 1rem;
             background: white;
             border-radius: 6px;
@@ -477,7 +482,7 @@
         .quick-settings { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
         .quick-settings button { width: 100%; padding: 0.75rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; justify-content: center; }
         .quick-settings button:hover { transform: translateY(-2px); }
-        .analysis-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .analysis-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; }
         .view-actions-btn { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
         /* RESPONSIVIDADE */
         @media (max-width: 768px) {
@@ -884,7 +889,7 @@
                 </div>
 
                 <div class="analytics-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                         <h3><i class="fas fa-balance-scale"></i> Recomendações da sua carteira</h3>
                         <button class="chart-period-btn" onclick="renderRecommendations()"><i class="fas fa-sync"></i></button>
                     </div>
@@ -918,7 +923,7 @@
 
     <!-- SEÇÃO DE ALERTAS - AGORA FUNCIONAL -->
     <section id="alertas" class="main-content">
-        <div style="max-width: 1400px; margin: 2rem auto; padding: 0 2rem;">
+        <div class="dashboard">
             <button class="back-button" onclick="showSection('carteira')">
                 <i class="fas fa-arrow-left"></i> Voltar para Carteira
             </button>
@@ -1348,7 +1353,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-04';
+        const APP_BUILD = '2026-07-22-05';
 
         async function checkForUpdate() {
             try {
