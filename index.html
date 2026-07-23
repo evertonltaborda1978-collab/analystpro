@@ -516,7 +516,7 @@
         .login-header-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
         .login-section { margin-bottom: 1rem; }
         .user-selection { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; position: relative; }
+        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; position: relative; min-width: 0; }
         .user-btn:hover { border-color: var(--primary); background: #f0f7ff; }
         .user-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
         .user-btn.add-portfolio-btn { border-style: dashed; color: var(--secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -1648,7 +1648,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-13';
+        const APP_BUILD = '2026-07-22-14';
 
         async function checkForUpdate() {
             try {
