@@ -54,12 +54,18 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
         body {
             background: var(--bg);
             color: var(--dark);
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
+            width: 100%;
         }
 
         input[type="text"], input[type="password"], input[type="number"], input[type="date"], select, textarea {
@@ -70,24 +76,30 @@
         .stock-list { display: none; }
 
         .stock-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-areas:
+                "ticker price"
+                "sub change"
+                "actions actions";
+            row-gap: 0.2rem;
+            column-gap: 0.5rem;
             padding: 0.65rem 0.15rem;
             border-bottom: 1px solid var(--border);
-            gap: 0.4rem;
         }
 
         .stock-row:last-child { border-bottom: none; }
 
-        .stock-row-left { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; flex: 1 1 auto; overflow: hidden; }
-        .stock-row-ticker { font-weight: 700; color: var(--dark); font-size: 0.9rem; }
-        .stock-row-sub { font-size: 0.7rem; color: var(--secondary); white-space: normal; line-height: 1.25; }
+        .stock-row-left { grid-area: unset; display: contents; }
+        .stock-row-ticker { grid-area: ticker; font-weight: 700; color: var(--dark); font-size: 0.9rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .stock-row-sub { grid-area: sub; font-size: 0.7rem; color: var(--secondary); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .stock-row-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; flex-shrink: 0; }
-        .stock-row-price { font-weight: 700; color: var(--dark); font-size: 0.9rem; }
+        .stock-row-right { grid-area: unset; display: contents; }
+        .stock-row-price { grid-area: price; font-weight: 700; color: var(--dark); font-size: 0.9rem; text-align: right; }
 
         .stock-row-change {
+            grid-area: change;
+            justify-self: end;
             font-size: 0.75rem;
             font-weight: 700;
             padding: 0.1rem 0.45rem;
@@ -97,7 +109,7 @@
         .stock-row-change.positive { color: var(--status-green); background: rgba(0, 192, 118, 0.12); }
         .stock-row-change.negative { color: var(--status-red); background: rgba(255, 82, 82, 0.12); }
 
-        .stock-row-actions { display: flex; gap: 0.3rem; margin-left: 0.3rem; flex-shrink: 0; }
+        .stock-row-actions { grid-area: actions; display: flex; justify-content: flex-end; gap: 0.4rem; margin-top: 0.2rem; }
 
         .stock-gauge-wrap {
             margin: 0.75rem 0 0.25rem;
@@ -516,17 +528,17 @@
         .login-header-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
         .login-section { margin-bottom: 1rem; }
         .user-selection { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; position: relative; min-width: 0; }
+        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; position: relative; min-width: 0; overflow: hidden; }
         .user-btn:hover { border-color: var(--primary); background: #f0f7ff; }
         .user-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
-        .user-btn.add-portfolio-btn { border-style: dashed; color: var(--secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .user-btn.add-portfolio-btn { border-style: dashed; color: var(--secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.4rem; }
         .user-btn.add-portfolio-btn:hover { color: var(--primary); }
         .user-btn-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
         .portfolio-manage-icons { position: absolute; top: 4px; right: 6px; display: flex; gap: 4px; }
         .portfolio-manage-icons i { font-size: 0.75rem; opacity: 0.6; padding: 2px; }
         .portfolio-manage-icons i:hover { opacity: 1; }
         .mode-selection { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-        .mode-btn { padding: 0.75rem; border: 2px solid var(--border); border-radius: 6px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; }
+        .mode-btn { padding: 0.75rem; border: 2px solid var(--border); border-radius: 6px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; min-width: 0; overflow: hidden; }
         .mode-btn:hover { border-color: var(--primary); }
         .mode-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
         .api-config { background: var(--light); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid var(--primary); }
@@ -556,7 +568,7 @@
         .card { background: var(--card-bg); padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid var(--primary); }
         .card h3 { color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .stat-item { text-align: center; padding: 1rem; background: var(--light); border-radius: 8px; }
+        .stat-item { text-align: center; padding: 1rem; background: var(--light); border-radius: 8px; min-width: 0; overflow: hidden; }
         .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
         .stat-label { font-size: 0.9rem; color: var(--secondary); }
         .chart-container { height: 300px; margin-top: 1rem; }
@@ -1648,7 +1660,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-14';
+        const APP_BUILD = '2026-07-22-16';
 
         async function checkForUpdate() {
             try {
@@ -1736,9 +1748,8 @@
                     <strong class="user-btn-name">${p.name}</strong>
                 </div>
             `).join('') + `
-                <div class="user-btn add-portfolio-btn" onclick="addPortfolio()">
-                    <i class="fas fa-plus" style="font-size: 1.3rem; margin-bottom: 0.3rem;"></i>
-                    <strong class="user-btn-name">Adicionar carteira</strong>
+                <div class="user-btn add-portfolio-btn" onclick="addPortfolio()" title="Adicionar carteira">
+                    <i class="fas fa-plus"></i>
                 </div>
             `;
         }
@@ -2537,6 +2548,7 @@
                 section.classList.remove('content-active');
             });
             document.getElementById(sectionName).classList.add('content-active');
+            window.scrollTo(0, 0);
 
             if (sectionName === 'analise') {
                 renderRecommendations();
