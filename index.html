@@ -80,7 +80,7 @@
 
         .stock-row:last-child { border-bottom: none; }
 
-        .stock-row-left { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+        .stock-row-left { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; flex: 1 1 auto; }
         .stock-row-ticker { font-weight: 700; color: var(--dark); font-size: 0.95rem; }
         .stock-row-sub { font-size: 0.75rem; color: var(--secondary); white-space: nowrap; }
 
@@ -601,6 +601,49 @@
         .view-actions-btn { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
         /* RESPONSIVIDADE */
         @media (max-width: 768px) {
+            /* Padrão geral de títulos e botões pro celular — vale pra TODAS as telas
+               (Análise, Alertas, Dividendos, Dashboard, etc.), a não ser que uma regra
+               mais específica (como .login-box h2) já defina outro tamanho. */
+            h1 { font-size: 1.3rem; line-height: 1.3; }
+            h2 { font-size: 1.15rem; line-height: 1.3; }
+            h3 { font-size: 1.05rem; line-height: 1.3; }
+            h4 { font-size: 0.95rem; line-height: 1.3; }
+
+            .back-button {
+                font-size: 0.85rem;
+                padding: 0.5rem 0.85rem;
+            }
+
+            .save-btn, .test-btn {
+                font-size: 0.9rem;
+                padding: 0.65rem 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.15rem;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+            }
+
+            .stat-item {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .top-header h1 {
+                font-size: 1.15rem;
+            }
+
+            .refresh-btn, .logout-btn {
+                font-size: 0.8rem;
+                padding: 0.45rem 0.75rem;
+            }
+
+            .card, .analytics-card {
+                padding: 1rem;
+            }
+
             .nav-container {
                 flex-direction: column;
                 align-items: stretch;
@@ -1556,7 +1599,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-11';
+        const APP_BUILD = '2026-07-22-12';
 
         async function checkForUpdate() {
             try {
@@ -2176,19 +2219,66 @@
             document.getElementById('dailyChange').className = dailyChange >= 0 ? 'positive' : 'negative';
             document.getElementById('totalProfit').textContent = `R$ ${totalProfit.toFixed(2)}`;
             document.getElementById('totalProfit').className = totalProfit >= 0 ? 'positive' : 'negative';
+
+            savePatrimonioSnapshot(totalCurrent);
+        }
+
+        // Guarda um "retrato" real do patrimônio de hoje, uma vez por dia, pra construir
+        // um histórico verdadeiro ao longo do tempo (não dá pra recriar o passado, só daqui pra frente).
+        function savePatrimonioSnapshot(totalCurrent) {
+            const key = `patrimonio_history_${selectedUser}`;
+            const hoje = new Date().toISOString().split('T')[0];
+            let historico = [];
+            try { historico = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { historico = []; }
+
+            const jaTemHoje = historico.some(h => h.date === hoje);
+            if (!jaTemHoje) {
+                historico.push({ date: hoje, value: totalCurrent });
+                if (historico.length > 180) historico = historico.slice(-180);
+                localStorage.setItem(key, JSON.stringify(historico));
+            } else {
+                historico[historico.length - 1].value = totalCurrent;
+                localStorage.setItem(key, JSON.stringify(historico));
+            }
+        }
+
+        function getPatrimonioHistorico() {
+            const key = `patrimonio_history_${selectedUser}`;
+            try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { return []; }
         }
 
         function initializePerformanceChart() {
             const ctx = document.getElementById('performanceChart').getContext('2d');
             if (window.performanceChart) window.performanceChart.destroy();
-            
+
+            const historico = getPatrimonioHistorico();
+
+            if (historico.length < 2) {
+                // Ainda não tem histórico real suficiente — mostramos isso de forma transparente,
+                // em vez de inventar números. A partir de hoje o app começa a registrar de verdade.
+                const container = ctx.canvas.parentElement;
+                ctx.canvas.style.display = 'none';
+                if (!document.getElementById('performanceChartEmptyMsg')) {
+                    const msg = document.createElement('div');
+                    msg.id = 'performanceChartEmptyMsg';
+                    msg.style.cssText = 'text-align:center; padding:2rem; color: var(--secondary);';
+                    msg.innerHTML = '<i class="fas fa-chart-line"></i><br>Ainda estamos construindo seu histórico real de patrimônio.<br>Volte em alguns dias pra ver a evolução aqui.';
+                    container.appendChild(msg);
+                }
+                return;
+            }
+
+            const emptyMsg = document.getElementById('performanceChartEmptyMsg');
+            if (emptyMsg) emptyMsg.remove();
+            ctx.canvas.style.display = 'block';
+
             window.performanceChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    labels: historico.map(h => new Date(h.date + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })),
                     datasets: [{
-                        label: 'Patrimônio',
-                        data: [10000, 12000, 11500, 13000, 14000, 15000],
+                        label: 'Patrimônio (real)',
+                        data: historico.map(h => h.value),
                         borderColor: '#2563eb',
                         backgroundColor: 'rgba(37, 99, 235, 0.1)',
                         fill: true
@@ -2962,16 +3052,42 @@
             });
         }
 
-        function updateComparisonChart() {
+        // Compara a variação REAL de hoje da sua carteira (baseada nos preços atuais vs.
+        // fechamento anterior de cada ativo) com a variação REAL do Ibovespa no mesmo dia.
+        async function updateComparisonChart() {
             const ctx = document.getElementById('comparisonChart').getContext('2d');
-            
-            new Chart(ctx, {
+            const portfolio = userPortfolios[selectedUser] || [];
+
+            let totalAtual = 0;
+            let totalFechamentoAnterior = 0;
+            portfolio.forEach(asset => {
+                const quote = livePrices[asset.symbol];
+                const precoAtual = getCurrentPrice(asset.symbol, asset.avgPrice);
+                const fechamentoAnterior = quote?.regularMarketPreviousClose ?? precoAtual;
+                totalAtual += asset.quantity * precoAtual;
+                totalFechamentoAnterior += asset.quantity * fechamentoAnterior;
+            });
+
+            const carteiraVariacaoHoje = totalFechamentoAnterior > 0
+                ? ((totalAtual - totalFechamentoAnterior) / totalFechamentoAnterior) * 100
+                : 0;
+
+            let ibovVariacaoHoje = null;
+            try {
+                const ibovData = await fetchBrapiQuotes(['^BVSP']);
+                ibovVariacaoHoje = ibovData['^BVSP']?.regularMarketChangePercent ?? null;
+            } catch (e) {
+                ibovVariacaoHoje = null;
+            }
+
+            if (window.comparisonChartInstance) window.comparisonChartInstance.destroy();
+            window.comparisonChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Sua Carteira', 'Ibovespa'],
+                    labels: ['Sua Carteira (hoje)', ibovVariacaoHoje === null ? 'Ibovespa (indisponível)' : 'Ibovespa (hoje)'],
                     datasets: [{
-                        label: 'Performance (%)',
-                        data: [15.2, 12.8],
+                        label: 'Variação (%) — hoje',
+                        data: [carteiraVariacaoHoje, ibovVariacaoHoje ?? 0],
                         backgroundColor: ['#2563eb', '#64748b']
                     }]
                 }
