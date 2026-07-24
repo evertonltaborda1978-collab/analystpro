@@ -529,18 +529,53 @@
         .login-header { text-align: center; margin-bottom: 2rem; }
         .login-header-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
         .login-section { margin-bottom: 1rem; }
-        .user-selection { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-        .user-btn { padding: 1rem; border: 2px solid var(--border); border-radius: 8px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; position: relative; min-width: 0; overflow: hidden; }
+        .user-selection { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin: 1rem 0; }
+        .user-btn {
+            padding: 0.65rem 0.85rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            text-align: center;
+        }
+        .user-btn i:first-child { font-size: 1.1rem; flex-shrink: 0; }
+        .user-btn.add-portfolio-btn { border-style: dashed; color: var(--secondary); }
+        .user-btn-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; font-size: 0.9rem; }
+        .portfolio-manage-icons { position: absolute; top: 4px; right: 6px; display: flex; gap: 6px; }
+        .portfolio-manage-icons i { font-size: 0.8rem; opacity: 0.6; padding: 4px; }
+        .portfolio-manage-icons i:hover { opacity: 1; }
         .user-btn:hover { border-color: var(--primary); background: #f0f7ff; }
         .user-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
-        .user-btn.add-portfolio-btn { border-style: dashed; color: var(--secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.4rem; }
         .user-btn.add-portfolio-btn:hover { color: var(--primary); }
-        .user-btn-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-        .portfolio-manage-icons { position: absolute; top: 4px; right: 6px; display: flex; gap: 4px; }
-        .portfolio-manage-icons i { font-size: 0.75rem; opacity: 0.6; padding: 2px; }
-        .portfolio-manage-icons i:hover { opacity: 1; }
-        .mode-selection { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-        .mode-btn { padding: 0.75rem; border: 2px solid var(--border); border-radius: 6px; background: var(--card-bg); cursor: pointer; text-align: center; transition: all 0.3s ease; min-width: 0; overflow: hidden; }
+        .mode-selection { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin: 1rem 0; }
+        .mode-btn {
+            padding: 0.6rem 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .mode-btn i { font-size: 1.1rem; flex-shrink: 0; }
+        .mode-btn-text { display: flex; flex-direction: column; gap: 0.05rem; min-width: 0; }
+        .mode-btn-text strong { font-size: 0.85rem; }
+        .mode-btn-text small { font-size: 0.7rem; opacity: 0.85; }
         .mode-btn:hover { border-color: var(--primary); }
         .mode-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
         .api-config { background: var(--light); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid var(--primary); }
@@ -632,6 +667,7 @@
             .save-btn, .test-btn {
                 font-size: 0.9rem;
                 padding: 0.65rem 1rem;
+                text-align: center;
             }
 
             .stat-value {
@@ -883,12 +919,12 @@
             }
 
             .user-btn {
-                padding: 0.7rem;
+                padding: 0.6rem 0.8rem;
                 font-size: 0.85rem;
             }
 
-            .user-btn i {
-                font-size: 1.1rem;
+            .user-btn i:first-child {
+                font-size: 1rem;
             }
 
             .login-form {
@@ -906,9 +942,8 @@
             }
 
             .user-selection {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-                margin: 0.6rem 0;
+                gap: 0.4rem;
+                margin: 0.5rem 0;
             }
 
             .modal-content {
@@ -968,11 +1003,6 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.6rem;
-            }
-
-            .mode-selection {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
             }
 
             .header-content > div {
@@ -1348,14 +1378,18 @@
                     
                     <div class="mode-selection">
                         <div class="mode-btn active" data-mode="online" onclick="selectMode('online')">
-                            <i class="fas fa-wifi"></i><br>
-                            <strong>Modo Online</strong><br>
-                            <small>Dados em tempo real</small>
+                            <i class="fas fa-wifi"></i>
+                            <div class="mode-btn-text">
+                                <strong>Modo Online</strong>
+                                <small>Dados em tempo real</small>
+                            </div>
                         </div>
                         <div class="mode-btn" data-mode="offline" onclick="selectMode('offline')">
-                            <i class="fas fa-laptop"></i><br>
-                            <strong>Modo Offline</strong><br>
-                            <small>Visualização apenas</small>
+                            <i class="fas fa-laptop"></i>
+                            <div class="mode-btn-text">
+                                <strong>Modo Offline</strong>
+                                <small>Visualização apenas</small>
+                            </div>
                         </div>
                     </div>
 
@@ -1677,7 +1711,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-17';
+        const APP_BUILD = '2026-07-22-19';
 
         async function checkForUpdate() {
             try {
@@ -1755,18 +1789,19 @@
             if (!grid) return;
             grid.innerHTML = portfolioList.map((p) => `
                 <div class="user-btn${p.id === selectedUser ? ' active' : ''}" data-user="${p.id}" onclick="selectUser('${p.id}')">
+                    <i class="fas ${p.icon || 'fa-briefcase'}"></i>
+                    <strong class="user-btn-name">${p.name}</strong>
                     ${portfolioList.length > 1 ? `
                         <div class="portfolio-manage-icons">
                             <i class="fas fa-pen" title="Renomear" onclick="event.stopPropagation(); renamePortfolio('${p.id}')"></i>
                             <i class="fas fa-trash" title="Remover" onclick="event.stopPropagation(); removePortfolio('${p.id}')"></i>
                         </div>
                     ` : ''}
-                    <i class="fas ${p.icon || 'fa-briefcase'}"></i><br>
-                    <strong class="user-btn-name">${p.name}</strong>
                 </div>
             `).join('') + `
-                <div class="user-btn add-portfolio-btn" onclick="addPortfolio()" title="Adicionar carteira">
+                <div class="user-btn add-portfolio-btn" onclick="addPortfolio()">
                     <i class="fas fa-plus"></i>
+                    <strong class="user-btn-name">Adicionar carteira</strong>
                 </div>
             `;
         }
