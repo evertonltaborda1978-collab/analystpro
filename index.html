@@ -395,6 +395,8 @@
         }
 
         .recovery-btn {
+            min-width: 0;
+            overflow: hidden;
             padding: 1rem;
             border: 2px solid var(--border);
             border-radius: 8px;
@@ -663,6 +665,20 @@
                 font-size: 0.9rem;
             }
 
+            .quick-settings {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .save-btn, .test-btn {
+                min-width: 0;
+                overflow: hidden;
+                white-space: normal;
+                font-size: 0.8rem;
+                line-height: 1.25;
+                padding: 0.6rem 0.5rem;
+            }
+
             .top-header h1 {
                 font-size: 1.15rem;
             }
@@ -901,7 +917,8 @@
             }
 
             .recovery-options {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem;
             }
 
             .card {
@@ -1660,7 +1677,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-16';
+        const APP_BUILD = '2026-07-22-17';
 
         async function checkForUpdate() {
             try {
