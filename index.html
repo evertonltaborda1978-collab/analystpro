@@ -527,7 +527,7 @@
         .login-container { min-height: 100vh; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; padding: 2rem; }
         .login-box { background: var(--card-bg); padding: 3rem; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
         .login-header { text-align: center; margin-bottom: 2rem; }
-        .login-header-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+        .login-header-icon { color: var(--primary); }
         .login-section { margin-bottom: 1rem; }
         .user-selection { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin: 1rem 0; }
         .user-btn {
@@ -732,7 +732,15 @@
                 flex-direction: column;
                 align-items: stretch;
                 gap: 0;
-                padding: 0.85rem 1.25rem;
+                padding: 0.5rem 0.85rem;
+            }
+
+            .nav-logo {
+                font-size: 1.05rem;
+            }
+
+            .nav-logo i {
+                font-size: 0.95rem;
             }
 
             .nav-top-row {
@@ -742,7 +750,7 @@
                 width: 100%;
             }
 
-            .nav-toggle {
+            .nav-toggle, .theme-toggle {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -750,10 +758,10 @@
                 border: 1px solid var(--border);
                 border-radius: 8px;
                 color: var(--primary);
-                font-size: 1.2rem;
-                width: 42px;
-                height: 42px;
                 cursor: pointer;
+                width: 32px;
+                height: 32px;
+                font-size: 0.95rem;
             }
 
             .nav-collapsible {
@@ -872,63 +880,83 @@
             }
 
             .login-header {
-                margin-bottom: 1rem;
+                margin-bottom: 0.6rem;
             }
 
             .login-header-icon {
-                font-size: 1.4rem;
-                margin-bottom: 0.3rem;
+                font-size: 0.95rem;
             }
 
             .login-box h2 {
-                font-size: 1.1rem;
+                font-size: 1.05rem;
                 margin-bottom: 0.15rem;
             }
 
             .login-box .login-header p {
-                font-size: 0.8rem;
+                font-size: 0.72rem;
             }
 
             .login-section {
-                margin-bottom: 0.5rem;
+                margin-bottom: 0.4rem;
             }
 
             .login-input {
-                padding: 0.7rem 0.85rem;
-                margin-bottom: 0.6rem;
-                font-size: 0.9rem;
-            }
-
-            .forgot-password {
-                margin-bottom: 0.5rem;
+                padding: 0.5rem 0.6rem;
+                margin-bottom: 0.4rem;
                 font-size: 0.8rem;
             }
 
+            .forgot-password {
+                margin-bottom: 0.35rem;
+                font-size: 0.72rem;
+            }
+
             .login-btn {
-                padding: 0.75rem;
-                font-size: 0.9rem;
-                margin-top: 0.5rem;
+                padding: 0.55rem;
+                font-size: 0.82rem;
+                margin-top: 0.35rem;
                 white-space: nowrap;
             }
 
             .login-section h4,
             .login-form h4,
             .api-config h4 {
-                font-size: 0.85rem;
-                margin-bottom: 0.4rem;
+                font-size: 0.78rem;
+                margin-bottom: 0.3rem;
             }
 
             .user-btn {
-                padding: 0.6rem 0.8rem;
-                font-size: 0.85rem;
+                padding: 0.45rem 0.6rem;
+                font-size: 0.78rem;
             }
 
             .user-btn i:first-child {
-                font-size: 1rem;
+                font-size: 0.85rem;
             }
 
             .login-form {
-                margin-top: 0.5rem;
+                margin-top: 0.35rem;
+            }
+
+            .login-box {
+                padding: 1rem 0.85rem;
+            }
+
+            .mode-btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .mode-btn i {
+                font-size: 0.9rem;
+            }
+
+            .mode-btn-text strong {
+                font-size: 0.75rem;
+            }
+
+            .mode-btn-text small {
+                font-size: 0.62rem;
             }
 
             .login-container {
@@ -1340,10 +1368,7 @@
         <div id="loginScreen" class="login-container">
             <div class="login-box">
                 <div class="login-header">
-                    <div class="login-header-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <h2>AnalystPro</h2>
+                    <h2><i class="fas fa-lock login-header-icon"></i> AnalystPro</h2>
                     <p style="color: var(--secondary);">Sistema Seguro de Carteira de Ações</p>
                 </div>
 
