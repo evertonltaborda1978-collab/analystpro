@@ -193,6 +193,21 @@
             cursor: pointer;
         }
 
+        .font-size-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.95rem;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
         .bottom-nav {
             display: none;
         }
@@ -771,7 +786,7 @@
                 width: 100%;
             }
 
-            .nav-toggle, .theme-toggle {
+            .nav-toggle, .theme-toggle, .font-size-toggle {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1076,6 +1091,8 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <button class="font-size-toggle" id="fontSizeToggleBtn" onclick="toggleFontSize()" aria-label="Ajustar tamanho da fonte" title="Tamanho da fonte">A</button>
+
                     <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Alternar tema">
                         <i class="fas fa-moon" id="themeToggleIcon"></i>
                     </button>
@@ -1395,8 +1412,19 @@
 
                 <!-- SELEÇÃO DE CARTEIRA -->
                 <div class="login-section">
-                    <h4><i class="fas fa-users"></i> Qual carteira você quer acessar?</h4>
-                    <div class="user-selection" id="userSelectionGrid"></div>
+                    <h4><i class="fas fa-users"></i> Carteira</h4>
+                    <div style="display: flex; gap: 0.4rem;">
+                        <select id="userSelectionDropdown" class="price-input" style="margin: 0; flex: 1;" onchange="selectUser(this.value)"></select>
+                        <button class="user-btn add-portfolio-btn" onclick="addPortfolio()" title="Adicionar carteira" style="flex: 0 0 auto; width: 42px; padding: 0; justify-content: center;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="user-btn" id="renamePortfolioBtn" onclick="renamePortfolio(selectedUser)" title="Renomear carteira" style="flex: 0 0 auto; width: 42px; padding: 0; justify-content: center; display: none;">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="user-btn" id="removePortfolioBtn" onclick="removePortfolio(selectedUser)" title="Remover carteira" style="flex: 0 0 auto; width: 42px; padding: 0; justify-content: center; display: none;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- SISTEMA DE LOGIN COM SENHA -->
@@ -1547,6 +1575,13 @@
                             <button class="save-btn" onclick="openManageAlerts()" style="background: var(--danger);">
                                 <i class="fas fa-bell-slash"></i> Gerenciar Alertas
                             </button>
+                            <button class="save-btn" onclick="exportBackup()" style="background: #0891b2;">
+                                <i class="fas fa-download"></i> Exportar Backup
+                            </button>
+                            <button class="save-btn" onclick="triggerImportBackup()" style="background: #6366f1;">
+                                <i class="fas fa-upload"></i> Importar Backup
+                            </button>
+                            <input type="file" id="backupFileInput" accept="application/json" style="display:none;" onchange="importBackupFile(event)">
                         </div>
                         <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--secondary);">
                             <p><i class="fas fa-info-circle"></i> Gerencie seus investimentos</p>
@@ -1562,6 +1597,7 @@
                             <span id="dataSource">Fonte: Dados Locais</span>
                         </div>
                     </div>
+                    <div id="backupReminderBanner"></div>
                     <div id="sampleDataBanner"></div>
                     <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;" class="portfolio-table-wrap">
                     <table class="portfolio-table">
@@ -1757,7 +1793,7 @@
         // Esse número muda toda vez que uma atualização nova é entregue. O app compara
         // esse valor com o do arquivo mais recente publicado no GitHub Pages (sempre
         // buscado sem cache) — se for diferente, mostra a faixinha de atualização.
-        const APP_BUILD = '2026-07-22-24';
+        const APP_BUILD = '2026-07-22-31';
 
         async function checkForUpdate() {
             try {
@@ -1831,25 +1867,17 @@
         }
 
         function renderUserSelection() {
-            const grid = document.getElementById('userSelectionGrid');
-            if (!grid) return;
-            grid.innerHTML = portfolioList.map((p) => `
-                <div class="user-btn${p.id === selectedUser ? ' active' : ''}" data-user="${p.id}" onclick="selectUser('${p.id}')">
-                    <i class="fas ${p.icon || 'fa-briefcase'}"></i>
-                    <strong class="user-btn-name">${p.name}</strong>
-                    ${portfolioList.length > 1 ? `
-                        <div class="portfolio-manage-icons">
-                            <i class="fas fa-pen" title="Renomear" onclick="event.stopPropagation(); renamePortfolio('${p.id}')"></i>
-                            <i class="fas fa-trash" title="Remover" onclick="event.stopPropagation(); removePortfolio('${p.id}')"></i>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('') + `
-                <div class="user-btn add-portfolio-btn" onclick="addPortfolio()">
-                    <i class="fas fa-plus"></i>
-                    <strong class="user-btn-name">Adicionar carteira</strong>
-                </div>
-            `;
+            const dropdown = document.getElementById('userSelectionDropdown');
+            if (!dropdown) return;
+            dropdown.innerHTML = portfolioList.map((p) => `
+                <option value="${p.id}"${p.id === selectedUser ? ' selected' : ''}>${p.name}</option>
+            `).join('');
+
+            const renameBtn = document.getElementById('renamePortfolioBtn');
+            const removeBtn = document.getElementById('removePortfolioBtn');
+            const showManage = portfolioList.length > 1 ? 'flex' : 'none';
+            if (renameBtn) renameBtn.style.display = showManage;
+            if (removeBtn) removeBtn.style.display = showManage;
         }
 
         function addPortfolio() {
@@ -1859,7 +1887,7 @@
             portfolioList.push({ id, name: name.trim(), icon: 'fa-wallet' });
             savePortfolioList();
             localStorage.setItem(`portfolio_${id}`, JSON.stringify([]));
-            renderUserSelection();
+            selectUser(id);
             showNotification(`✅ Carteira "${name.trim()}" criada!`, 'success');
         }
 
@@ -1960,35 +1988,53 @@
             const uniqueTickers = [...new Set(tickers)];
             const modules = 'defaultKeyStatistics,financialData';
 
-            const results = await Promise.all(uniqueTickers.map(async (ticker) => {
+            // Busca uma ação de cada vez, com uma pequena pausa entre elas — evitar disparar
+            // tudo ao mesmo tempo, porque planos gratuitos costumam limitar pedidos por segundo
+            // (isso já causou o sintoma de "só a primeira ação atualiza, as outras não").
+            const results = [];
+            for (const ticker of uniqueTickers) {
                 let url = `https://brapi.dev/api/quote/${ticker}?modules=${modules}&dividends=true`;
                 if (brapiToken) url += `&token=${brapiToken}`;
                 try {
                     const response = await fetch(url);
                     if (!response.ok) {
-                        return {
+                        results.push({
                             ticker,
                             error: response.status === 401 || response.status === 403
-                                ? 'Chave da Brapi inválida ou ausente para essas ações.'
-                                : `A Brapi respondeu com erro (${response.status}) para ${ticker}.`
-                        };
+                                ? `Chave da Brapi inválida ou ausente para ${ticker}.`
+                                : response.status === 429
+                                    ? `Muitos pedidos ao mesmo tempo (limite do plano) ao buscar ${ticker}.`
+                                    : `A Brapi respondeu com erro (${response.status}) para ${ticker}.`
+                        });
+                    } else {
+                        const data = await response.json();
+                        const found = (data.results || [])[0];
+                        results.push(found ? { ticker, quote: found } : { ticker, error: `Ticker ${ticker} não encontrado na Brapi.` });
                     }
-                    const data = await response.json();
-                    const found = (data.results || [])[0];
-                    return found ? { ticker, quote: found } : { ticker, error: `Ticker ${ticker} não encontrado na Brapi.` };
                 } catch (err) {
-                    return { ticker, error: 'Não foi possível conectar à Brapi. Verifique sua internet.' };
+                    results.push({ ticker, error: `Não foi possível conectar à Brapi pra buscar ${ticker}.` });
                 }
-            }));
+                // Pequena pausa entre pedidos (não aplica depois do último)
+                if (ticker !== uniqueTickers[uniqueTickers.length - 1]) {
+                    await new Promise(resolve => setTimeout(resolve, 350));
+                }
+            }
 
             const map = {};
-            let firstError = null;
+            const failedTickers = [];
             results.forEach((r) => {
                 if (r.quote) map[r.ticker] = r.quote;
-                else if (r.error && !firstError) firstError = r.error;
+                else if (r.error) failedTickers.push(r.ticker);
             });
 
-            lastFetchError = Object.keys(map).length === 0 ? firstError : null;
+            if (failedTickers.length > 0) {
+                lastFetchError = failedTickers.length === uniqueTickers.length
+                    ? (results.find(r => r.error)?.error || 'Não foi possível buscar nenhuma ação agora.')
+                    : `Não consegui atualizar: ${failedTickers.join(', ')}. As demais ações foram atualizadas normalmente.`;
+            } else {
+                lastFetchError = null;
+            }
+
             return map;
         }
 
@@ -2230,6 +2276,7 @@
             renderAutoSignals();
             loadDividends();
             updateDashboardMetrics();
+            checkBackupReminder();
             
             document.getElementById('lastUpdate').textContent = `Última atualização: ${lastUpdate}`;
             showNotification('📊 Carteira carregada com sucesso!', 'success');
@@ -2621,6 +2668,29 @@
             if (saved === 'dark') applyTheme('dark');
         })();
 
+        // ── Tamanho da fonte (mesmo padrão A / A+ / A++ do app de notas) ──
+        // Como o CSS inteiro usa "rem", mudar o tamanho da fonte raiz reescala o app todo de uma vez.
+        const FONT_SIZES = { sm: '14px', md: '16px', lg: '18px' };
+        const FONT_LABELS = { sm: 'A', md: 'A+', lg: 'A++' };
+
+        function applyFontSize(size) {
+            document.documentElement.style.fontSize = FONT_SIZES[size] || FONT_SIZES.md;
+            const btn = document.getElementById('fontSizeToggleBtn');
+            if (btn) btn.textContent = FONT_LABELS[size] || FONT_LABELS.md;
+        }
+
+        function toggleFontSize() {
+            const current = localStorage.getItem('analystpro_fontsize') || 'md';
+            const next = current === 'sm' ? 'md' : current === 'md' ? 'lg' : 'sm';
+            localStorage.setItem('analystpro_fontsize', next);
+            applyFontSize(next);
+        }
+
+        (function initFontSize() {
+            const saved = localStorage.getItem('analystpro_fontsize') || 'sm';
+            applyFontSize(saved);
+        })();
+
         function toggleMobileNav() {
             const collapsible = document.getElementById('navCollapsible');
             const icon = document.getElementById('navToggleIcon');
@@ -2854,6 +2924,118 @@
             document.getElementById('alertModal').style.display = 'none';
         }
 
+        // ── Backup manual: baixa/restaura todas as carteiras, ativos, alertas, dividendos e preços-alvo ──
+        // ── Lembrete de backup: avisa sozinho quando faz tempo que você não exporta ──
+        function checkBackupReminder() {
+            const banner = document.getElementById('backupReminderBanner');
+            if (!banner) return;
+
+            const lastBackupStr = localStorage.getItem('analystpro_last_backup');
+            const portfolio = userPortfolios[selectedUser] || [];
+
+            if (portfolio.length === 0) { banner.innerHTML = ''; return; }
+
+            const DIAS_LIMITE = 7;
+            let diasSemBackup = null;
+            if (lastBackupStr) {
+                const diffMs = Date.now() - new Date(lastBackupStr).getTime();
+                diasSemBackup = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            }
+
+            const precisaAvisar = !lastBackupStr || diasSemBackup >= DIAS_LIMITE;
+            if (!precisaAvisar) { banner.innerHTML = ''; return; }
+
+            const mensagem = !lastBackupStr
+                ? 'Você ainda não fez nenhum backup da sua carteira.'
+                : `Já faz ${diasSemBackup} dias desde o seu último backup.`;
+
+            banner.innerHTML = `
+                <div class="alert-banner" style="background: linear-gradient(135deg, #dbeafe, #3b82f6); color: #1e3a8a;">
+                    <i class="fas fa-cloud-download-alt"></i>
+                    <div style="flex: 1;">
+                        <strong>Backup desatualizado.</strong> ${mensagem} Recomendo baixar um novo, é rapidinho.
+                    </div>
+                    <button class="chart-period-btn" onclick="exportBackup()" style="white-space: nowrap; background: #1e3a8a; color: #fff; border: none;">📦 Baixar agora</button>
+                </div>
+            `;
+        }
+
+        function exportBackup() {
+            const backup = {
+                appBuild: APP_BUILD,
+                exportedAt: new Date().toISOString(),
+                portfolioList: portfolioList,
+                portfolios: {}
+            };
+
+            portfolioList.forEach((p) => {
+                backup.portfolios[p.id] = {
+                    holdings: JSON.parse(localStorage.getItem(`portfolio_${p.id}`) || '[]'),
+                    alerts: JSON.parse(localStorage.getItem(`alerts_${p.id}`) || '[]'),
+                    dividends: JSON.parse(localStorage.getItem(`dividends_${p.id}`) || '[]'),
+                    priceTargets: JSON.parse(localStorage.getItem(`priceTargets_${p.id}`) || '{}'),
+                    patrimonioHistory: JSON.parse(localStorage.getItem(`patrimonio_history_${p.id}`) || '[]')
+                };
+            });
+
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const dateStr = new Date().toISOString().split('T')[0];
+            a.href = url;
+            a.download = `analystpro-backup-${dateStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            localStorage.setItem('analystpro_last_backup', new Date().toISOString());
+            checkBackupReminder();
+            showNotification('📦 Backup baixado! Guarde esse arquivo em algum lugar seguro (e-mail, nuvem, computador).', 'success');
+        }
+
+        function triggerImportBackup() {
+            document.getElementById('backupFileInput').click();
+        }
+
+        function importBackupFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!data || !Array.isArray(data.portfolioList) || !data.portfolios) {
+                        showNotification('❌ Esse arquivo não parece ser um backup válido do AnalystPro.', 'error');
+                        return;
+                    }
+
+                    const dataStr = data.exportedAt ? new Date(data.exportedAt).toLocaleString('pt-BR') : 'data desconhecida';
+                    const ok = confirm(`Isso vai SUBSTITUIR todas as carteiras atuais pelas ${data.portfolioList.length} carteira(s) desse backup (feito em ${dataStr}). Essa ação não pode ser desfeita. Continuar?`);
+                    if (!ok) return;
+
+                    localStorage.setItem('portfolio_list', JSON.stringify(data.portfolioList));
+                    Object.keys(data.portfolios).forEach((id) => {
+                        const p = data.portfolios[id] || {};
+                        localStorage.setItem(`portfolio_${id}`, JSON.stringify(p.holdings || []));
+                        localStorage.setItem(`alerts_${id}`, JSON.stringify(p.alerts || []));
+                        localStorage.setItem(`dividends_${id}`, JSON.stringify(p.dividends || []));
+                        localStorage.setItem(`priceTargets_${id}`, JSON.stringify(p.priceTargets || {}));
+                        localStorage.setItem(`patrimonio_history_${id}`, JSON.stringify(p.patrimonioHistory || []));
+                    });
+
+                    localStorage.setItem('analystpro_last_backup', new Date().toISOString());
+                    showNotification('✅ Backup restaurado com sucesso! Recarregando...', 'success');
+                    setTimeout(() => location.reload(), 1200);
+                } catch (err) {
+                    showNotification('❌ Não consegui ler esse arquivo. Confira se é o backup certo.', 'error');
+                } finally {
+                    event.target.value = '';
+                }
+            };
+            reader.readAsText(file);
+        }
+
         function openManageAlerts() {
             document.getElementById('manageAlertsModal').style.display = 'flex';
         }
@@ -2889,6 +3071,10 @@
                 if (response.ok) {
                     testResult.innerHTML = '<i class="fas fa-check-circle"></i> Conexão OK! Sua chave funciona.';
                     testResult.className = 'result-success';
+                    if (token) {
+                        localStorage.setItem('brapiToken', token);
+                        brapiToken = token;
+                    }
                 } else if (response.status === 401 || response.status === 403) {
                     testResult.innerHTML = '<i class="fas fa-times-circle"></i> Chave inválida. Confira se colou certo.';
                     testResult.className = 'result-error';
