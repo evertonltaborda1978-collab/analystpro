@@ -12,6 +12,44 @@
   <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA (SUBSTITUI OS ALERTS PADRÃO DO NAVEGADOR) -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
+  <!-- MODAL POP-UP PARA NOVA OPERAÇÃO (SUBSTITUI O PROMPT PADRÃO) -->
+  <div id="modalOperacao" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <i class="fa-solid fa-plus-circle text-emerald-600"></i> Cadastrar Nova Operação
+        </h3>
+        <button onclick="fecharModalOperacao()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label for="opTicker" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Código do Ativo (Ticker)</label>
+          <input type="text" id="opTicker" placeholder="Ex: SAPR11, PETR4" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="opQtd" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Quantidade</label>
+            <input type="number" id="opQtd" placeholder="Ex: 40" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+          </div>
+          <div>
+            <label for="opPM" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Preço Médio (R$)</label>
+            <input type="number" step="0.01" id="opPM" placeholder="Ex: 23.72" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+          </div>
+        </div>
+        
+        <div class="flex gap-3 pt-2">
+          <button onclick="fecharModalOperacao()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 rounded-lg text-sm transition">
+            Cancelar
+          </button>
+          <button onclick="salvarNovaOperacao()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg text-sm transition">
+            Salvar Operação
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ========================================================= -->
   <!-- TELA DE LOGIN / AUTENTICAÇÃO (EXIBIDA AO ABRIR/RECARREGAR) -->
   <!-- ========================================================= -->
@@ -124,7 +162,7 @@
             <i class="fa-solid fa-wallet text-blue-600"></i> Minha Carteira
           </h3>
           <div class="flex gap-3">
-            <button onclick="adicionarOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
+            <button onclick="abrirModalOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
               <i class="fa-solid fa-plus"></i> Nova Operação
             </button>
             <button onclick="atualizarCotacoesBrapi()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
@@ -278,12 +316,10 @@
 
       container.appendChild(toast);
 
-      // Animação de entrada
       setTimeout(() => {
         toast.classList.remove('translate-y-2', 'opacity-0');
       }, 10);
 
-      // Remoção automática após 3.5 segundos
       setTimeout(() => {
         toast.classList.add('opacity-0', 'translate-y-2');
         setTimeout(() => toast.remove(), 300);
@@ -559,37 +595,59 @@
       }
     }
 
-    function adicionarOperacao() {
-      const ticker = prompt("Digite o código do Ativo (ex: PETR4):")?.toUpperCase().trim();
-      if (!ticker) return;
-      const qtd = prompt("Digite a quantidade:", "10");
-      const pm = prompt("Digite o Preço Médio:", "10.00");
+    // CONTROLE DO POP-UP DE NOVA OPERAÇÃO
+    function abrirModalOperacao() {
+      document.getElementById('opTicker').value = '';
+      document.getElementById('opQtd').value = '';
+      document.getElementById('opPM').value = '';
+      document.getElementById('modalOperacao').classList.remove('hidden');
+    }
 
-      if (ticker && qtd && pm) {
-        const tbody = document.getElementById('tabelaAtivos');
-        const novaLinha = document.createElement('tr');
-        novaLinha.setAttribute('data-ticker', ticker);
-        novaLinha.className = "border-b border-gray-100 text-sm";
-        
-        const valorInv = parseFloat(qtd) * parseFloat(pm);
+    function fecharModalOperacao() {
+      document.getElementById('modalOperacao').classList.add('hidden');
+    }
 
-        novaLinha.innerHTML = `
-          <td class="py-3 px-4 font-bold text-gray-800">${ticker}</td>
-          <td class="py-3 px-4 qtd">${qtd}</td>
-          <td class="py-3 px-4 pm">R$ ${parseFloat(pm).toFixed(2).replace('.', ',')}</td>
-          <td class="py-3 px-4 preco-atual font-semibold">R$ ${parseFloat(pm).toFixed(2).replace('.', ',')}</td>
-          <td class="py-3 px-4">R$ -</td>
-          <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
-          <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-          <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-          <td class="py-3 px-4 text-center">
-            <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-          </td>
-        `;
-        tbody.appendChild(novaLinha);
-        recalcularTotais();
-        mostrarNotificacao(`Ativo ${ticker} adicionado!`, "sucesso");
+    function salvarNovaOperacao() {
+      const ticker = document.getElementById('opTicker').value.toUpperCase().trim();
+      const qtd = document.getElementById('opQtd').value.trim();
+      const pm = document.getElementById('opPM').value.trim();
+
+      if (!ticker || !qtd || !pm) {
+        mostrarNotificacao("Preencha todos os campos da operação.", "aviso");
+        return;
       }
+
+      const tbody = document.getElementById('tabelaAtivos');
+      
+      // Verifica se o ativo já existe na tabela para substituir
+      const linhaExistente = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
+      if (linhaExistente) {
+        linhaExistente.remove();
+      }
+
+      const novaLinha = document.createElement('tr');
+      novaLinha.setAttribute('data-ticker', ticker);
+      novaLinha.className = "border-b border-gray-100 text-sm";
+      
+      const valorInv = parseFloat(qtd) * parseFloat(pm);
+
+      novaLinha.innerHTML = `
+        <td class="py-3 px-4 font-bold text-gray-800">${ticker}</td>
+        <td class="py-3 px-4 qtd">${qtd}</td>
+        <td class="py-3 px-4 pm">R$ ${parseFloat(pm).toFixed(2).replace('.', ',')}</td>
+        <td class="py-3 px-4 preco-atual font-semibold">R$ ${parseFloat(pm).toFixed(2).replace('.', ',')}</td>
+        <td class="py-3 px-4">R$ -</td>
+        <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+        <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+        <td class="py-3 px-4 text-center">
+          <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      `;
+      tbody.appendChild(novaLinha);
+      fecharModalOperacao();
+      recalcularTotais();
+      mostrarNotificacao(`Operação em ${ticker} salva com sucesso!`, "sucesso");
     }
   </script>
 </body>
