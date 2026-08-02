@@ -9,154 +9,348 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
 
-  <!-- NAVBAR / HEADER -->
-  <header class="bg-blue-600 text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold flex items-center gap-2">
-        <i class="fa-solid => fa-chart-line"></i> AnalystPro
-      </h1>
-      <nav class="flex gap-6 text-sm font-medium">
-        <a href="#carteira" onclick="navegar('carteira')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-wallet"></i> Carteira</a>
-        <a href="#dividendos" onclick="navegar('dividendos')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-hand-holding-dollar"></i> Dividendos</a>
-        <a href="#oportunidades" onclick="navegar('oportunidades')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-bullseye"></i> Oportunidades</a>
-        <a href="#analise" onclick="navegar('analise')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-chart-pie"></i> Análise</a>
-        <a href="#configuracoes" onclick="navegar('configuracoes')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-gear"></i> Configurações</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="max-w-7xl mx-auto px-4 py-8">
-
-    <!-- CARDS DE RESUMO (TOPO) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
-        <span class="text-sm text-gray-500">Valor Total da Carteira</span>
-        <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 mt-1">R$ 2.209,50</h2>
-        <span id="statusAtualizacao" class="text-xs text-gray-400">Aguardando atualização...</span>
+  <!-- ========================================================= -->
+  <!-- TELA DE LOGIN / AUTENTICAÇÃO (EXIBIDA AO ABRIR/RECARREGAR) -->
+  <!-- ========================================================= -->
+  <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-3">
+          <i class="fa-solid fa-lock text-2xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900">AnalystPro</h2>
+        <p class="text-sm text-gray-500 mt-1">Digite sua senha para acessar sua carteira</p>
       </div>
 
-      <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-emerald-500">
-        <span class="text-sm text-gray-500">Proventos Recebidos</span>
-        <h2 class="text-3xl font-bold text-emerald-600 mt-1">R$ 316,40</h2>
-        <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
-      </div>
-
-      <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-cyan-500">
-        <span class="text-sm text-gray-500">Lucro / Prejuízo (Ações)</span>
-        <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 mt-1">R$ 0,00 <span class="text-sm font-normal">(+0.00%)</span></h2>
-      </div>
-    </div>
-
-    <!-- SEÇÃO: CARTEIRA -->
-    <section id="sec-carteira" class="bg-white p-6 rounded-lg shadow-sm">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-          <i class="fa-solid fa-wallet text-blue-600"></i> Minha Carteira
-        </h3>
-        <div class="flex gap-3">
-          <button onclick="adicionarOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
-            <i class="fa-solid fa-plus"></i> Nova Operação
-          </button>
-          <button onclick="atualizarCotacoesBrapi()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
-            <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
-          </button>
+      <!-- FORMULÁRIO DE LOGIN -->
+      <div id="formLogin" class="space-y-4">
+        <div>
+          <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Senha de Acesso</label>
+          <input type="password" id="senhaAcesso" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
+          Entrar no Sistema
+        </button>
+        <div class="text-center pt-2">
+          <button onclick="exibirTelaRecuperacao()" class="text-xs text-blue-600 hover:underline">Esqueceu a senha?</button>
         </div>
       </div>
 
-      <!-- TABELA DE ATIVOS -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="border-b border-gray-200 bg-gray-50 text-gray-600 text-sm font-semibold">
-              <th class="py-3 px-4">Ativo</th>
-              <th class="py-3 px-4">Qtd</th>
-              <th class="py-3 px-4">Preço Médio</th>
-              <th class="py-3 px-4">Preço Atual</th>
-              <th class="py-3 px-4">Preço Justo</th>
-              <th class="py-3 px-4">Variação Dia</th>
-              <th class="py-3 px-4">Valor Investido</th>
-              <th class="py-3 px-4">Valor Atual</th>
-              <th class="py-3 px-4 text-center">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaAtivos" class="divide-y divide-gray-100 text-sm">
-            <tr data-ticker="PETR4">
-              <td class="py-3 px-4 font-bold text-gray-800">PETR4</td>
-              <td class="py-3 px-4 qtd">10</td>
-              <td class="py-3 px-4 pm">R$ 32,21</td>
-              <td class="py-3 px-4 preco-atual font-semibold">R$ 32,21</td>
-              <td class="py-3 px-4">R$ 27,22</td>
-              <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
-              <td class="py-3 px-4 valor-investido">R$ 322,10</td>
-              <td class="py-3 px-4 valor-atual font-semibold">R$ 322,10</td>
-              <td class="py-3 px-4 text-center">
-                <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
-            <tr data-ticker="KLBN3">
-              <td class="py-3 px-4 font-bold text-gray-800">KLBN3</td>
-              <td class="py-3 px-4 qtd">225</td>
-              <td class="py-3 px-4 pm">R$ 6,28</td>
-              <td class="py-3 px-4 preco-atual font-semibold">R$ 6,28</td>
-              <td class="py-3 px-4">R$ 3,81</td>
-              <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
-              <td class="py-3 px-4 valor-investido">R$ 1.413,00</td>
-              <td class="py-3 px-4 valor-atual font-semibold">R$ 1.413,00</td>
-              <td class="py-3 px-4 text-center">
-                <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
-            <tr data-ticker="SAPR11">
-              <td class="py-3 px-4 font-bold text-gray-800">SAPR11</td>
-              <td class="py-3 px-4 qtd">20</td>
-              <td class="py-3 px-4 pm">R$ 23,72</td>
-              <td class="py-3 px-4 preco-atual font-semibold">R$ 23,72</td>
-              <td class="py-3 px-4">R$ 21,35</td>
-              <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
-              <td class="py-3 px-4 valor-investido">R$ 474,40</td>
-              <td class="py-3 px-4 valor-atual font-semibold">R$ 474,40</td>
-              <td class="py-3 px-4 text-center">
-                <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- SEÇÃO: CONFIGURAÇÕES -->
-    <section id="sec-configuracoes" class="bg-white p-6 rounded-lg shadow-sm hidden">
-      <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-gear text-blue-600"></i> Configurações da API
-      </h3>
-      <div class="max-w-md">
-        <label for="brapiTokenInput" class="block text-sm font-medium text-gray-700 mb-2">Token de Acesso da Brapi (brapi.dev)</label>
-        <input type="text" id="brapiTokenInput" placeholder="Cole seu token da Brapi aqui" class="w-full p-2 border border-gray-300 rounded-md text-sm mb-4 focus:ring-2 focus:ring-blue-500 outline-none">
-        <button onclick="salvarConfiguracoes()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm">
-          Salvar Configurações
+      <!-- FORMULÁRIO DE RECUPERAÇÃO DE SENHA -->
+      <div id="formRecuperacao" class="space-y-4 hidden">
+        <p class="text-xs text-gray-600">Para redefinir sua senha, digite o seu Token da Brapi cadastrado para confirmar sua identidade:</p>
+        <div>
+          <label for="tokenRecuperacao" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Token Brapi de Confirmação</label>
+          <input type="text" id="tokenRecuperacao" placeholder="Cole seu token aqui" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <div>
+          <label for="novaSenha" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Nova Senha</label>
+          <input type="password" id="novaSenha" placeholder="Digite a nova senha" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <button onclick="restaurarSenha()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
+          Redefinir Senha
         </button>
+        <div class="text-center pt-1">
+          <button onclick="exibirTelaLogin()" class="text-xs text-gray-500 hover:underline">Voltar ao Login</button>
+        </div>
       </div>
-    </section>
 
-    <!-- OUTRAS SEÇÕES (Placeholder) -->
-    <section id="sec-dividendos" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Dividendos</h3></section>
-    <section id="sec-oportunidades" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Oportunidades</h3></section>
-    <section id="sec-analise" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Análise</h3></section>
+      <div class="mt-6 pt-4 border-t border-gray-100 text-center">
+        <span class="text-xs text-gray-400">Senha padrão inicial: <strong class="text-gray-600">123456</strong></span>
+      </div>
+    </div>
+  </div>
 
-  </main>
+  <!-- ========================================================= -->
+  <!-- APLICAÇÃO PRINCIPAL (PROTEGIDA POR SENHA) -->
+  <!-- ========================================================= -->
+  <div id="appConteudo" class="hidden">
+    <!-- NAVBAR / HEADER -->
+    <header class="bg-blue-600 text-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <h1 class="text-2xl font-bold flex items-center gap-2">
+            <i class="fa-solid fa-chart-line"></i> AnalystPro
+          </h1>
+          <!-- STATUS DA API BRAPI NO TOPO -->
+          <div id="statusApiBrapi" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-700 text-blue-200">
+            <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+            <span>Brapi: Verificando...</span>
+          </div>
+        </div>
 
-  <!-- LÓGICA JAVASCRIPT INTEGRAL -->
+        <nav class="flex items-center gap-6 text-sm font-medium">
+          <a href="#carteira" onclick="navegar('carteira')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-wallet"></i> Carteira</a>
+          <a href="#dividendos" onclick="navegar('dividendos')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-hand-holding-dollar"></i> Dividendos</a>
+          <a href="#oportunidades" onclick="navegar('oportunidades')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-bullseye"></i> Oportunidades</a>
+          <a href="#analise" onclick="navegar('analise')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-chart-pie"></i> Análise</a>
+          <a href="#configuracoes" onclick="navegar('configuracoes')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-gear"></i> Configurações</a>
+          <button onclick="bloquearApp()" title="Sair / Bloquear" class="ml-2 text-blue-200 hover:text-white"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+
+      <!-- CARDS DE RESUMO (TOPO) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+          <span class="text-sm text-gray-500">Valor Total da Carteira</span>
+          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 mt-1">R$ 1.984,55</h2>
+          <span id="statusAtualizacao" class="text-xs text-gray-400">Aguardando atualização...</span>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-emerald-500">
+          <span class="text-sm text-gray-500">Proventos Recebidos</span>
+          <h2 class="text-3xl font-bold text-emerald-600 mt-1">R$ 316,40</h2>
+          <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
+        </div>
+
+        <!-- CARD DINÂMICO DE LUCRO/PREJUÍZO -->
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-cyan-500">
+          <span class="text-sm text-gray-500">Lucro / Prejuízo (Ações)</span>
+          <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 mt-1">R$ 0,00 <span class="text-sm font-normal">(+0.00%)</span></h2>
+        </div>
+      </div>
+
+      <!-- SEÇÃO: CARTEIRA -->
+      <section id="sec-carteira" class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+            <i class="fa-solid fa-wallet text-blue-600"></i> Minha Carteira
+          </h3>
+          <div class="flex gap-3">
+            <button onclick="adicionarOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
+              <i class="fa-solid fa-plus"></i> Nova Operação
+            </button>
+            <button onclick="atualizarCotacoesBrapi()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
+              <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
+            </button>
+          </div>
+        </div>
+
+        <!-- TABELA DE ATIVOS -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-200 bg-gray-50 text-gray-600 text-sm font-semibold">
+                <th class="py-3 px-4">Ativo</th>
+                <th class="py-3 px-4">Qtd</th>
+                <th class="py-3 px-4">Preço Médio</th>
+                <th class="py-3 px-4">Preço Atual</th>
+                <th class="py-3 px-4">Preço Justo</th>
+                <th class="py-3 px-4">Variação Dia</th>
+                <th class="py-3 px-4">Valor Investido</th>
+                <th class="py-3 px-4">Valor Atual</th>
+                <th class="py-3 px-4 text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaAtivos" class="divide-y divide-gray-100 text-sm">
+              <tr data-ticker="PETR4">
+                <td class="py-3 px-4 font-bold text-gray-800">PETR4</td>
+                <td class="py-3 px-4 qtd">10</td>
+                <td class="py-3 px-4 pm">R$ 32,21</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 32,21</td>
+                <td class="py-3 px-4">R$ 27,22</td>
+                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+                <td class="py-3 px-4 valor-investido">R$ 322,10</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 322,10</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr data-ticker="KLBN3">
+                <td class="py-3 px-4 font-bold text-gray-800">KLBN3</td>
+                <td class="py-3 px-4 qtd">225</td>
+                <td class="py-3 px-4 pm">R$ 6,28</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 6,28</td>
+                <td class="py-3 px-4">R$ 3,81</td>
+                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+                <td class="py-3 px-4 valor-investido">R$ 1.413,00</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 1.413,00</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr data-ticker="SAPR11">
+                <td class="py-3 px-4 font-bold text-gray-800">SAPR11</td>
+                <td class="py-3 px-4 qtd">20</td>
+                <td class="py-3 px-4 pm">R$ 23,72</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 23,72</td>
+                <td class="py-3 px-4">R$ 21,35</td>
+                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+                <td class="py-3 px-4 valor-investido">R$ 474,40</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 474,40</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: CONFIGURAÇÕES -->
+      <section id="sec-configuracoes" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-8">
+        <div>
+          <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-gear text-blue-600"></i> Configurações da API Brapi
+          </h3>
+          <div class="max-w-md">
+            <label for="brapiTokenInput" class="block text-sm font-medium text-gray-700 mb-2">Token de Acesso da Brapi (brapi.dev)</label>
+            <input type="text" id="brapiTokenInput" placeholder="Cole seu token da Brapi aqui" class="w-full p-2 border border-gray-300 rounded-md text-sm mb-4 focus:ring-2 focus:ring-blue-500 outline-none">
+            <button onclick="salvarConfiguracoes()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm">
+              Salvar Token
+            </button>
+          </div>
+        </div>
+
+        <hr class="border-gray-200">
+
+        <!-- ALTERAR SENHA DE ACESSO -->
+        <div>
+          <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-key text-blue-600"></i> Alterar Senha do Aplicativo
+          </h3>
+          <div class="max-w-md space-y-3">
+            <div>
+              <label for="novaSenhaConfig" class="block text-sm font-medium text-gray-700 mb-1">Nova Senha</label>
+              <input type="password" id="novaSenhaConfig" placeholder="Digite a nova senha" class="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <button onclick="alterarSenhaConfig()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md font-medium text-sm">
+              Atualizar Senha
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÕES AUXILIARES -->
+      <section id="sec-dividendos" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Dividendos</h3></section>
+      <section id="sec-oportunidades" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Oportunidades</h3></section>
+      <section id="sec-analise" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Análise</h3></section>
+
+    </main>
+  </div>
+
+  <!-- LÓGICA JAVASCRIPT COMPLETA E INTEGRAL -->
   <script>
-    // 1. Ao carregar a página, restaura a chave salva no campo das configurações
+    if (!localStorage.getItem('app_senha')) {
+      localStorage.setItem('app_senha', '123456');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('telaLogin').classList.remove('hidden');
+      document.getElementById('appConteudo').classList.add('hidden');
+
       const tokenSalvo = localStorage.getItem('brapi_token');
       if (tokenSalvo) {
         document.getElementById('brapiTokenInput').value = tokenSalvo;
       }
     });
 
-    // 2. Navegação simples entre as abas do menu
+    // ---------------------------------------------------------
+    // SISTEMA DE SEGURANÇA E AUTENTICAÇÃO
+    // ---------------------------------------------------------
+    function autenticar() {
+      const senhaInformada = document.getElementById('senhaAcesso').value;
+      const senhaSalva = localStorage.getItem('app_senha');
+
+      if (senhaInformada === senhaSalva) {
+        document.getElementById('telaLogin').classList.add('hidden');
+        document.getElementById('appConteudo').classList.remove('hidden');
+        document.getElementById('senhaAcesso').value = '';
+        
+        testarStatusBrapi();
+        recalcularTotais(); // Calcula Lucro/Prejuízo imediatamente ao entrar
+      } else {
+        alert("Senha incorreta! Tente novamente.");
+      }
+    }
+
+    function bloquearApp() {
+      document.getElementById('appConteudo').classList.add('hidden');
+      document.getElementById('telaLogin').classList.remove('hidden');
+      exibirTelaLogin();
+    }
+
+    function exibirTelaRecuperacao() {
+      document.getElementById('formLogin').classList.add('hidden');
+      document.getElementById('formRecuperacao').classList.remove('hidden');
+    }
+
+    function exibirTelaLogin() {
+      document.getElementById('formRecuperacao').classList.add('hidden');
+      document.getElementById('formLogin').classList.remove('hidden');
+    }
+
+    function restaurarSenha() {
+      const tokenDigitado = document.getElementById('tokenRecuperacao').value.trim();
+      const novaSenha = document.getElementById('novaSenha').value.trim();
+      const tokenSalvo = localStorage.getItem('brapi_token');
+
+      if (!tokenSalvo) {
+        alert("Nenhum token da Brapi está gravado no sistema para confirmar sua identidade.");
+        return;
+      }
+
+      if (tokenDigitado === tokenSalvo) {
+        if (novaSenha.length < 4) {
+          alert("A nova senha deve ter pelo menos 4 caracteres.");
+          return;
+        }
+        localStorage.setItem('app_senha', novaSenha);
+        alert("Senha redefinida com sucesso! Você já pode entrar com a nova senha.");
+        document.getElementById('tokenRecuperacao').value = '';
+        document.getElementById('novaSenha').value = '';
+        exibirTelaLogin();
+      } else {
+        alert("Token incorreto! Não foi possível restaurar a senha.");
+      }
+    }
+
+    function alterarSenhaConfig() {
+      const nova = document.getElementById('novaSenhaConfig').value.trim();
+      if (nova.length >= 4) {
+        localStorage.setItem('app_senha', nova);
+        alert("Senha alterada com sucesso!");
+        document.getElementById('novaSenhaConfig').value = '';
+      } else {
+        alert("Por favor, escolha uma senha com pelo menos 4 caracteres.");
+      }
+    }
+
+    // ---------------------------------------------------------
+    // VERIFICAÇÃO DE STATUS DA API BRAPI
+    // ---------------------------------------------------------
+    async function testarStatusBrapi() {
+      const statusContainer = document.getElementById('statusApiBrapi');
+      const token = localStorage.getItem('brapi_token');
+
+      if (!token) {
+        statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800";
+        statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-yellow-500"></span><span>Brapi: Sem Token</span>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://brapi.dev/api/quote/PETR4?token=${token}`);
+        if (res.ok) {
+          statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800";
+          statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Brapi: Online</span>`;
+        } else {
+          statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800";
+          statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span>Brapi: Erro ${res.status}</span>`;
+        }
+      } catch (err) {
+        statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800";
+        statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span>Brapi: Offline</span>`;
+      }
+    }
+
+    // ---------------------------------------------------------
+    // NAVEGAÇÃO E REGRAS DA CARTEIRA
+    // ---------------------------------------------------------
     function navegar(aba) {
       const secoes = ['carteira', 'dividendos', 'oportunidades', 'analise', 'configuracoes'];
       secoes.forEach(s => {
@@ -167,24 +361,23 @@
       if (ativa) ativa.classList.remove('hidden');
     }
 
-    // 3. Salvar o Token da API limpo no localStorage
     function salvarConfiguracoes() {
       const input = document.getElementById('brapiTokenInput');
       if (input && input.value.trim() !== "") {
         const tokenLimpo = input.value.trim();
         localStorage.setItem('brapi_token', tokenLimpo);
         alert('Token da Brapi salvo com sucesso!');
+        testarStatusBrapi();
       } else {
         alert('Por favor, insira um token válido.');
       }
     }
 
-    // 4. Função PRINCIPAL para Atualizar Preços (Corrigida com Promise.all para evitar o erro 400)
     async function atualizarCotacoesBrapi() {
       const token = localStorage.getItem('brapi_token');
 
       if (!token) {
-        alert("Token da Brapi não encontrado! Vá em Configurações e salve seu token.");
+        alert("Token da Brapi não encontrado! Vá na aba Configurações e salve seu token.");
         navegar('configuracoes');
         return;
       }
@@ -192,7 +385,6 @@
       const statusElement = document.getElementById('statusAtualizacao');
       if (statusElement) statusElement.innerText = "Atualizando preços...";
 
-      // Obtém dinamicamente todos os tickers presentes nas linhas da tabela
       const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
       const tickers = Array.from(linhas).map(linha => linha.getAttribute('data-ticker'));
 
@@ -201,46 +393,48 @@
         return;
       }
 
-      try {
-        // Dispara requisições individuais em paralelo para cada ticker (resolve o erro 400 Bad Request)
-        const requisicoes = tickers.map(ticker =>
-          fetch(`https://brapi.dev/api/quote/${ticker}?token=${token}`)
-            .then(async res => {
-              if (!res.ok) {
-                throw new Error(`Erro no ativo ${ticker}: Status ${res.status}`);
-              }
-              return res.json();
-            })
-        );
+      let atualizadosComSucesso = 0;
 
-        const resultados = await Promise.all(requisicoes);
+      for (const ticker of tickers) {
+        try {
+          let url = `https://brapi.dev/api/quote/${ticker}?token=${token}`;
+          let response = await fetch(url);
 
-        // Atualiza a tabela elemento por elemento
-        resultados.forEach(data => {
-          if (data.results && data.results.length > 0) {
-            const ativo = data.results[0];
-            const ticker = ativo.symbol;
-            const precoAtual = ativo.regularMarketPrice;
-            const variacao = ativo.regularMarketChangePercent;
-
-            atualizarLinhaTabela(ticker, precoAtual, variacao);
+          if (response.status === 404) {
+            url = `https://brapi.dev/api/quote/${ticker}.SA?token=${token}`;
+            response = await fetch(url);
           }
-        });
 
-        recalcularTotais();
+          if (response.ok) {
+            const data = await response.json();
+            if (data.results && data.results.length > 0) {
+              const ativo = data.results[0];
+              const precoAtual = ativo.regularMarketPrice;
+              const variacao = ativo.regularMarketChangePercent;
 
-        const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        if (statusElement) statusElement.innerText = `Atualizado às ${agora}`;
-        alert("Cotações atualizadas com sucesso!");
+              atualizarLinhaTabela(ticker, precoAtual, variacao);
+              atualizadosComSucesso++;
+            }
+          }
+        } catch (err) {
+          console.error(`Erro de rede ao buscar ${ticker}:`, err);
+        }
+      }
 
-      } catch (erro) {
-        console.error("Erro na atualização:", erro);
-        if (statusElement) statusElement.innerText = "Falha ao atualizar";
-        alert("Ocorreu um erro ao buscar os preços. Verifique se seu token na aba Configurações está correto e sem espaços.");
+      recalcularTotais();
+
+      const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      if (statusElement) {
+        if (atualizadosComSucesso > 0) {
+          statusElement.innerText = `Atualizado às ${agora}`;
+          alert("Cotações atualizadas com sucesso!");
+        } else {
+          statusElement.innerText = "Falha ao atualizar";
+          alert("Não foi possível atualizar os preços. Verifique seu token nas Configurações.");
+        }
       }
     }
 
-    // 5. Atualiza os dados de uma linha específica no DOM
     function atualizarLinhaTabela(ticker, precoAtual, variacao) {
       const linha = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
       if (!linha) return;
@@ -257,14 +451,11 @@
       if (celulaVariacao && variacao !== undefined) {
         const sinal = variacao >= 0 ? '+' : '';
         celulaVariacao.innerText = `${sinal}${variacao.toFixed(2)}%`;
-        if (variacao >= 0) {
-          celulaVariacao.className = "py-3 px-4 variacao text-emerald-600 font-medium";
-        } else {
-          celulaVariacao.className = "py-3 px-4 variacao text-red-500 font-medium";
-        }
+        celulaVariacao.className = variacao >= 0 
+          ? "py-3 px-4 variacao text-emerald-600 font-medium" 
+          : "py-3 px-4 variacao text-red-500 font-medium";
       }
 
-      // Recalcula o valor total daquele ativo (Quantidade * Preço Atual)
       if (celulaQtd && celulaValorAtual && precoAtual !== undefined) {
         const qtd = parseFloat(celulaQtd.innerText.replace(',', '.'));
         const valorAtualTotal = qtd * precoAtual;
@@ -272,24 +463,53 @@
       }
     }
 
-    // 6. Recalcula o valor total acumulado da carteira
+    // CÁLCULO DINÂMICO DE TOTAIS E LUCRO/PREJUÍZO
     function recalcularTotais() {
-      const valoresAtuais = document.querySelectorAll('#tabelaAtivos .valor-atual');
-      let totalGeral = 0;
+      const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
+      let totalInvestido = 0;
+      let totalAtual = 0;
 
-      valoresAtuais.forEach(el => {
-        const textoLimpo = el.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
-        const valor = parseFloat(textoLimpo);
-        if (!isNaN(valor)) totalGeral += valor;
+      linhas.forEach(linha => {
+        const celulaValorInv = linha.querySelector('.valor-investido');
+        const celulaValorAtual = linha.querySelector('.valor-atual');
+
+        if (celulaValorInv) {
+          const vInv = parseFloat(celulaValorInv.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+          if (!isNaN(vInv)) totalInvestido += vInv;
+        }
+
+        if (celulaValorAtual) {
+          const vAtu = parseFloat(celulaValorAtual.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+          if (!isNaN(vAtu)) totalAtual += vAtu;
+        }
       });
 
+      // Atualiza o Total da Carteira
       const totalElement = document.getElementById('totalCarteira');
       if (totalElement) {
-        totalElement.innerText = `R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        totalElement.innerText = `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+
+      // Atualiza o Lucro/Prejuízo Total
+      const lucroPrejuizoElement = document.getElementById('lucroPrejuizo');
+      if (lucroPrejuizoElement) {
+        const diferenca = totalAtual - totalInvestido;
+        const percentual = totalInvestido > 0 ? (diferenca / totalInvestido) * 100 : 0;
+        const sinal = diferenca >= 0 ? '+' : '';
+
+        lucroPrejuizoElement.innerHTML = `
+          R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} 
+          <span class="text-sm font-normal">(${sinal}${percentual.toFixed(2)}%)</span>
+        `;
+
+        if (diferenca >= 0) {
+          lucroPrejuizoElement.className = "text-3xl font-bold text-emerald-600 mt-1";
+        } else {
+          lucroPrejuizoElement.className = "text-3xl font-bold text-red-500 mt-1";
+        }
       }
     }
 
-    // Helper de remoção
     function removerAtivo(btn) {
       if (confirm("Deseja remover este ativo da carteira?")) {
         const tr = btn.closest('tr');
@@ -298,7 +518,6 @@
       }
     }
 
-    // Helper de inclusão (exemplo)
     function adicionarOperacao() {
       const ticker = prompt("Digite o código do Ativo (ex: PETR4):")?.toUpperCase().trim();
       if (!ticker) return;
