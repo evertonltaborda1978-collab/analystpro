@@ -13,7 +13,7 @@
     .nav-tabs .nav-link.active { font-weight: bold; }
     .card-stat { border: none; shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); }
     
-    /* Banner Flutuante de Atualização */
+    /* Banner Flutuante de Atualização em Tempo Real */
     #updateBanner {
       position: fixed;
       bottom: 20px;
@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <!-- Navbar / Header -->
+  <!-- Navbar / Header com TODOS os Ícones do Menu -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
       <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-chart-line me-2"></i>AnalystPro</a>
@@ -47,12 +47,26 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-menu nav nav-pills ms-auto" id="mainTabs" role="tablist">
+        <ul class="navbar-nav nav-pills ms-auto" id="mainTabs" role="tablist">
           <li class="nav-item">
-            <button class="nav-link text-white active" id="carteira-tab" data-bs-toggle="tab" data-bs-target="#carteira" type="button"><i class="fa-solid fa-wallet me-1"></i> Carteira</button>
+            <button class="nav-link text-white active" id="carteira-tab" data-bs-toggle="tab" data-bs-target="#carteira" type="button">
+              <i class="fa-solid fa-wallet me-1"></i> Carteira
+            </button>
           </li>
           <li class="nav-item">
-            <button class="nav-link text-white" id="dividendos-tab" data-bs-toggle="tab" data-bs-target="#dividendos" type="button"><i class="fa-solid fa-hand-holding-dollar me-1"></i> Dividendos</button>
+            <button class="nav-link text-white" id="dividendos-tab" data-bs-toggle="tab" data-bs-target="#dividendos" type="button">
+              <i class="fa-solid fa-hand-holding-dollar me-1"></i> Dividendos
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link text-white" id="analise-tab" data-bs-toggle="tab" data-bs-target="#analise" type="button">
+              <i class="fa-solid fa-chart-pie me-1"></i> Análise
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link text-white" id="config-tab" data-bs-toggle="tab" data-bs-target="#config" type="button">
+              <i class="fa-solid fa-gear me-1"></i> Configurações
+            </button>
           </li>
         </ul>
       </div>
@@ -60,7 +74,7 @@
   </nav>
 
   <div class="container">
-    <!-- Cards de Resumo -->
+    <!-- Cards de Resumo no Topo -->
     <div class="row g-3 mb-4">
       <div class="col-md-4">
         <div class="card card-stat p-3 bg-white border-start border-4 border-primary rounded-3 shadow-sm">
@@ -91,7 +105,7 @@
       <div class="tab-pane fade show active" id="carteira" role="tabpanel">
         <div class="card p-4 shadow-sm border-0 mb-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="m-0 fw-bold">Minha Carteira</h5>
+            <h5 class="m-0 fw-bold"><i class="fa-solid fa-wallet text-primary me-2"></i>Minha Carteira</h5>
             <div>
               <button class="btn btn-success btn-sm me-2"><i class="fa-solid fa-plus me-1"></i> Nova Operação</button>
               <button class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-arrows-rotate me-1"></i> Atualizar Preços</button>
@@ -238,6 +252,22 @@
 
       </div>
 
+      <!-- ABA 3: ANÁLISE -->
+      <div class="tab-pane fade" id="analise" role="tabpanel">
+        <div class="card p-4 shadow-sm border-0">
+          <h5 class="fw-bold"><i class="fa-solid fa-chart-pie text-primary me-2"></i>Análise da Carteira</h5>
+          <p class="text-muted">Área reservada para gráficos de alocação de ativos e indicadores financeiros.</p>
+        </div>
+      </div>
+
+      <!-- ABA 4: CONFIGURAÇÕES -->
+      <div class="tab-pane fade" id="config" role="tabpanel">
+        <div class="card p-4 shadow-sm border-0">
+          <h5 class="fw-bold"><i class="fa-solid fa-gear text-primary me-2"></i>Configurações</h5>
+          <p class="text-muted">Ajustes gerais do aplicativo AnalystPro.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -263,13 +293,8 @@
       }
     }
 
-    // Checagem inicial
     verificarNovaVersao();
-
-    // Checagem em tempo real a cada 3 segundos
     setInterval(verificarNovaVersao, 3000);
-
-    // Checagem imediata quando o usuário volta para a aba do navegador
     window.addEventListener('focus', verificarNovaVersao);
 
 
