@@ -33,7 +33,7 @@
             <input type="number" id="opQtd" placeholder="Ex: 20" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
           <div>
-            <label for="opPM" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Preço Médio (R$)</label>
+            <label for="opPM" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Preço da Compra (R$)</label>
             <input type="number" step="0.01" id="opPM" placeholder="Ex: 20.00" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
         </div>
@@ -63,7 +63,6 @@
         <p class="text-sm text-gray-500 mt-1">Digite sua senha para acessar sua carteira</p>
       </div>
 
-      <!-- FORMULÁRIO DE LOGIN -->
       <div id="formLogin" class="space-y-4">
         <div>
           <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Senha de Acesso</label>
@@ -72,32 +71,6 @@
         <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
           Entrar no Sistema
         </button>
-        <div class="text-center pt-2">
-          <button onclick="exibirTelaRecuperacao()" class="text-xs text-blue-600 hover:underline">Esqueceu a senha?</button>
-        </div>
-      </div>
-
-      <!-- FORMULÁRIO DE RECUPERAÇÃO DE SENHA -->
-      <div id="formRecuperacao" class="space-y-4 hidden">
-        <p class="text-xs text-gray-600">Para redefinir sua senha, digite o seu Token da Brapi cadastrado para confirmar sua identidade:</p>
-        <div>
-          <label for="tokenRecuperacao" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Token Brapi de Confirmação</label>
-          <input type="text" id="tokenRecuperacao" placeholder="Cole seu token aqui" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
-        <div>
-          <label for="novaSenha" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Nova Senha</label>
-          <input type="password" id="novaSenha" placeholder="Digite a nova senha" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
-        <button onclick="restaurarSenha()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
-          Redefinir Senha
-        </button>
-        <div class="text-center pt-1">
-          <button onclick="exibirTelaLogin()" class="text-xs text-gray-500 hover:underline">Voltar ao Login</button>
-        </div>
-      </div>
-
-      <div class="mt-6 pt-4 border-t border-gray-100 text-center">
-        <span class="text-xs text-gray-400">Senha padrão inicial: <strong class="text-gray-600">123456</strong></span>
       </div>
     </div>
   </div>
@@ -106,7 +79,6 @@
   <!-- APLICAÇÃO PRINCIPAL -->
   <!-- ========================================================= -->
   <div id="appConteudo" class="hidden">
-    <!-- NAVBAR / HEADER -->
     <header class="bg-blue-600 text-white shadow-md">
       <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <div class="flex items-center gap-4">
@@ -130,14 +102,11 @@
       </div>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-4 py-8">
-
-      <!-- CARDS DE RESUMO (TOPO) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
           <span class="text-sm text-gray-500">Valor Total da Carteira</span>
-          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 mt-1">R$ 2.384,55</h2>
+          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 mt-1">R$ 0,00</h2>
           <span id="statusAtualizacao" class="text-xs text-gray-400">Aguardando atualização...</span>
         </div>
 
@@ -166,18 +135,16 @@
             <button onclick="atualizarCotacoesBrapi()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
             </button>
-            <!-- BOTÕES DE BACKUP OFFLINE DA CARTEIRA -->
-            <button onclick="exportarBackup()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5" title="Salvar Backup Offline">
+            <button onclick="exportarBackup()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-download"></i> Salvar Backup
             </button>
-            <label class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 cursor-pointer" title="Restaurar Backup">
+            <label class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 cursor-pointer">
               <i class="fa-solid fa-upload"></i> Carregar Backup
               <input type="file" id="importInput" accept=".json" onchange="importarBackup(event)" class="hidden">
             </label>
           </div>
         </div>
 
-        <!-- TABELA DE ATIVOS -->
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -222,32 +189,139 @@
               </tr>
               <tr data-ticker="SAPR11">
                 <td class="py-3 px-4 font-bold text-gray-800">SAPR11</td>
-                <td class="py-3 px-4 qtd">20</td>
-                <td class="py-3 px-4 pm">R$ 23,72</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 23,72</td>
+                <td class="py-3 px-4 qtd">40</td>
+                <td class="py-3 px-4 pm">R$ 21,86</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 21,86</td>
                 <td class="py-3 px-4">R$ 21,35</td>
                 <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
-                <td class="py-3 px-4 valor-investido">R$ 474,40</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 474,40</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                </td>
-              </tr>
-              <tr data-ticker="SAPR11">
-                <td class="py-3 px-4 font-bold text-gray-800">SAPR11</td>
-                <td class="py-3 px-4 qtd">20</td>
-                <td class="py-3 px-4 pm">R$ 20,00</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 20,00</td>
-                <td class="py-3 px-4">R$ -</td>
-                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
-                <td class="py-3 px-4 valor-investido">R$ 400,00</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 400,00</td>
+                <td class="py-3 px-4 valor-investido">R$ 874,40</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 874,40</td>
                 <td class="py-3 px-4 text-center">
                   <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: DIVIDENDOS -->
+      <section id="sec-dividendos" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
+        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> Histórico de Proventos e Dividendos
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg">
+            <span class="text-xs font-semibold text-emerald-800 uppercase">Total Acumulado de Proventos</span>
+            <h4 class="text-2xl font-bold text-emerald-700 mt-1">R$ 316,40</h4>
+          </div>
+          <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+            <span class="text-xs font-semibold text-blue-800 uppercase">Média Mensal Estimada</span>
+            <h4 class="text-2xl font-bold text-blue-700 mt-1">R$ 8,78 / mês</h4>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-200 bg-gray-50 text-gray-600 text-sm font-semibold">
+                <th class="py-3 px-4">Ativo</th>
+                <th class="py-3 px-4">Tipo</th>
+                <th class="py-3 px-4">Data Com</th>
+                <th class="py-3 px-4">Data Pagamento</th>
+                <th class="py-3 px-4">Valor Total (R$)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-sm">
+              <tr>
+                <td class="py-3 px-4 font-bold text-gray-800">SAPR11</td>
+                <td class="py-3 px-4 text-gray-600">JCP / Dividendo</td>
+                <td class="py-3 px-4">15/12/2025</td>
+                <td class="py-3 px-4">28/12/2025</td>
+                <td class="py-3 px-4 font-semibold text-emerald-600">R$ 45,20</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-gray-800">PETR4</td>
+                <td class="py-3 px-4 text-gray-600">Dividendo Extra</td>
+                <td class="py-3 px-4">10/11/2025</td>
+                <td class="py-3 px-4">25/11/2025</td>
+                <td class="py-3 px-4 font-semibold text-emerald-600">R$ 88,50</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-bold text-gray-800">KLBN3</td>
+                <td class="py-3 px-4 text-gray-600">Dividendo Trimestral</td>
+                <td class="py-3 px-4">02/08/2025</td>
+                <td class="py-3 px-4">18/08/2025</td>
+                <td class="py-3 px-4 font-semibold text-emerald-600">R$ 182,70</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: OPORTUNIDADES -->
+      <section id="sec-oportunidades" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
+        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-bullseye text-blue-600"></i> Radar de Oportunidades (Value Investing)
+        </h3>
+        <p class="text-sm text-gray-600">Ativos monitorados com base no Preço Justo (Método Graham / Dividend Yield):</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Oportunidade</span>
+            <h4 class="text-lg font-bold text-gray-800 mt-2">SAPR11</h4>
+            <p class="text-xs text-gray-500 mt-1">Sanepar Unit</p>
+            <div class="mt-4 space-y-1 text-sm">
+              <div class="flex justify-between"><span>Preço Atual:</span> <span class="font-semibold text-emerald-600">R$ 21,86</span></div>
+              <div class="flex justify-between"><span>Preço Justo:</span> <span class="font-semibold text-gray-700">R$ 21,35</span></div>
+            </div>
+          </div>
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <span class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Neutro / Monitorando</span>
+            <h4 class="text-lg font-bold text-gray-800 mt-2">PETR4</h4>
+            <p class="text-xs text-gray-500 mt-1">Petrobras PN</p>
+            <div class="mt-4 space-y-1 text-sm">
+              <div class="flex justify-between"><span>Preço Atual:</span> <span class="font-semibold text-blue-600">R$ 32,21</span></div>
+              <div class="flex justify-between"><span>Preço Justo:</span> <span class="font-semibold text-gray-700">R$ 27,22</span></div>
+            </div>
+          </div>
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Descontado</span>
+            <h4 class="text-lg font-bold text-gray-800 mt-2">KLBN3</h4>
+            <p class="text-xs text-gray-500 mt-1">Klabin ON</p>
+            <div class="mt-4 space-y-1 text-sm">
+              <div class="flex justify-between"><span>Preço Atual:</span> <span class="font-semibold text-emerald-600">R$ 6,28</span></div>
+              <div class="flex justify-between"><span>Preço Justo:</span> <span class="font-semibold text-gray-700">R$ 3,81</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: ANÁLISE -->
+      <section id="sec-analise" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
+        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie text-cyan-600"></i> Análise de Alocação de Ativos
+        </h3>
+        <p class="text-sm text-gray-600">Distribuição percentual da sua carteira por tipo de empresa e setor:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="p-4 border border-gray-100 rounded-lg bg-gray-50 space-y-3">
+            <h4 class="font-semibold text-gray-700">Alocação Setorial</h4>
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1"><span>Papel e Celulose (KLBN3)</span> <span>56%</span></div>
+              <div class="w-full bg-gray-200 h-2.5 rounded-full"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 56%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1"><span>Saneamento (SAPR11)</span> <span>34%</span></div>
+              <div class="w-full bg-gray-200 h-2.5 rounded-full"><div class="bg-emerald-600 h-2.5 rounded-full" style="width: 34%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1"><span>Petróleo e Gás (PETR4)</span> <span>10%</span></div>
+              <div class="w-full bg-gray-200 h-2.5 rounded-full"><div class="bg-cyan-600 h-2.5 rounded-full" style="width: 10%"></div></div>
+            </div>
+          </div>
+          <div class="p-4 border border-gray-100 rounded-lg bg-gray-50 flex flex-col justify-center items-center text-center">
+            <i class="fa-solid fa-shield-halved text-4xl text-emerald-600 mb-2"></i>
+            <h4 class="font-bold text-gray-800">Saúde da Carteira: Boa</h4>
+            <p class="text-xs text-gray-500 mt-1">Sua carteira possui ótima diversificação entre setores defensivos (saneamento) e geradores de caixa (commodities).</p>
+          </div>
         </div>
       </section>
 
@@ -265,35 +339,11 @@
             </button>
           </div>
         </div>
-
-        <hr class="border-gray-200">
-
-        <!-- ALTERAR SENHA DE ACESSO -->
-        <div>
-          <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-key text-blue-600"></i> Alterar Senha do Aplicativo
-          </h3>
-          <div class="max-w-md space-y-3">
-            <div>
-              <label for="novaSenhaConfig" class="block text-sm font-medium text-gray-700 mb-1">Nova Senha</label>
-              <input type="password" id="novaSenhaConfig" placeholder="Digite a nova senha" class="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-            </div>
-            <button onclick="alterarSenhaConfig()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md font-medium text-sm">
-              Atualizar Senha
-            </button>
-          </div>
-        </div>
       </section>
-
-      <!-- SEÇÕES AUXILIARES -->
-      <section id="sec-dividendos" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Dividendos</h3></section>
-      <section id="sec-oportunidades" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Oportunidades</h3></section>
-      <section id="sec-analise" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Análise</h3></section>
 
     </main>
   </div>
 
-  <!-- LÓGICA JAVASCRIPT COMPLETA E INTEGRAL -->
   <script>
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -302,55 +352,32 @@
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('telaLogin').classList.remove('hidden');
       document.getElementById('appConteudo').classList.add('hidden');
-
       const tokenSalvo = localStorage.getItem('brapi_token');
       if (tokenSalvo) {
         document.getElementById('brapiTokenInput').value = tokenSalvo;
       }
+      recalcularTotais();
     });
 
     function mostrarNotificacao(mensagem, tipo = 'sucesso') {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
-
-      const cores = {
-        sucesso: 'bg-emerald-600 text-white',
-        erro: 'bg-red-600 text-white',
-        aviso: 'bg-amber-500 text-white',
-        info: 'bg-blue-600 text-white'
-      };
-
-      const icones = {
-        sucesso: 'fa-circle-check',
-        erro: 'fa-circle-xmark',
-        aviso: 'fa-triangle-exclamation',
-        info: 'fa-circle-info'
-      };
-
+      const cores = { sucesso: 'bg-emerald-600 text-white', erro: 'bg-red-600 text-white', aviso: 'bg-amber-500 text-white', info: 'bg-blue-600 text-white' };
+      const icones = { sucesso: 'fa-circle-check', erro: 'fa-circle-xmark', aviso: 'fa-triangle-exclamation', info: 'fa-circle-info' };
       toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-sm font-medium transform transition-all duration-300 translate-y-2 opacity-0 ${cores[tipo] || cores.info}`;
       toast.innerHTML = `<i class="fa-solid ${icones[tipo] || icones.info} text-lg"></i> <span>${mensagem}</span>`;
-
       container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.classList.remove('translate-y-2', 'opacity-0');
-      }, 10);
-
-      setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-      }, 3500);
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+      setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => toast.remove(), 300); }, 3500);
     }
 
     function autenticar() {
       const senhaInformada = document.getElementById('senhaAcesso').value;
       const senhaSalva = localStorage.getItem('app_senha');
-
       if (senhaInformada === senhaSalva) {
         document.getElementById('telaLogin').classList.add('hidden');
         document.getElementById('appConteudo').classList.remove('hidden');
         document.getElementById('senhaAcesso').value = '';
-        
         testarStatusBrapi();
         recalcularTotais();
         mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
@@ -362,66 +389,17 @@
     function bloquearApp() {
       document.getElementById('appConteudo').classList.add('hidden');
       document.getElementById('telaLogin').classList.remove('hidden');
-      exibirTelaLogin();
       mostrarNotificacao("Sessão encerrada.", "info");
-    }
-
-    function exibirTelaRecuperacao() {
-      document.getElementById('formLogin').classList.add('hidden');
-      document.getElementById('formRecuperacao').classList.remove('hidden');
-    }
-
-    function exibirTelaLogin() {
-      document.getElementById('formRecuperacao').classList.add('hidden');
-      document.getElementById('formLogin').classList.remove('hidden');
-    }
-
-    function restaurarSenha() {
-      const tokenDigitado = document.getElementById('tokenRecuperacao').value.trim();
-      const novaSenha = document.getElementById('novaSenha').value.trim();
-      const tokenSalvo = localStorage.getItem('brapi_token');
-
-      if (!tokenSalvo) {
-        mostrarNotificacao("Nenhum token gravado para redefinir a senha.", "erro");
-        return;
-      }
-
-      if (tokenDigitado === tokenSalvo) {
-        if (novaSenha.length < 4) {
-          mostrarNotificacao("A nova senha deve ter pelo menos 4 caracteres.", "aviso");
-          return;
-        }
-        localStorage.setItem('app_senha', novaSenha);
-        mostrarNotificacao("Senha redefinida com sucesso!", "sucesso");
-        document.getElementById('tokenRecuperacao').value = '';
-        document.getElementById('novaSenha').value = '';
-        exibirTelaLogin();
-      } else {
-        mostrarNotificacao("Token incorreto! Não foi possível redefinir.", "erro");
-      }
-    }
-
-    function alterarSenhaConfig() {
-      const nova = document.getElementById('novaSenhaConfig').value.trim();
-      if (nova.length >= 4) {
-        localStorage.setItem('app_senha', nova);
-        mostrarNotificacao("Senha de acesso atualizada!", "sucesso");
-        document.getElementById('novaSenhaConfig').value = '';
-      } else {
-        mostrarNotificacao("A senha deve ter pelo menos 4 caracteres.", "aviso");
-      }
     }
 
     async function testarStatusBrapi() {
       const statusContainer = document.getElementById('statusApiBrapi');
       const token = localStorage.getItem('brapi_token');
-
       if (!token) {
         statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800";
         statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-yellow-500"></span><span>Brapi: Sem Token</span>`;
         return;
       }
-
       try {
         const res = await fetch(`https://brapi.dev/api/quote/PETR4?token=${token}`);
         if (res.ok) {
@@ -450,8 +428,7 @@
     function salvarConfiguracoes() {
       const input = document.getElementById('brapiTokenInput');
       if (input && input.value.trim() !== "") {
-        const tokenLimpo = input.value.trim();
-        localStorage.setItem('brapi_token', tokenLimpo);
+        localStorage.setItem('brapi_token', input.value.trim());
         mostrarNotificacao("Token da Brapi salvo com sucesso!", "sucesso");
         testarStatusBrapi();
       } else {
@@ -461,70 +438,44 @@
 
     async function atualizarCotacoesBrapi() {
       const token = localStorage.getItem('brapi_token');
-
       if (!token) {
         mostrarNotificacao("Token não encontrado. Salve sua chave nas Configurações.", "aviso");
         navegar('configuracoes');
         return;
       }
-
       const statusElement = document.getElementById('statusAtualizacao');
       if (statusElement) statusElement.innerText = "Atualizando preços...";
 
       const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
-      const tickers = Array.from(new Set(Array.from(linhas).map(linha => linha.getAttribute('data-ticker'))));
+      const tickers = Array.from(new Set(Array.from(linhas).map(l => l.getAttribute('data-ticker'))));
 
-      if (tickers.length === 0) {
-        mostrarNotificacao("Nenhum ativo na carteira para atualizar.", "info");
-        return;
-      }
-
-      let atualizadosComSucesso = 0;
-
+      let atualizados = 0;
       for (const ticker of tickers) {
         try {
           let url = `https://brapi.dev/api/quote/${ticker}?token=${token}`;
-          let response = await fetch(url);
-
-          if (response.status === 404) {
+          let res = await fetch(url);
+          if (res.status === 404) {
             url = `https://brapi.dev/api/quote/${ticker}.SA?token=${token}`;
-            response = await fetch(url);
+            res = await fetch(url);
           }
-
-          if (response.ok) {
-            const data = await response.json();
+          if (res.ok) {
+            const data = await res.json();
             if (data.results && data.results.length > 0) {
               const ativo = data.results[0];
-              const precoAtual = ativo.regularMarketPrice;
-              const variacao = ativo.regularMarketChangePercent;
-
-              atualizarLinhaTabela(ticker, precoAtual, variacao);
-              atualizadosComSucesso++;
+              atualizarLinhaTabela(ticker, ativo.regularMarketPrice, ativo.regularMarketChangePercent);
+              atualizados++;
             }
           }
-        } catch (err) {
-          console.error(`Erro de rede ao buscar ${ticker}:`, err);
-        }
+        } catch (err) { console.error(err); }
       }
-
       recalcularTotais();
-
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      if (statusElement) {
-        if (atualizadosComSucesso > 0) {
-          statusElement.innerText = `Atualizado às ${agora}`;
-          mostrarNotificacao("Cotações da carteira atualizadas!", "sucesso");
-        } else {
-          statusElement.innerText = "Falha ao atualizar";
-          mostrarNotificacao("Erro ao atualizar cotações. Verifique o token.", "erro");
-        }
-      }
+      if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Falha ao atualizar";
+      if (atualizados > 0) mostrarNotificacao("Cotações atualizadas com sucesso!", "sucesso");
     }
 
-    // ATUALIZA TODAS AS LINHAS (SEPARADAS) DO MESMO ATIVO DA B3
     function atualizarLinhaTabela(ticker, precoAtual, variacao) {
       const linhas = document.querySelectorAll(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
-      
       linhas.forEach(linha => {
         const celulaPreco = linha.querySelector('.preco-atual');
         const celulaVariacao = linha.querySelector('.variacao');
@@ -534,19 +485,14 @@
         if (celulaPreco && precoAtual !== undefined) {
           celulaPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
         }
-
         if (celulaVariacao && variacao !== undefined) {
           const sinal = variacao >= 0 ? '+' : '';
           celulaVariacao.innerText = `${sinal}${variacao.toFixed(2)}%`;
-          celulaVariacao.className = variacao >= 0 
-            ? "py-3 px-4 variacao text-emerald-600 font-medium" 
-            : "py-3 px-4 variacao text-red-500 font-medium";
+          celulaVariacao.className = variacao >= 0 ? "py-3 px-4 variacao text-emerald-600 font-medium" : "py-3 px-4 variacao text-red-500 font-medium";
         }
-
         if (celulaQtd && celulaValorAtual && precoAtual !== undefined) {
           const qtd = parseFloat(celulaQtd.innerText.replace(',', '.'));
-          const valorAtualTotal = qtd * precoAtual;
-          celulaValorAtual.innerText = `R$ ${valorAtualTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          celulaValorAtual.innerText = `R$ ${(qtd * precoAtual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         }
       });
     }
@@ -557,50 +503,28 @@
       let totalAtual = 0;
 
       linhas.forEach(linha => {
-        const celulaValorInv = linha.querySelector('.valor-investido');
-        const celulaValorAtual = linha.querySelector('.valor-atual');
-
-        if (celulaValorInv) {
-          const vInv = parseFloat(celulaValorInv.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
-          if (!isNaN(vInv)) totalInvestido += vInv;
-        }
-
-        if (celulaValorAtual) {
-          const vAtu = parseFloat(celulaValorAtual.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
-          if (!isNaN(vAtu)) totalAtual += vAtu;
-        }
+        const vInv = parseFloat(linha.querySelector('.valor-investido')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
+        const vAtu = parseFloat(linha.querySelector('.valor-atual')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
+        totalInvestido += vInv;
+        totalAtual += vAtu;
       });
 
-      const totalElement = document.getElementById('totalCarteira');
-      if (totalElement) {
-        totalElement.innerText = `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      }
+      document.getElementById('totalCarteira').innerText = `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      
+      const lucroElem = document.getElementById('lucroPrejuizo');
+      const diferenca = totalAtual - totalInvestido;
+      const percentual = totalInvestido > 0 ? (diferenca / totalInvestido) * 100 : 0;
+      const sinal = diferenca >= 0 ? '+' : '';
 
-      const lucroPrejuizoElement = document.getElementById('lucroPrejuizo');
-      if (lucroPrejuizoElement) {
-        const diferenca = totalAtual - totalInvestido;
-        const percentual = totalInvestido > 0 ? (diferenca / totalInvestido) * 100 : 0;
-        const sinal = diferenca >= 0 ? '+' : '';
-
-        lucroPrejuizoElement.innerHTML = `
-          R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} 
-          <span class="text-sm font-normal">(${sinal}${percentual.toFixed(2)}%)</span>
-        `;
-
-        if (diferenca >= 0) {
-          lucroPrejuizoElement.className = "text-3xl font-bold text-emerald-600 mt-1";
-        } else {
-          lucroPrejuizoElement.className = "text-3xl font-bold text-red-500 mt-1";
-        }
-      }
+      lucroElem.innerHTML = `R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-sm font-normal">(${sinal}${percentual.toFixed(2)}%)</span>`;
+      lucroElem.className = diferenca >= 0 ? "text-3xl font-bold text-emerald-600 mt-1" : "text-3xl font-bold text-red-500 mt-1";
     }
 
     function removerAtivo(btn) {
       if (confirm("Deseja remover este ativo da carteira?")) {
-        const tr = btn.closest('tr');
-        tr.remove();
+        btn.closest('tr').remove();
         recalcularTotais();
-        mostrarNotificacao("Ativo removido da carteira.", "info");
+        mostrarNotificacao("Ativo removido.", "info");
       }
     }
 
@@ -617,47 +541,67 @@
 
     function salvarNovaOperacao() {
       const ticker = document.getElementById('opTicker').value.toUpperCase().trim();
-      const qtd = document.getElementById('opQtd').value.trim();
-      const pm = document.getElementById('opPM').value.trim();
+      const novaQtd = parseFloat(document.getElementById('opQtd').value);
+      const novoPm = parseFloat(document.getElementById('opPM').value);
 
-      if (!ticker || !qtd || !pm) {
-        mostrarNotificacao("Preencha todos os campos da operação.", "aviso");
+      if (!ticker || isNaN(novaQtd) || isNaN(novoPm)) {
+        mostrarNotificacao("Preencha todos os campos corretamente.", "aviso");
         return;
       }
 
       const tbody = document.getElementById('tabelaAtivos');
-      const novaLinha = document.createElement('tr');
-      novaLinha.setAttribute('data-ticker', ticker);
-      novaLinha.className = "border-b border-gray-100 text-sm";
-      
-      const valorInv = parseFloat(qtd) * parseFloat(pm);
+      const linhaExistente = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
 
-      novaLinha.innerHTML = `
-        <td class="py-3 px-4 font-bold text-gray-800">${ticker}</td>
-        <td class="py-3 px-4 qtd">${qtd}</td>
-        <td class="py-3 px-4 pm">R$ ${parseFloat(pm).toFixed(2).replace('.', ',')}</td>
-        <td class="py-3 px-4 preco-atual font-semibold">R$ ${parseFloat(pm).toFixed(2).replace('.', ',')}</td>
-        <td class="py-3 px-4">R$ -</td>
-        <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
-        <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-        <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-        <td class="py-3 px-4 text-center">
-          <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-        </td>
-      `;
-      tbody.appendChild(novaLinha);
+      if (linhaExistente) {
+        const qtdAntiga = parseFloat(linhaExistente.querySelector('.qtd').innerText.replace(',', '.'));
+        const pmAntigo = parseFloat(linhaExistente.querySelector('.pm').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+
+        const totalQtd = qtdAntiga + novaQtd;
+        const totalInvestidoAntigo = qtdAntiga * pmAntigo;
+        const totalInvestidoNovoAporte = novaQtd * novoPm;
+        const novoPrecoMedio = (totalInvestidoAntigo + totalInvestidoNovoAporte) / totalQtd;
+        const novoValorInvTotal = totalInvestidoAntigo + totalInvestidoNovoAporte;
+
+        linhaExistente.querySelector('.qtd').innerText = totalQtd;
+        linhaExistente.querySelector('.pm').innerText = `R$ ${novoPrecoMedio.toFixed(2).replace('.', ',')}`;
+        linhaExistente.querySelector('.valor-investido').innerText = `R$ ${novoValorInvTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        const precoAtualStr = linhaExistente.querySelector('.preco-atual').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+        const precoAtual = parseFloat(precoAtualStr) || novoPrecoMedio;
+        linhaExistente.querySelector('.valor-atual').innerText = `R$ ${(totalQtd * precoAtual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        mostrarNotificacao(`Aporte adicionado em ${ticker}! Quantidade total: ${totalQtd}`, "sucesso");
+      } else {
+        const novaLinha = document.createElement('tr');
+        novaLinha.setAttribute('data-ticker', ticker);
+        novaLinha.className = "border-b border-gray-100 text-sm";
+        
+        const valorInv = novaQtd * novoPm;
+
+        novaLinha.innerHTML = `
+          <td class="py-3 px-4 font-bold text-gray-800">${ticker}</td>
+          <td class="py-3 px-4 qtd">${novaQtd}</td>
+          <td class="py-3 px-4 pm">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
+          <td class="py-3 px-4 preco-atual font-semibold">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
+          <td class="py-3 px-4">R$ -</td>
+          <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+          <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(novaLinha);
+        mostrarNotificacao(`Novo ativo ${ticker} cadastrado com sucesso!`, "sucesso");
+      }
+
       fecharModalOperacao();
       recalcularTotais();
-      mostrarNotificacao(`Operação em ${ticker} salva com sucesso!`, "sucesso");
     }
 
-    // ---------------------------------------------------------
-    // SISTEMA DE EXPORTAÇÃO E IMPORTAÇÃO DE BACKUP OFFLINE (JSON)
-    // ---------------------------------------------------------
     function exportarBackup() {
       const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
       const ativos = [];
-
       linhas.forEach(l => {
         ativos.push({
           ticker: l.getAttribute('data-ticker'),
@@ -668,36 +612,26 @@
           valorAtual: l.querySelector('.valor-atual')?.innerText || "R$ 0,00"
         });
       });
-
-      const dadosBackup = {
-        dataExportacao: new Date().toISOString(),
-        ativos: ativos
-      };
-
-      const jsonStr = JSON.stringify(dadosBackup, null, 2);
-      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ ativos }, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `analystpro_carteira_backup.json`;
+      a.download = `analystpro_backup.json`;
       a.click();
       URL.revokeObjectURL(url);
-
-      mostrarNotificacao("Backup baixado com sucesso!", "sucesso");
+      mostrarNotificacao("Backup baixado!", "sucesso");
     }
 
     function importarBackup(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
           const dados = JSON.parse(e.target.result);
           if (dados && Array.isArray(dados.ativos)) {
             const tbody = document.getElementById('tabelaAtivos');
-            tbody.innerHTML = ''; // Limpa a tabela atual
-
+            tbody.innerHTML = '';
             dados.ativos.forEach(a => {
               const tr = document.createElement('tr');
               tr.setAttribute('data-ticker', a.ticker);
@@ -717,15 +651,10 @@
               `;
               tbody.appendChild(tr);
             });
-
             recalcularTotais();
-            mostrarNotificacao("Backup restaurado com sucesso!", "sucesso");
-          } else {
-            mostrarNotificacao("Arquivo de backup inválido.", "erro");
+            mostrarNotificacao("Backup restaurado!", "sucesso");
           }
-        } catch (err) {
-          mostrarNotificacao("Erro ao ler o arquivo JSON.", "erro");
-        }
+        } catch (err) { mostrarNotificacao("Erro ao ler backup.", "erro"); }
       };
       reader.readAsText(file);
     }
