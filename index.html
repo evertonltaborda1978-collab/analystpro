@@ -9,10 +9,10 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
 
-  <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA (SUBSTITUI OS ALERTS PADRÃO DO NAVEGADOR) -->
+  <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- MODAL POP-UP PARA NOVA OPERAÇÃO (SUBSTITUI O PROMPT PADRÃO) -->
+  <!-- MODAL POP-UP PARA NOVA OPERAÇÃO -->
   <div id="modalOperacao" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100">
       <div class="flex justify-between items-center mb-4">
@@ -30,11 +30,11 @@
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label for="opQtd" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Quantidade</label>
-            <input type="number" id="opQtd" placeholder="Ex: 40" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="number" id="opQtd" placeholder="Ex: 20" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
           <div>
             <label for="opPM" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Preço Médio (R$)</label>
-            <input type="number" step="0.01" id="opPM" placeholder="Ex: 23.72" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="number" step="0.01" id="opPM" placeholder="Ex: 20.00" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
         </div>
         
@@ -51,7 +51,7 @@
   </div>
 
   <!-- ========================================================= -->
-  <!-- TELA DE LOGIN / AUTENTICAÇÃO (EXIBIDA AO ABRIR/RECARREGAR) -->
+  <!-- TELA DE LOGIN / AUTENTICAÇÃO -->
   <!-- ========================================================= -->
   <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100">
@@ -103,7 +103,7 @@
   </div>
 
   <!-- ========================================================= -->
-  <!-- APLICAÇÃO PRINCIPAL (PROTEGIDA POR SENHA) -->
+  <!-- APLICAÇÃO PRINCIPAL -->
   <!-- ========================================================= -->
   <div id="appConteudo" class="hidden">
     <!-- NAVBAR / HEADER -->
@@ -113,7 +113,6 @@
           <h1 class="text-2xl font-bold flex items-center gap-2">
             <i class="fa-solid fa-chart-line"></i> AnalystPro
           </h1>
-          <!-- STATUS DA API BRAPI NO TOPO -->
           <div id="statusApiBrapi" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-700 text-blue-200">
             <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
             <span>Brapi: Verificando...</span>
@@ -138,7 +137,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
           <span class="text-sm text-gray-500">Valor Total da Carteira</span>
-          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 mt-1">R$ 1.984,55</h2>
+          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 mt-1">R$ 2.384,55</h2>
           <span id="statusAtualizacao" class="text-xs text-gray-400">Aguardando atualização...</span>
         </div>
 
@@ -148,7 +147,6 @@
           <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
         </div>
 
-        <!-- CARD DINÂMICO DE LUCRO/PREJUÍZO -->
         <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-cyan-500">
           <span class="text-sm text-gray-500">Lucro / Prejuízo (Ações)</span>
           <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 mt-1">R$ 0,00 <span class="text-sm font-normal">(+0.00%)</span></h2>
@@ -157,17 +155,25 @@
 
       <!-- SEÇÃO: CARTEIRA -->
       <section id="sec-carteira" class="bg-white p-6 rounded-lg shadow-sm">
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
           <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
             <i class="fa-solid fa-wallet text-blue-600"></i> Minha Carteira
           </h3>
-          <div class="flex gap-3">
-            <button onclick="abrirModalOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
+          <div class="flex gap-2 flex-wrap">
+            <button onclick="abrirModalOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-plus"></i> Nova Operação
             </button>
-            <button onclick="atualizarCotacoesBrapi()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
+            <button onclick="atualizarCotacoesBrapi()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
             </button>
+            <!-- BOTÕES DE BACKUP OFFLINE DA CARTEIRA -->
+            <button onclick="exportarBackup()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5" title="Salvar Backup Offline">
+              <i class="fa-solid fa-download"></i> Salvar Backup
+            </button>
+            <label class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 cursor-pointer" title="Restaurar Backup">
+              <i class="fa-solid fa-upload"></i> Carregar Backup
+              <input type="file" id="importInput" accept=".json" onchange="importarBackup(event)" class="hidden">
+            </label>
           </div>
         </div>
 
@@ -223,6 +229,19 @@
                 <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
                 <td class="py-3 px-4 valor-investido">R$ 474,40</td>
                 <td class="py-3 px-4 valor-atual font-semibold">R$ 474,40</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr data-ticker="SAPR11">
+                <td class="py-3 px-4 font-bold text-gray-800">SAPR11</td>
+                <td class="py-3 px-4 qtd">20</td>
+                <td class="py-3 px-4 pm">R$ 20,00</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 20,00</td>
+                <td class="py-3 px-4">R$ -</td>
+                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+                <td class="py-3 px-4 valor-investido">R$ 400,00</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 400,00</td>
                 <td class="py-3 px-4 text-center">
                   <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
                 </td>
@@ -290,9 +309,6 @@
       }
     });
 
-    // ---------------------------------------------------------
-    // NOVO SISTEMA DE NOTIFICAÇÃO ESTILIZADA (SUBSTITUI ALERT)
-    // ---------------------------------------------------------
     function mostrarNotificacao(mensagem, tipo = 'sucesso') {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
@@ -326,9 +342,6 @@
       }, 3500);
     }
 
-    // ---------------------------------------------------------
-    // SISTEMA DE SEGURANÇA E AUTENTICAÇÃO
-    // ---------------------------------------------------------
     function autenticar() {
       const senhaInformada = document.getElementById('senhaAcesso').value;
       const senhaSalva = localStorage.getItem('app_senha');
@@ -399,9 +412,6 @@
       }
     }
 
-    // ---------------------------------------------------------
-    // VERIFICAÇÃO DE STATUS DA API BRAPI
-    // ---------------------------------------------------------
     async function testarStatusBrapi() {
       const statusContainer = document.getElementById('statusApiBrapi');
       const token = localStorage.getItem('brapi_token');
@@ -427,9 +437,6 @@
       }
     }
 
-    // ---------------------------------------------------------
-    // NAVEGAÇÃO E REGRAS DA CARTEIRA
-    // ---------------------------------------------------------
     function navegar(aba) {
       const secoes = ['carteira', 'dividendos', 'oportunidades', 'analise', 'configuracoes'];
       secoes.forEach(s => {
@@ -465,7 +472,7 @@
       if (statusElement) statusElement.innerText = "Atualizando preços...";
 
       const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
-      const tickers = Array.from(linhas).map(linha => linha.getAttribute('data-ticker'));
+      const tickers = Array.from(new Set(Array.from(linhas).map(linha => linha.getAttribute('data-ticker'))));
 
       if (tickers.length === 0) {
         mostrarNotificacao("Nenhum ativo na carteira para atualizar.", "info");
@@ -514,32 +521,34 @@
       }
     }
 
+    // ATUALIZA TODAS AS LINHAS (SEPARADAS) DO MESMO ATIVO DA B3
     function atualizarLinhaTabela(ticker, precoAtual, variacao) {
-      const linha = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
-      if (!linha) return;
+      const linhas = document.querySelectorAll(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
+      
+      linhas.forEach(linha => {
+        const celulaPreco = linha.querySelector('.preco-atual');
+        const celulaVariacao = linha.querySelector('.variacao');
+        const celulaQtd = linha.querySelector('.qtd');
+        const celulaValorAtual = linha.querySelector('.valor-atual');
 
-      const celulaPreco = linha.querySelector('.preco-atual');
-      const celulaVariacao = linha.querySelector('.variacao');
-      const celulaQtd = linha.querySelector('.qtd');
-      const celulaValorAtual = linha.querySelector('.valor-atual');
+        if (celulaPreco && precoAtual !== undefined) {
+          celulaPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
+        }
 
-      if (celulaPreco && precoAtual !== undefined) {
-        celulaPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
-      }
+        if (celulaVariacao && variacao !== undefined) {
+          const sinal = variacao >= 0 ? '+' : '';
+          celulaVariacao.innerText = `${sinal}${variacao.toFixed(2)}%`;
+          celulaVariacao.className = variacao >= 0 
+            ? "py-3 px-4 variacao text-emerald-600 font-medium" 
+            : "py-3 px-4 variacao text-red-500 font-medium";
+        }
 
-      if (celulaVariacao && variacao !== undefined) {
-        const sinal = variacao >= 0 ? '+' : '';
-        celulaVariacao.innerText = `${sinal}${variacao.toFixed(2)}%`;
-        celulaVariacao.className = variacao >= 0 
-          ? "py-3 px-4 variacao text-emerald-600 font-medium" 
-          : "py-3 px-4 variacao text-red-500 font-medium";
-      }
-
-      if (celulaQtd && celulaValorAtual && precoAtual !== undefined) {
-        const qtd = parseFloat(celulaQtd.innerText.replace(',', '.'));
-        const valorAtualTotal = qtd * precoAtual;
-        celulaValorAtual.innerText = `R$ ${valorAtualTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      }
+        if (celulaQtd && celulaValorAtual && precoAtual !== undefined) {
+          const qtd = parseFloat(celulaQtd.innerText.replace(',', '.'));
+          const valorAtualTotal = qtd * precoAtual;
+          celulaValorAtual.innerText = `R$ ${valorAtualTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+      });
     }
 
     function recalcularTotais() {
@@ -595,7 +604,6 @@
       }
     }
 
-    // CONTROLE DO POP-UP DE NOVA OPERAÇÃO
     function abrirModalOperacao() {
       document.getElementById('opTicker').value = '';
       document.getElementById('opQtd').value = '';
@@ -618,13 +626,6 @@
       }
 
       const tbody = document.getElementById('tabelaAtivos');
-      
-      // Verifica se o ativo já existe na tabela para substituir
-      const linhaExistente = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
-      if (linhaExistente) {
-        linhaExistente.remove();
-      }
-
       const novaLinha = document.createElement('tr');
       novaLinha.setAttribute('data-ticker', ticker);
       novaLinha.className = "border-b border-gray-100 text-sm";
@@ -648,6 +649,85 @@
       fecharModalOperacao();
       recalcularTotais();
       mostrarNotificacao(`Operação em ${ticker} salva com sucesso!`, "sucesso");
+    }
+
+    // ---------------------------------------------------------
+    // SISTEMA DE EXPORTAÇÃO E IMPORTAÇÃO DE BACKUP OFFLINE (JSON)
+    // ---------------------------------------------------------
+    function exportarBackup() {
+      const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
+      const ativos = [];
+
+      linhas.forEach(l => {
+        ativos.push({
+          ticker: l.getAttribute('data-ticker'),
+          qtd: l.querySelector('.qtd')?.innerText || "0",
+          pm: l.querySelector('.pm')?.innerText || "R$ 0,00",
+          precoAtual: l.querySelector('.preco-atual')?.innerText || "R$ 0,00",
+          valorInvestido: l.querySelector('.valor-investido')?.innerText || "R$ 0,00",
+          valorAtual: l.querySelector('.valor-atual')?.innerText || "R$ 0,00"
+        });
+      });
+
+      const dadosBackup = {
+        dataExportacao: new Date().toISOString(),
+        ativos: ativos
+      };
+
+      const jsonStr = JSON.stringify(dadosBackup, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `analystpro_carteira_backup.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      mostrarNotificacao("Backup baixado com sucesso!", "sucesso");
+    }
+
+    function importarBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const dados = JSON.parse(e.target.result);
+          if (dados && Array.isArray(dados.ativos)) {
+            const tbody = document.getElementById('tabelaAtivos');
+            tbody.innerHTML = ''; // Limpa a tabela atual
+
+            dados.ativos.forEach(a => {
+              const tr = document.createElement('tr');
+              tr.setAttribute('data-ticker', a.ticker);
+              tr.className = "border-b border-gray-100 text-sm";
+              tr.innerHTML = `
+                <td class="py-3 px-4 font-bold text-gray-800">${a.ticker}</td>
+                <td class="py-3 px-4 qtd">${a.qtd}</td>
+                <td class="py-3 px-4 pm">${a.pm}</td>
+                <td class="py-3 px-4 preco-atual font-semibold">${a.precoAtual}</td>
+                <td class="py-3 px-4">R$ -</td>
+                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+                <td class="py-3 px-4 valor-investido">${a.valorInvestido}</td>
+                <td class="py-3 px-4 valor-atual font-semibold">${a.valorAtual}</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              `;
+              tbody.appendChild(tr);
+            });
+
+            recalcularTotais();
+            mostrarNotificacao("Backup restaurado com sucesso!", "sucesso");
+          } else {
+            mostrarNotificacao("Arquivo de backup inválido.", "erro");
+          }
+        } catch (err) {
+          mostrarNotificacao("Erro ao ler o arquivo JSON.", "erro");
+        }
+      };
+      reader.readAsText(file);
     }
   </script>
 </body>
