@@ -72,10 +72,6 @@
 
         .form-control { width: 100%; padding: 0.625rem; border: 1px solid var(--border-color); border-radius: 0.375rem; background-color: var(--bg-primary); color: var(--text-main); outline: none; }
 
-        .badge { padding: 0.35rem 0.65rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem; }
-        .badge-buy { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-        .badge-wait { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
         .modal-content { background: var(--bg-card); padding: 1.5rem; border-radius: 0.75rem; width: 100%; max-width: 450px; }
     </style>
@@ -87,7 +83,7 @@
         <ul class="nav-links">
             <li class="nav-item active" onclick="showSection('carteira')"><i class="fas fa-wallet"></i> Carteira</li>
             <li class="nav-item" onclick="showSection('analise')"><i class="fas fa-chart-bar"></i> Análise Técnica</li>
-            <li class="nav-item" onclick="showSection('alertas')"><i class="fas fa-bell"></i> Alertas de Compra</li>
+            <li class="nav-item" onclick="showSection('alertas')"><i class="fas fa-bell"></i> Alertas</li>
             <li class="nav-item" onclick="showSection('config')"><i class="fas fa-cog"></i> Configurações</li>
         </ul>
         <div>
@@ -99,6 +95,7 @@
 
         <!-- SEÇÃO 1: CARTEIRA -->
         <div id="carteira" class="main-content active">
+            
             <div class="grid-dashboard">
                 <div class="card">
                     <span style="color: var(--text-muted); font-weight: 600;"><i class="fas fa-wallet"></i> Valor Total da Carteira</span>
@@ -136,7 +133,9 @@
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="portfolioTableBody"></tbody>
+                    <tbody id="portfolioTableBody">
+                        <!-- Renderizado dinamicamente via JS -->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -158,49 +157,19 @@
             </div>
         </div>
 
-        <!-- SEÇÃO 3: ALERTAS DE COMPRA -->
+        <!-- SEÇÃO 3: ALERTAS -->
         <div id="alertas" class="main-content">
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <h3><i class="fas fa-bell"></i> Cadastrar Alerta de Compra</h3>
-                <p style="color: var(--text-muted); margin-top: 0.25rem; margin-bottom: 1rem;">Defina o Preço Alvo (Preço Teto) para receber a indicação de compra.</p>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
-                    <div>
-                        <label style="font-size: 0.85rem;">Ativo</label>
-                        <input type="text" id="alertSymbol" class="form-control" placeholder="Ex: KLBN3">
-                    </div>
-                    <div>
-                        <label style="font-size: 0.85rem;">Preço Alvo de Compra (R$)</label>
-                        <input type="number" step="0.01" id="alertTargetPrice" class="form-control" placeholder="Ex: 3.80">
-                    </div>
-                    <div style="display: flex; align-items: flex-end;">
-                        <button class="btn btn-primary" style="width: 100%;" onclick="addAlert()"><i class="fas fa-plus"></i> Salvar Alerta</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card table-container">
-                <h3>Radar de Oportunidades (Preço Atual vs Preço Alvo)</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Ativo</th>
-                            <th>Preço Atual</th>
-                            <th>Preço Alvo</th>
-                            <th>Status do Mercado</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="alertsTableBody"></tbody>
-                </table>
+            <div class="card">
+                <h3><i class="fas fa-bell"></i> Gerenciar Alertas de Preço</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Configure avisos quando uma ação atingir determinado patamar de preço.</p>
             </div>
         </div>
 
-        <!-- SEÇÃO 4: CONFIGURAÇÕES -->
+        <!-- SEÇÃO 4: CONFIGURAÇÕES DA API BRAPI -->
         <div id="config" class="main-content">
             <div class="card">
                 <h3><i class="fas fa-key"></i> Token API Brapi</h3>
-                <p style="color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Token para cotações em tempo real.</p>
+                <p style="color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Insira a sua chave gerada no site brapi.dev para liberar as cotações em tempo real do mercado B3.</p>
                 <div style="margin-bottom: 1rem;">
                     <input type="password" id="brapiTokenInput" class="form-control" placeholder="Cole seu token aqui">
                 </div>
@@ -210,12 +179,12 @@
 
     </div>
 
-    <!-- MODAL DE OPERAÇÕES -->
+    <!-- MODAL PARA ADICIONAR/EDITAR ATIVO -->
     <div id="tradeModal" class="modal">
         <div class="modal-content">
             <h3>Nova Operação</h3>
             <div style="margin-top: 1rem;">
-                <label style="display:block; margin-bottom: 0.25rem; font-size: 0.85rem;">Ativo</label>
+                <label style="display:block; margin-bottom: 0.25rem; font-size: 0.85rem;">Ativo (Ex: KLBN3, PETR4)</label>
                 <input type="text" id="tradeSymbol" class="form-control" placeholder="KLBN3" style="margin-bottom: 0.75rem;">
                 
                 <label style="display:block; margin-bottom: 0.25rem; font-size: 0.85rem;">Quantidade</label>
@@ -225,7 +194,7 @@
                 <input type="number" step="0.01" id="tradePrice" class="form-control" placeholder="6.28" style="margin-bottom: 0.75rem;">
                 
                 <label style="display:block; margin-bottom: 0.25rem; font-size: 0.85rem;">Preço Justo (R$)</label>
-                <input type="number" step="0.01" id="tradeFairPrice" class="form-control" placeholder="3.81" style="margin-bottom: 1rem;">
+                <input type="number" step="0.01" id="tradeFairPrice" class="form-control" placeholder="8.50" style="margin-bottom: 1rem;">
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
                 <button class="btn" onclick="closeTradeModal()">Cancelar</button>
@@ -235,20 +204,22 @@
     </div>
 
     <script>
+        // DADOS EXATOS DA SUA CARTEIRA
         const EXACT_PORTFOLIO = [
             { symbol: 'PETR4', qty: 10, avgPrice: 32.21, fairPrice: 27.22 },
             { symbol: 'KLBN3', qty: 225, avgPrice: 6.28, fairPrice: 3.81 },
             { symbol: 'SAPR11', qty: 20, avgPrice: 23.72, fairPrice: 21.35 }
         ];
 
-        const DEFAULT_ALERTS = [
-            { symbol: 'KLBN3', targetPrice: 3.81 },
-            { symbol: 'SAPR11', targetPrice: 22.00 },
-            { symbol: 'PETR4', targetPrice: 30.00 }
-        ];
+        // FORÇA A ATUALIZAÇÃO DO CACHE LOCAL PARA CORRIGIR VALORES ANTIGOS D0 NAVEGADOR
+        const portfolioVersion = "v2_correct_quantities";
+        if (localStorage.getItem("portfolio_version") !== portfolioVersion) {
+            localStorage.removeItem("user_portfolio");
+            localStorage.setItem("portfolio_version", portfolioVersion);
+        }
 
         let portfolio = JSON.parse(localStorage.getItem('user_portfolio')) || EXACT_PORTFOLIO;
-        let alertsList = JSON.parse(localStorage.getItem('user_alerts')) || DEFAULT_ALERTS;
+        localStorage.setItem('user_portfolio', JSON.stringify(portfolio));
 
         let priceCache = {};
         let changeCache = {};
@@ -261,17 +232,14 @@
             refreshData();
         });
 
+        // Consulta cotações individualmente para não estourar o limite da API gratuita
         async function fetchPrices() {
-            const allSymbols = Array.from(new Set([
-                ...portfolio.map(p => p.symbol.trim().toUpperCase()),
-                ...alertsList.map(a => a.symbol.trim().toUpperCase())
-            ]));
-
-            if (allSymbols.length === 0) return;
+            if (portfolio.length === 0) return;
 
             const token = (brapiToken || '').trim();
 
-            const requests = allSymbols.map(async (sym) => {
+            const requests = portfolio.map(async (item) => {
+                const sym = item.symbol.trim().toUpperCase();
                 let url = `https://brapi.dev/api/quote/${encodeURIComponent(sym)}`;
                 if (token) url += `?token=${encodeURIComponent(token)}`;
 
@@ -288,7 +256,7 @@
                         }
                     }
                 } catch (e) {
-                    console.error(`Erro ao carregar preço para ${sym}:`, e);
+                    console.error(`Erro ao buscar cotação para ${sym}:`, e);
                 }
             });
 
@@ -301,7 +269,6 @@
 
             await fetchPrices();
             renderTable();
-            renderAlertsTable();
             updateSummary();
 
             const now = new Date().toLocaleTimeString();
@@ -338,59 +305,6 @@
                     </tr>
                 `;
             }).join('');
-        }
-
-        function renderAlertsTable() {
-            const tbody = document.getElementById('alertsTableBody');
-            if (!tbody) return;
-
-            tbody.innerHTML = alertsList.map((item, index) => {
-                const sym = item.symbol.toUpperCase();
-                const currentPrice = priceCache[sym] !== undefined ? priceCache[sym] : 0;
-                const target = item.targetPrice;
-
-                const isBuyPoint = currentPrice > 0 && currentPrice <= target;
-
-                return `
-                    <tr>
-                        <td><strong>${sym}</strong></td>
-                        <td>R$ ${currentPrice ? currentPrice.toFixed(2) : '-'}</td>
-                        <td>R$ ${target.toFixed(2)}</td>
-                        <td>
-                            ${isBuyPoint 
-                                ? `<span class="badge badge-buy"><i class="fas fa-shopping-cart"></i> HORA DE COMPRAR</span>`
-                                : `<span class="badge badge-wait"><i class="fas fa-clock"></i> AGUARDAR</span>`}
-                        </td>
-                        <td>
-                            <button class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="removeAlert(${index})"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function addAlert() {
-            const sym = document.getElementById('alertSymbol').value.toUpperCase().trim();
-            const target = parseFloat(document.getElementById('alertTargetPrice').value);
-
-            if (!sym || isNaN(target)) {
-                alert('Preencha o código do ativo e o preço alvo.');
-                return;
-            }
-
-            alertsList.push({ symbol: sym, targetPrice: target });
-            localStorage.setItem('user_alerts', JSON.stringify(alertsList));
-
-            document.getElementById('alertSymbol').value = '';
-            document.getElementById('alertTargetPrice').value = '';
-
-            refreshData();
-        }
-
-        function removeAlert(index) {
-            alertsList.splice(index, 1);
-            localStorage.setItem('user_alerts', JSON.stringify(alertsList));
-            refreshData();
         }
 
         function updateSummary() {
