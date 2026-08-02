@@ -13,14 +13,14 @@
     .nav-tabs .nav-link.active { font-weight: bold; }
     .card-stat { border: none; shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); }
     
-    /* Estilo da Notificação de Atualização */
+    /* Banner Flutuante de Atualização */
     #updateBanner {
       position: fixed;
       bottom: 20px;
       right: 20px;
       z-index: 9999;
       display: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
   </style>
 </head>
@@ -31,7 +31,7 @@
     <div class="d-flex align-items-center justify-content-between">
       <div class="toast-body d-flex align-items-center gap-2">
         <i class="fa-solid fa-arrows-rotate text-warning fs-5"></i>
-        <span><strong>Nova versão disponível!</strong> Clique para atualizar o aplicativo.</span>
+        <span><strong>Nova versão disponível!</strong> Clique para atualizar.</span>
       </div>
       <button type="button" class="btn btn-warning btn-sm fw-bold ms-3" onclick="window.location.reload(true)">
         Atualizar
@@ -246,30 +246,31 @@
 
   <!-- Lógica de Negócio (JS) -->
   <script>
-    // --- LÓGICA DE DETECÇÃO DE ATUALIZAÇÕES DO GITHUB ---
-    const VERSAO_ATUAL = "1.0.0"; // Altere aqui a cada atualização no GitHub
+    // --- LÓGICA DE VERIFICAÇÃO AUTOMÁTICA DE ATUALIZAÇÕES ---
+    const VERSAO_ATUAL = "1.0.0"; // Altere aqui a cada commit no GitHub
 
     async function verificarNovaVersao() {
       try {
-        // Busca o arquivo version.json sem usar o cache do navegador
         const resposta = await fetch(`version.json?t=${new Date().getTime()}`);
         if (resposta.ok) {
           const dados = await resposta.json();
           if (dados.version !== VERSAO_ATUAL) {
-            // Exibe o aviso para atualizar
             document.getElementById('updateBanner').style.display = 'block';
           }
         }
       } catch (e) {
-        console.log("Erro ao verificar versão:", e);
+        console.log("Aguardando verificação de versão...", e);
       }
     }
 
-    // Verifica ao abrir a página
+    // Checagem inicial
     verificarNovaVersao();
 
-    // Re-verifica a cada 30 segundos enquanto o aplicativo estiver aberto
-    setInterval(verificarNovaVersao, 30000);
+    // Checagem em tempo real a cada 3 segundos
+    setInterval(verificarNovaVersao, 3000);
+
+    // Checagem imediata quando o usuário volta para a aba do navegador
+    window.addEventListener('focus', verificarNovaVersao);
 
 
     // --- DADOS E OPERAÇÕES DA APLICAÇÃO ---
