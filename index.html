@@ -9,6 +9,9 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
 
+  <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA (SUBSTITUI OS ALERTS PADRÃO DO NAVEGADOR) -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
   <!-- ========================================================= -->
   <!-- TELA DE LOGIN / AUTENTICAÇÃO (EXIBIDA AO ABRIR/RECARREGAR) -->
   <!-- ========================================================= -->
@@ -250,6 +253,44 @@
     });
 
     // ---------------------------------------------------------
+    // NOVO SISTEMA DE NOTIFICAÇÃO ESTILIZADA (SUBSTITUI ALERT)
+    // ---------------------------------------------------------
+    function mostrarNotificacao(mensagem, tipo = 'sucesso') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+
+      const cores = {
+        sucesso: 'bg-emerald-600 text-white',
+        erro: 'bg-red-600 text-white',
+        aviso: 'bg-amber-500 text-white',
+        info: 'bg-blue-600 text-white'
+      };
+
+      const icones = {
+        sucesso: 'fa-circle-check',
+        erro: 'fa-circle-xmark',
+        aviso: 'fa-triangle-exclamation',
+        info: 'fa-circle-info'
+      };
+
+      toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-sm font-medium transform transition-all duration-300 translate-y-2 opacity-0 ${cores[tipo] || cores.info}`;
+      toast.innerHTML = `<i class="fa-solid ${icones[tipo] || icones.info} text-lg"></i> <span>${mensagem}</span>`;
+
+      container.appendChild(toast);
+
+      // Animação de entrada
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+
+      // Remoção automática após 3.5 segundos
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // ---------------------------------------------------------
     // SISTEMA DE SEGURANÇA E AUTENTICAÇÃO
     // ---------------------------------------------------------
     function autenticar() {
@@ -262,9 +303,10 @@
         document.getElementById('senhaAcesso').value = '';
         
         testarStatusBrapi();
-        recalcularTotais(); // Calcula Lucro/Prejuízo imediatamente ao entrar
+        recalcularTotais();
+        mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
       } else {
-        alert("Senha incorreta! Tente novamente.");
+        mostrarNotificacao("Senha incorreta! Tente novamente.", "erro");
       }
     }
 
@@ -272,6 +314,7 @@
       document.getElementById('appConteudo').classList.add('hidden');
       document.getElementById('telaLogin').classList.remove('hidden');
       exibirTelaLogin();
+      mostrarNotificacao("Sessão encerrada.", "info");
     }
 
     function exibirTelaRecuperacao() {
@@ -290,22 +333,22 @@
       const tokenSalvo = localStorage.getItem('brapi_token');
 
       if (!tokenSalvo) {
-        alert("Nenhum token da Brapi está gravado no sistema para confirmar sua identidade.");
+        mostrarNotificacao("Nenhum token gravado para redefinir a senha.", "erro");
         return;
       }
 
       if (tokenDigitado === tokenSalvo) {
         if (novaSenha.length < 4) {
-          alert("A nova senha deve ter pelo menos 4 caracteres.");
+          mostrarNotificacao("A nova senha deve ter pelo menos 4 caracteres.", "aviso");
           return;
         }
         localStorage.setItem('app_senha', novaSenha);
-        alert("Senha redefinida com sucesso! Você já pode entrar com a nova senha.");
+        mostrarNotificacao("Senha redefinida com sucesso!", "sucesso");
         document.getElementById('tokenRecuperacao').value = '';
         document.getElementById('novaSenha').value = '';
         exibirTelaLogin();
       } else {
-        alert("Token incorreto! Não foi possível restaurar a senha.");
+        mostrarNotificacao("Token incorreto! Não foi possível redefinir.", "erro");
       }
     }
 
@@ -313,10 +356,10 @@
       const nova = document.getElementById('novaSenhaConfig').value.trim();
       if (nova.length >= 4) {
         localStorage.setItem('app_senha', nova);
-        alert("Senha alterada com sucesso!");
+        mostrarNotificacao("Senha de acesso atualizada!", "sucesso");
         document.getElementById('novaSenhaConfig').value = '';
       } else {
-        alert("Por favor, escolha uma senha com pelo menos 4 caracteres.");
+        mostrarNotificacao("A senha deve ter pelo menos 4 caracteres.", "aviso");
       }
     }
 
@@ -366,10 +409,10 @@
       if (input && input.value.trim() !== "") {
         const tokenLimpo = input.value.trim();
         localStorage.setItem('brapi_token', tokenLimpo);
-        alert('Token da Brapi salvo com sucesso!');
+        mostrarNotificacao("Token da Brapi salvo com sucesso!", "sucesso");
         testarStatusBrapi();
       } else {
-        alert('Por favor, insira um token válido.');
+        mostrarNotificacao("Por favor, insira um token válido.", "aviso");
       }
     }
 
@@ -377,7 +420,7 @@
       const token = localStorage.getItem('brapi_token');
 
       if (!token) {
-        alert("Token da Brapi não encontrado! Vá na aba Configurações e salve seu token.");
+        mostrarNotificacao("Token não encontrado. Salve sua chave nas Configurações.", "aviso");
         navegar('configuracoes');
         return;
       }
@@ -389,7 +432,7 @@
       const tickers = Array.from(linhas).map(linha => linha.getAttribute('data-ticker'));
 
       if (tickers.length === 0) {
-        alert("Nenhum ativo encontrado na carteira.");
+        mostrarNotificacao("Nenhum ativo na carteira para atualizar.", "info");
         return;
       }
 
@@ -427,10 +470,10 @@
       if (statusElement) {
         if (atualizadosComSucesso > 0) {
           statusElement.innerText = `Atualizado às ${agora}`;
-          alert("Cotações atualizadas com sucesso!");
+          mostrarNotificacao("Cotações da carteira atualizadas!", "sucesso");
         } else {
           statusElement.innerText = "Falha ao atualizar";
-          alert("Não foi possível atualizar os preços. Verifique seu token nas Configurações.");
+          mostrarNotificacao("Erro ao atualizar cotações. Verifique o token.", "erro");
         }
       }
     }
@@ -463,7 +506,6 @@
       }
     }
 
-    // CÁLCULO DINÂMICO DE TOTAIS E LUCRO/PREJUÍZO
     function recalcularTotais() {
       const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
       let totalInvestido = 0;
@@ -484,13 +526,11 @@
         }
       });
 
-      // Atualiza o Total da Carteira
       const totalElement = document.getElementById('totalCarteira');
       if (totalElement) {
         totalElement.innerText = `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       }
 
-      // Atualiza o Lucro/Prejuízo Total
       const lucroPrejuizoElement = document.getElementById('lucroPrejuizo');
       if (lucroPrejuizoElement) {
         const diferenca = totalAtual - totalInvestido;
@@ -515,6 +555,7 @@
         const tr = btn.closest('tr');
         tr.remove();
         recalcularTotais();
+        mostrarNotificacao("Ativo removido da carteira.", "info");
       }
     }
 
@@ -547,6 +588,7 @@
         `;
         tbody.appendChild(novaLinha);
         recalcularTotais();
+        mostrarNotificacao(`Ativo ${ticker} adicionado!`, "sucesso");
       }
     }
   </script>
