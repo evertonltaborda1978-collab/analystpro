@@ -1,920 +1,345 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <title>AnalystPro - Plataforma Completa de Investimentos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #64748b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --dark: #1e293b;
-            --light: #f8fafc;
-            --border: #e2e8f0;
-            --bg: #ffffff;
-            --card-bg: #ffffff;
-            --status-green: #00a876;
-            --status-red: #f87171;
-            --analytics-bg: #f8fafc;
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-color: #2563eb;
+            --green: #10b981;
+            --red: #ef4444;
+            --yellow: #f59e0b;
         }
 
         [data-theme="dark"] {
-            --primary: #4f8ff7;
-            --primary-dark: #2563eb;
-            --secondary: #9aa1ab;
-            --success: #00c076;
-            --danger: #ff5252;
-            --warning: #f5a623;
-            --dark: #e5e7eb;
-            --light: #1c1f28;
-            --border: #2a2e39;
-            --bg: #0f1115;
-            --card-bg: #171a21;
-            --status-green: #00c076;
-            --status-red: #ff5252;
-            --analytics-bg: #171a21;
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #3b82f6;
+            --green: #22c55e;
+            --red: #f87171;
+            --yellow: #fbbf24;
         }
 
-        [data-theme="dark"] .login-container {
-            background: linear-gradient(135deg, #0f1115, #1c1f28);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-primary); color: var(--text-main); }
 
-        [data-theme="dark"] ::placeholder {
-            color: #6b7280;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html {
-            overflow-x: hidden;
-            width: 100%;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--dark);
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            width: 100%;
-        }
-
-        input[type="text"], input[type="password"], input[type="number"], input[type="date"], select, textarea {
-            background: var(--card-bg);
-            color: var(--dark);
-        }
-
-        .stock-list { display: none; }
-
-        .stock-row {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            grid-template-areas:
-                "ticker price"
-                "sub change"
-                "actions actions";
-            row-gap: 0.2rem;
-            column-gap: 0.5rem;
-            padding: 0.65rem 0.15rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .stock-row:last-child { border-bottom: none; }
-
-        .stock-row-left { grid-area: unset; display: contents; }
-        .stock-row-ticker { grid-area: ticker; font-weight: 700; color: var(--dark); font-size: 0.9rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .stock-row-sub { grid-area: sub; font-size: 0.7rem; color: var(--secondary); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-        .stock-row-right { grid-area: unset; display: contents; }
-        .stock-row-price { grid-area: price; font-weight: 700; color: var(--dark); font-size: 0.9rem; text-align: right; }
-
-        .stock-row-change {
-            grid-area: change;
-            justify-self: end;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.1rem 0.45rem;
-            border-radius: 5px;
-        }
-
-        .stock-row-change.positive { color: var(--status-green); background: rgba(0, 192, 118, 0.12); }
-        .stock-row-change.negative { color: var(--status-red); background: rgba(255, 82, 82, 0.12); }
-
-        .stock-row-actions { grid-area: actions; display: flex; justify-content: flex-end; gap: 0.4rem; margin-top: 0.2rem; }
-
-        .stock-gauge-wrap {
-            margin: 0.75rem 0 0.25rem;
-        }
-
-        .stock-gauge-percent {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-
-        .stock-gauge-track {
-            position: relative;
-            height: 6px;
-            border-radius: 3px;
-            background: linear-gradient(to right, var(--status-green), var(--warning), var(--status-red));
-            margin-top: 0.6rem;
-        }
-
-        .stock-gauge-marker {
-            position: absolute;
-            top: -8px;
-            transform: translateX(-50%);
-            font-size: 0.8rem;
-            line-height: 1;
-        }
-
-        .stock-gauge-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-top: 0.4rem;
-        }
-
-        /* NAVEGAÇÃO */
-        .main-nav {
-            background: var(--card-bg);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* HEADER & NAV */
+        .navbar {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
             padding: 1rem 2rem;
-        }
-
-        .nav-logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            cursor: pointer;
-        }
-
-        .nav-top-row {
-            display: contents;
-        }
-
-        .nav-collapsible {
-            display: contents;
-        }
-
-        .nav-toggle {
-            display: none;
-        }
-
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--light);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--primary);
-            font-size: 1.1rem;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-        }
-
-        .font-size-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--light);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 0.95rem;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-        }
-
-        .bottom-nav {
-            display: none;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-item {
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-item.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .nav-item:hover {
-            background: #f0f7ff;
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            background: var(--light);
-            border-radius: 25px;
-            padding: 0.5rem 1rem;
-            width: 300px;
-        }
-
-        .search-input {
-            background: none;
-            border: none;
-            outline: none;
-            width: 100%;
-            padding: 0.5rem;
-        }
-
-        /* CONTEÚDO PRINCIPAL */
-        .main-content {
-            display: none;
-            min-height: 100vh;
-        }
-
-        .content-active {
-            display: block;
-        }
-
-        /* BOTÕES DE VOLTAR */
-        .back-button {
-            background: var(--secondary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: #475569;
-        }
-
-        /* ANÁLISE DE AÇÕES - DESIGN */
-        .analytics-container {
-            background: var(--analytics-bg);
-            min-height: 100vh;
-            padding: 2rem;
-        }
-
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .analytics-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .analytics-card h3 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .stock-comparison {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .comparison-item {
-            text-align: center;
-            padding: 1rem;
-            background: var(--light);
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
-        }
-
-        .alert-banner {
-            background: linear-gradient(135deg, #fef3c7, #f59e0b);
-            color: #92400e;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .alert-banner.critical {
-            background: linear-gradient(135deg, #fecaca, #ef4444);
-            color: #991b1b;
-        }
-
-        /* DIVIDENDOS */
-        .dividend-timeline {
-            margin-top: 1rem;
-        }
-
-        .timeline-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
         }
 
-        .timeline-item:last-child {
-            border-bottom: none;
-        }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--accent-color); display: flex; align-items: center; gap: 0.5rem; }
+        .nav-links { display: flex; gap: 0.5rem; list-style: none; }
+        .nav-item { padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; }
+        .nav-item.active, .nav-item:hover { background-color: var(--accent-color); color: white; }
 
-        .dividend-amount {
-            font-weight: bold;
-            color: var(--success);
-        }
+        /* CONTAINERS */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .main-content { display: none; }
+        .main-content.active { display: block; }
 
-        /* GRÁFICOS INTERATIVOS */
-        .chart-controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
+        /* CARDS */
+        .banner { background-color: var(--accent-color); color: white; padding: 1.5rem 2rem; border-radius: 0.75rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .grid-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.75rem; padding: 1.5rem; }
 
-        .chart-period-btn {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        /* BUTTONS & FORMS */
+        .btn { padding: 0.625rem 1.25rem; border: none; border-radius: 0.375rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-primary { background-color: var(--accent-color); color: white; }
+        .btn-success { background-color: var(--green); color: white; }
+        .btn-danger { background-color: var(--red); color: white; }
+        .form-control { width: 100%; padding: 0.625rem; border: 1px solid var(--border-color); border-radius: 0.375rem; background-color: var(--bg-primary); color: var(--text-main); margin-bottom: 1rem; }
 
-        .chart-period-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 0.875rem; border-bottom: 1px solid var(--border-color); text-align: left; }
+        th { color: var(--text-muted); font-size: 0.875rem; }
 
-        /* RECUPERAÇÃO DE SENHA */
-        .recovery-options {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-
-        .recovery-btn {
-            min-width: 0;
-            overflow: hidden;
-            padding: 1rem;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            background: var(--card-bg);
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .recovery-btn:hover {
-            border-color: var(--primary);
-            background: #f0f7ff;
-        }
-
-        /* DASHBOARD INTERATIVO */
-        .dashboard-metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .metric-card {
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            border-left: 4px solid var(--primary);
-        }
-
-        .metric-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 0.5rem 0;
-        }
-
-        .metric-label {
-            color: var(--secondary);
-            font-size: 0.9rem;
-        }
-
-        .user-management {
-            background: var(--light);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-
-        .user-list {
-            display: grid;
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-
-        /* ESTILOS EXISTENTES */
-        .login-container { min-height: 100vh; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; padding: 2rem; }
-        .login-box { background: var(--card-bg); padding: 3rem; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
-        .login-header { text-align: center; margin-bottom: 2rem; }
-        .login-header-icon { color: var(--primary); }
-        .login-section { margin-bottom: 1rem; }
-        .user-btn {
-            padding: 0.65rem 0.85rem;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            background: var(--card-bg);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            min-width: 0;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            text-align: center;
-        }
-        .user-btn.add-portfolio-btn { border-style: dashed; color: var(--secondary); }
-        .mode-selection { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin: 1rem 0; }
-        .mode-btn {
-            padding: 0.6rem 0.75rem;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            background: var(--card-bg);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 0;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-        .mode-btn-text { display: flex; flex-direction: column; gap: 0.05rem; min-width: 0; }
-        .mode-btn:hover { border-color: var(--primary); }
-        .mode-btn.active { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.02); }
-        .api-config { background: var(--light); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid var(--primary); }
-        .form-group { margin-bottom: 1rem; position: relative; }
-        .password-toggle { position: absolute; right: 10px; top: 35px; background: none; border: none; color: var(--secondary); cursor: pointer; }
-        .login-btn { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: all 0.3s ease; }
-        .login-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        .test-btn { width: 100%; padding: 0.75rem; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; margin: 0.5rem 0; transition: all 0.3s ease; }
-        .notification { position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem; border-radius: 8px; color: white; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
-        .notification.show { transform: translateX(0); }
-        .notification.success { background: var(--success); }
-        .notification.error { background: var(--danger); }
-        .notification.warning { background: var(--warning); }
-        .main-container { display: none; min-height: 100vh; background: var(--bg); }
-        .top-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
-        .dashboard { max-width: 1400px; margin: 0 auto; padding: 2rem; }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; margin-bottom: 2rem; }
-        .card { background: var(--card-bg); padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid var(--primary); }
-        .card h3 { color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-        .stats-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
-        .stat-item { text-align: center; padding: 1rem; background: var(--light); border-radius: 8px; min-width: 0; overflow: hidden; }
-        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
-        .stat-label { font-size: 0.9rem; color: var(--secondary); }
-        .chart-container { height: 300px; margin-top: 1rem; position: relative; }
-        .portfolio-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        .portfolio-table th, .portfolio-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
-        .portfolio-table th { background: var(--light); font-weight: 600; color: var(--dark); }
-        .positive { color: var(--success); }
-        .negative { color: var(--danger); }
-        .logout-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; transition: all 0.3s ease; }
-        .refresh-btn { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; margin-left: 1rem; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: var(--card-bg); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
-        .modal h3 { color: var(--primary); margin-bottom: 1rem; }
-        .price-input { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; margin: 0.5rem 0; }
-        .save-btn { background: var(--success); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; margin-top: 1rem; }
-        .login-form { margin: 1.5rem 0; }
-        .login-input { width: 100%; padding: 1rem; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 1rem; font-size: 1rem; }
-        .forgot-password { text-align: right; margin-bottom: 1rem; }
-        .forgot-password a { color: var(--primary); text-decoration: none; font-size: 0.9rem; }
-        .action-btn { padding: 0.25rem 0.5rem; margin: 0.1rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .edit-btn { background: var(--warning); color: white; }
-        .delete-btn { background: var(--danger); color: white; }
-        .quick-settings { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
-        .quick-settings button { width: 100%; padding: 0.75rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; justify-content: center; }
-
-        @media (max-width: 768px) {
-            .dashboard-grid, .analytics-grid, .dashboard-metrics { grid-template-columns: 1fr; }
-            .portfolio-table-wrap { display: none; }
-            .stock-list { display: block; }
-            .bottom-nav {
-                display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); z-index: 1500;
-            }
-            .bottom-nav-item {
-                flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.5rem; color: var(--secondary); font-size: 0.65rem; cursor: pointer;
-            }
-            .bottom-nav-item.active { color: var(--primary); }
-            body { padding-bottom: 60px; }
-            .nav-menu { display: none; }
-        }
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: var(--bg-card); padding: 1.5rem; border-radius: 0.75rem; width: 100%; max-width: 400px; }
     </style>
 </head>
 <body>
-    <div id="updateBanner" style="display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: #1e293b; color: #fff; text-align: center; padding: 10px 12px; font-size: 13px; font-weight: 700; cursor: pointer;" onclick="applyUpdate()">
-        🔄 Nova versão disponível — toque para atualizar
+
+    <nav class="navbar">
+        <div class="logo"><i class="fas fa-chart-line"></i> AnalystPro</div>
+        <ul class="nav-links">
+            <li class="nav-item active" onclick="showSection('carteira')"><i class="fas fa-wallet"></i> Carteira</li>
+            <li class="nav-item" onclick="showSection('analise')"><i class="fas fa-search"></i> Análise</li>
+            <li class="nav-item" onclick="showSection('alertas')"><i class="fas fa-bell"></i> Alertas</li>
+            <li class="nav-item" onclick="showSection('config')"><i class="fas fa-cog"></i> Configurações</li>
+        </ul>
+        <div>
+            <button class="btn" onclick="toggleTheme()"><i id="themeIcon" class="fas fa-moon"></i></button>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <!-- BANNER HEADER -->
+        <div class="banner">
+            <h2><i class="fas fa-chart-line"></i> AnalystPro</h2>
+            <button class="btn btn-primary" style="background: rgba(255,255,255,0.2);" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Atualizar Preços</button>
+        </div>
+
+        <!-- SEÇÃO: CARTEIRA -->
+        <div id="carteira" class="main-content active">
+            <div class="grid-dashboard">
+                <div class="card">
+                    <h4 style="color: var(--text-muted); margin-bottom: 0.5rem;">Resumo Total</h4>
+                    <h2 id="totalPortfolioValue" style="color: var(--accent-color);">R$ 0,00</h2>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--text-muted); margin-bottom: 0.5rem;">Ações Rápidas</h4>
+                    <button class="btn btn-success" onclick="openTradeModal()"><i class="fas fa-plus"></i> + Operação</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Minha Carteira</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ativo</th>
+                            <th>Qtd</th>
+                            <th>Preço Médio</th>
+                            <th>Preço Atual</th>
+                            <th>Valor Total</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="portfolioTableBody">
+                        <!-- Renderizado via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: ANÁLISE TÉCNICA -->
+        <div id="analise" class="main-content">
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3>Consultar Ativo B3</h3>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <input type="text" id="chartSearch" class="form-control" style="margin: 0;" placeholder="Ex: KLBN3, PETR4, VALE3" value="KLBN3">
+                    <button class="btn btn-primary" onclick="loadChart()">Buscar</button>
+                </div>
+            </div>
+            <div class="card">
+                <div style="height: 300px;">
+                    <canvas id="techChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: CONFIGURAÇÕES DA API -->
+        <div id="config" class="main-content">
+            <div class="card">
+                <h3>Token API Brapi</h3>
+                <p style="color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Insira sua chave para atualizar cotações de KLBN3, PETR4, VALE3, etc.</p>
+                <input type="password" id="brapiTokenInput" class="form-control" placeholder="Cole seu token aqui">
+                <button class="btn btn-primary" onclick="saveToken()">Salvar Token</button>
+            </div>
+        </div>
+
     </div>
 
-    <!-- NAVEGAÇÃO PRINCIPAL -->
-    <nav class="main-nav">
-        <div class="nav-container">
-            <div class="nav-top-row">
-                <div class="nav-logo" onclick="showSection('carteira')">
-                    <i class="fas fa-chart-line"></i> AnalystPro
-                </div>
-
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()">
-                        <i class="fas fa-moon" id="themeToggleIcon"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="nav-collapsible">
-                <div class="nav-menu">
-                    <div class="nav-item active" onclick="showSection('carteira')"><i class="fas fa-wallet"></i> Carteira</div>
-                    <div class="nav-item" onclick="showSection('analise')"><i class="fas fa-search-dollar"></i> Análise</div>
-                    <div class="nav-item" onclick="showSection('alertas')"><i class="fas fa-bell"></i> Alertas</div>
-                    <div class="nav-item" onclick="showSection('dividendos')"><i class="fas fa-money-bill-wave"></i> Dividendos</div>
-                    <div class="nav-item" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- MENU INFERIOR MOBILE -->
-    <nav class="bottom-nav">
-        <div class="bottom-nav-item active" onclick="showSection('carteira')"><i class="fas fa-wallet"></i><span>Carteira</span></div>
-        <div class="bottom-nav-item" onclick="showSection('analise')"><i class="fas fa-search-dollar"></i><span>Análise</span></div>
-        <div class="bottom-nav-item" onclick="showSection('alertas')"><i class="fas fa-bell"></i><span>Alertas</span></div>
-        <div class="bottom-nav-item" onclick="showSection('dividendos')"><i class="fas fa-money-bill-wave"></i><span>Dividendos</span></div>
-        <div class="bottom-nav-item" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></div>
-    </nav>
-
-    <!-- SEÇÃO: DASHBOARD -->
-    <section id="dashboard" class="main-content">
-        <div class="dashboard">
-            <button class="back-button" onclick="showSection('carteira')"><i class="fas fa-arrow-left"></i> Voltar</button>
-            <h1><i class="fas fa-tachometer-alt"></i> Dashboard Interativo</h1>
-            <div class="dashboard-metrics">
-                <div class="metric-card">
-                    <div class="metric-label">Valor Total</div>
-                    <div class="metric-value" id="dashboardTotalValue">R$ 0,00</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Lucro/Prejuízo Total</div>
-                    <div class="metric-value" id="dashboardProfit">R$ 0,00</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEÇÃO: DIVIDENDOS -->
-    <section id="dividendos" class="main-content">
-        <div class="dashboard">
-            <button class="back-button" onclick="showSection('carteira')"><i class="fas fa-arrow-left"></i> Voltar</button>
-            <h1><i class="fas fa-money-bill-wave"></i> Sistema de Dividendos</h1>
-            <div class="analytics-card">
-                <h3><i class="fas fa-plus-circle"></i> Registrar Dividendo</h3>
-                <div class="form-group">
-                    <label>Ativo</label>
-                    <input type="text" id="dividendStock" class="price-input" placeholder="EX: PETR4">
-                </div>
-                <div class="form-group">
-                    <label>Valor (R$)</label>
-                    <input type="number" step="0.01" id="dividendAmount" class="price-input">
-                </div>
-                <button class="save-btn" onclick="saveDividend()"><i class="fas fa-save"></i> Salvar</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEÇÃO: ANÁLISE DE AÇÕES -->
-    <section id="analise" class="main-content">
-        <div class="analytics-container">
-            <button class="back-button" onclick="showSection('carteira')"><i class="fas fa-arrow-left"></i> Voltar</button>
-            <div class="analysis-header">
-                <h1><i class="fas fa-search-dollar"></i> Análise Técnico-Fundamentalista</h1>
-            </div>
-            <div class="analytics-grid">
-                <div class="analytics-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3>Análise de Preço — <span id="chartSymbolLabel">PETR4</span></h3>
-                        <div style="display:flex; gap:0.4rem;">
-                            <input type="text" id="chartSearchInput" placeholder="Ex: BBAS3" class="price-input" style="width: 100px; margin: 0;">
-                            <button class="chart-period-btn" onclick="buscarGraficoAcao()"><i class="fas fa-search"></i></button>
-                        </div>
-                    </div>
-                    <div class="chart-controls" style="margin-top: 1rem;">
-                        <button class="chart-period-btn active" onclick="changeChartPeriod('1m')">1M</button>
-                        <button class="chart-period-btn" onclick="changeChartPeriod('3m')">3M</button>
-                        <button class="chart-period-btn" onclick="changeChartPeriod('1y')">1A</button>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="technicalChart"></canvas>
-                    </div>
-                </div>
-                <div class="analytics-card">
-                    <h3>Recomendações da Carteira</h3>
-                    <div id="stockRecommendations">Clique no botão para atualizar a análise.</div>
-                    <button class="save-btn" onclick="renderRecommendations()"><i class="fas fa-sync"></i> Analisar Carteira</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEÇÃO: ALERTAS -->
-    <section id="alertas" class="main-content">
-        <div class="dashboard">
-            <button class="back-button" onclick="showSection('carteira')"><i class="fas fa-arrow-left"></i> Voltar</button>
-            <div class="card">
-                <h3><i class="fas fa-bell"></i> Alertas Ativos</h3>
-                <div id="activeAlertsList">Nenhum alerta cadastrado.</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEÇÃO: CARTEIRA (TELA INICIAL) -->
-    <section id="carteira" class="main-content content-active">
-        <!-- LOGIN -->
-        <div id="loginScreen" class="login-container">
-            <div class="login-box">
-                <div class="login-header">
-                    <h2><i class="fas fa-lock"></i> AnalystPro</h2>
-                </div>
-                <div class="login-form">
-                    <input type="text" id="username" class="login-input" placeholder="Usuário" value="admin">
-                    <input type="password" id="password" class="login-input" placeholder="Senha" value="1234">
-                    <button class="login-btn" onclick="login()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TELA DA CARTEIRA -->
-        <div id="mainApp" class="main-container">
-            <div class="top-header">
-                <div class="header-content">
-                    <h1><i class="fas fa-chart-line"></i> AnalystPro</h1>
-                    <div>
-                        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dashboard">
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <h3>Resumo</h3>
-                        <div class="stat-value" id="totalValue">R$ 0,00</div>
-                    </div>
-                    <div class="card">
-                        <h3>Ações Rápidas</h3>
-                        <button class="save-btn" onclick="openTradeModal()"><i class="fas fa-plus"></i> Operação</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3>Minha Carteira</h3>
-                    <table class="portfolio-table">
-                        <thead>
-                            <tr>
-                                <th>Ativo</th>
-                                <th>Qtd</th>
-                                <th>Preço Médio</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="portfolioTable"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- NOTIFICAÇÃO -->
-    <div id="notification" class="notification"><span id="notificationMessage"></span></div>
-
-    <!-- MODAL NOVA OPERAÇÃO -->
+    <!-- MODAL DE OPERAÇÕES -->
     <div id="tradeModal" class="modal">
         <div class="modal-content">
-            <h3>Nova Operação</h3>
-            <input type="text" id="tradeSymbol" class="price-input" placeholder="Ativo (Ex: PETR4)">
-            <input type="number" id="tradeQuantity" class="price-input" placeholder="Quantidade">
-            <input type="number" step="0.01" id="tradePrice" class="price-input" placeholder="Preço Médio">
-            <button class="save-btn" onclick="saveTrade()"><i class="fas fa-save"></i> Salvar Operação</button>
-            <button class="back-button" onclick="closeTradeModal()" style="margin-top:0.5rem;">Cancelar</button>
+            <h3>Adicionar / Editar Ativo</h3>
+            <div style="margin-top: 1rem;">
+                <label>Ativo (Ex: KLBN3, PETR4)</label>
+                <input type="text" id="tradeSymbol" class="form-control" placeholder="KLBN3">
+                <label>Quantidade</label>
+                <input type="number" id="tradeQty" class="form-control" placeholder="100">
+                <label>Preço Médio (R$)</label>
+                <input type="number" step="0.01" id="tradePrice" class="form-control" placeholder="6.28">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+                <button class="btn" onclick="closeTradeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveAsset()">Salvar</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const APP_BUILD = '2026-08-02-01';
-        let selectedUser = 'pai';
-        let isAuthenticated = false;
-        let technicalChart = null;
+        // CARTEIRA INICIAL COM A KLABIN (KLBN3), PETR4 E VALE3
+        let portfolio = JSON.parse(localStorage.getItem('user_portfolio')) || [
+            { symbol: 'PETR4', qty: 100, avgPrice: 32.50 },
+            { symbol: 'VALE3', qty: 50, avgPrice: 68.90 },
+            { symbol: 'KLBN3', qty: 225, avgPrice: 6.28 }
+        ];
 
-        let userPortfolios = JSON.parse(localStorage.getItem('userPortfolios')) || {
-            'pai': [
-                { symbol: 'PETR4', quantity: 100, avgPrice: 32.50 },
-                { symbol: 'VALE3', quantity: 50, avgPrice: 68.90 }
-            ]
-        };
+        let priceCache = {};
+        let brapiToken = localStorage.getItem('brapiToken') || '';
+        let chartInstance = null;
 
-        function showNotification(msg, type = 'success') {
-            const notif = document.getElementById('notification');
-            document.getElementById('notificationMessage').textContent = msg;
-            notif.className = `notification ${type} show`;
-            setTimeout(() => notif.classList.remove('show'), 3000);
+        document.addEventListener('DOMContentLoaded', () => {
+            if (brapiToken) {
+                document.getElementById('brapiTokenInput').value = brapiToken;
+            }
+            refreshData();
+        });
+
+        async function fetchPrices() {
+            if (portfolio.length === 0) return;
+
+            const tickers = portfolio.map(p => p.symbol.toUpperCase()).join(',');
+            let url = `https://brapi.dev/api/quote/${encodeURIComponent(tickers)}`;
+            if (brapiToken) url += `?token=${encodeURIComponent(brapiToken.trim())}`;
+
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('Erro na API');
+                const data = await res.json();
+
+                if (data.results) {
+                    data.results.forEach(item => {
+                        if (item.symbol && item.regularMarketPrice) {
+                            priceCache[item.symbol.toUpperCase()] = item.regularMarketPrice;
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Falha ao buscar preços:', err);
+            }
         }
 
-        function showSection(sectionId) {
-            document.querySelectorAll('.main-content').forEach(s => s.classList.remove('content-active'));
-            const sec = document.getElementById(sectionId);
-            if (sec) sec.classList.add('content-active');
-
-            document.querySelectorAll('.bottom-nav-item').forEach(item => {
-                item.classList.toggle('active', item.getAttribute('onclick')?.includes(sectionId));
-            });
+        async function refreshData() {
+            await fetchPrices();
+            renderTable();
         }
 
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', targetTheme);
-            document.getElementById('themeToggleIcon').className = targetTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
+        function renderTable() {
+            const tbody = document.getElementById('portfolioTableBody');
+            let totalValue = 0;
 
-        function login() {
-            isAuthenticated = true;
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            renderPortfolioTable();
-            showNotification('Login efetuado com sucesso!');
-        }
+            tbody.innerHTML = portfolio.map((item, index) => {
+                const currentPrice = priceCache[item.symbol.toUpperCase()] || item.avgPrice;
+                const assetTotal = item.qty * currentPrice;
+                totalValue += assetTotal;
 
-        function logout() {
-            isAuthenticated = false;
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'flex';
-        }
-
-        function renderPortfolioTable() {
-            const list = userPortfolios[selectedUser] || [];
-            const tbody = document.getElementById('portfolioTable');
-            let total = 0;
-
-            tbody.innerHTML = list.map((item, idx) => {
-                const subtotal = item.quantity * item.avgPrice;
-                total += subtotal;
                 return `
                     <tr>
-                        <td><strong>${item.symbol}</strong></td>
-                        <td>${item.quantity}</td>
-                        <td>R$ ${item.avgPrice.toFixed(2)}</td>
-                        <td><button class="action-btn delete-btn" onclick="removeTrade(${idx})">Remover</button></td>
+                        <td><strong>${item.symbol.toUpperCase()}</strong></td>
+                        <td>${item.qty}</td>
+                        <td>R$ ${Number(item.avgPrice).toFixed(2)}</td>
+                        <td>R$ ${Number(currentPrice).toFixed(2)}</td>
+                        <td>R$ ${assetTotal.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="removeAsset(${index})">Remover</button>
+                        </td>
                     </tr>
                 `;
             }).join('');
 
-            document.getElementById('totalValue').textContent = `R$ ${total.toFixed(2)}`;
-            document.getElementById('dashboardTotalValue').textContent = `R$ ${total.toFixed(2)}`;
+            document.getElementById('totalPortfolioValue').textContent = `R$ ${totalValue.toFixed(2)}`;
         }
 
         function openTradeModal() { document.getElementById('tradeModal').style.display = 'flex'; }
         function closeTradeModal() { document.getElementById('tradeModal').style.display = 'none'; }
 
-        function saveTrade() {
+        function saveAsset() {
             const symbol = document.getElementById('tradeSymbol').value.toUpperCase().trim();
-            const quantity = parseFloat(document.getElementById('tradeQuantity').value);
+            const qty = parseInt(document.getElementById('tradeQty').value);
             const avgPrice = parseFloat(document.getElementById('tradePrice').value);
 
-            if (!symbol || isNaN(quantity) || isNaN(avgPrice)) {
-                showNotification('Preencha os dados corretamente.', 'error');
+            if (!symbol || isNaN(qty) || isNaN(avgPrice)) {
+                alert('Preencha os campos corretamente.');
                 return;
             }
 
-            if (!userPortfolios[selectedUser]) userPortfolios[selectedUser] = [];
-            userPortfolios[selectedUser].push({ symbol, quantity, avgPrice });
-            localStorage.setItem('userPortfolios', JSON.stringify(userPortfolios));
+            const existingIndex = portfolio.findIndex(p => p.symbol === symbol);
+            if (existingIndex >= 0) {
+                portfolio[existingIndex] = { symbol, qty, avgPrice };
+            } else {
+                portfolio.push({ symbol, qty, avgPrice });
+            }
 
-            renderPortfolioTable();
+            localStorage.setItem('user_portfolio', JSON.stringify(portfolio));
             closeTradeModal();
-            showNotification('Operação registrada!');
+            refreshData();
         }
 
-        function removeTrade(index) {
-            userPortfolios[selectedUser].splice(index, 1);
-            localStorage.setItem('userPortfolios', JSON.stringify(userPortfolios));
-            renderPortfolioTable();
-            showNotification('Ativo removido.');
+        function removeAsset(index) {
+            portfolio.splice(index, 1);
+            localStorage.setItem('user_portfolio', JSON.stringify(portfolio));
+            refreshData();
         }
 
-        function saveDividend() {
-            showNotification('Dividendo salvo com sucesso!');
+        function saveToken() {
+            brapiToken = document.getElementById('brapiTokenInput').value.trim();
+            localStorage.setItem('brapiToken', brapiToken);
+            alert('Token salvo com sucesso!');
+            refreshData();
         }
 
-        // --- SISTEMA DE GRÁFICO (Chart.js + Brapi) ---
-        async function buscarGraficoAcao() {
-            const symbol = (document.getElementById('chartSearchInput').value || 'PETR4').toUpperCase().trim();
-            document.getElementById('chartSymbolLabel').textContent = symbol;
-            await buildChart(symbol, '1m');
+        function showSection(id) {
+            document.querySelectorAll('.main-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if (id === 'analise') loadChart();
         }
 
-        async function changeChartPeriod(range) {
-            const symbol = document.getElementById('chartSymbolLabel').textContent;
-            await buildChart(symbol, range);
+        async function loadChart() {
+            const ctx = document.getElementById('techChart');
+            const ticker = document.getElementById('chartSearch').value.toUpperCase().trim() || 'KLBN3';
+
+            let url = `https://brapi.dev/api/quote/${encodeURIComponent(ticker)}?range=1mo&interval=1d`;
+            if (brapiToken) url += `&token=${encodeURIComponent(brapiToken)}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                const quote = (data.results || [])[0];
+                const historical = quote ? (quote.historicalDataPrice || quote.historical || []) : [];
+
+                const labels = historical.map(h => new Date(h.date * 1000).toLocaleDateString('pt-BR'));
+                const prices = historical.map(h => h.close);
+
+                if (chartInstance) chartInstance.destroy();
+
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: `Histórico (${ticker})`,
+                            data: prices,
+                            borderColor: '#2563eb',
+                            fill: false
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            } catch (e) {
+                console.error(e);
+            }
         }
 
-        async function buildChart(symbol, range) {
-            const ctx = document.getElementById('technicalChart').getContext('2d');
-            
-            // Dados simulados com curva dinâmica para fallback/renderização instantânea
-            const points = range === '1m' ? 30 : (range === '3m' ? 90 : 365);
-            const labels = Array.from({length: points}, (_, i) => `Dia ${i+1}`);
-            const dataValues = Array.from({length: points}, (_, i) => 30 + Math.sin(i / 5) * 4 + (Math.random() * 2));
-
-            if (technicalChart) technicalChart.destroy();
-
-            technicalChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: `Histórico ${symbol}`,
-                        data: dataValues,
-                        borderColor: '#2563eb',
-                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
+        function toggleTheme() {
+            const current = document.body.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', next);
+            document.getElementById('themeIcon').className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
-
-        function renderRecommendations() {
-            document.getElementById('stockRecommendations').innerHTML = `
-                <div class="alert-banner">
-                    <i class="fas fa-check-circle"></i>
-                    <div><strong>PETR4:</strong> Indicadores e dividendos atrativos para a carteira.</div>
-                </div>
-            `;
-        }
-
-        function applyUpdate() { location.reload(); }
     </script>
 </body>
 </html>
