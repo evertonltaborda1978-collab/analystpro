@@ -4,543 +4,332 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AnalystPro - Gestão de Investimentos</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body { background-color: #f8f9fa; }
-    .nav-tabs .nav-link.active { font-weight: bold; }
-    .card-stat { border: none; shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); }
-    
-    /* Linha Divisória entre os Anos */
-    .linha-separadora-ano {
-      border-bottom: 3px solid #dee2e6 !important;
-    }
-
-    /* Banner Flutuante de Atualização em Tempo Real */
-    #updateBanner {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 9999;
-      display: none;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-gray-100 font-sans text-gray-800">
 
-  <!-- BANNER DE ALERTA DE NOVA VERSÃO DO SITE -->
-  <div id="updateBanner" class="toast show align-items-center text-bg-dark border-0 p-2" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="toast-body d-flex align-items-center gap-2">
-        <i class="fa-solid fa-arrows-rotate text-warning fs-5"></i>
-        <span><strong>Nova versão disponível!</strong> Clique para atualizar.</span>
-      </div>
-      <button type="button" class="btn btn-warning btn-sm fw-bold ms-3" onclick="window.location.reload(true)">
-        Atualizar
-      </button>
+  <!-- NAVBAR / HEADER -->
+  <header class="bg-blue-600 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold flex items-center gap-2">
+        <i class="fa-solid => fa-chart-line"></i> AnalystPro
+      </h1>
+      <nav class="flex gap-6 text-sm font-medium">
+        <a href="#carteira" onclick="navegar('carteira')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-wallet"></i> Carteira</a>
+        <a href="#dividendos" onclick="navegar('dividendos')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-hand-holding-dollar"></i> Dividendos</a>
+        <a href="#oportunidades" onclick="navegar('oportunidades')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-bullseye"></i> Oportunidades</a>
+        <a href="#analise" onclick="navegar('analise')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-chart-pie"></i> Análise</a>
+        <a href="#configuracoes" onclick="navegar('configuracoes')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-gear"></i> Configurações</a>
+      </nav>
     </div>
-  </div>
+  </header>
 
-  <!-- Navbar / Header -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-chart-line me-2"></i>AnalystPro</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav nav-pills ms-auto" id="mainTabs" role="tablist">
-          <li class="nav-item">
-            <button class="nav-link text-white active" id="carteira-tab" data-bs-toggle="tab" data-bs-target="#carteira" type="button">
-              <i class="fa-solid fa-wallet me-1"></i> Carteira
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link text-white" id="dividendos-tab" data-bs-toggle="tab" data-bs-target="#dividendos" type="button">
-              <i class="fa-solid fa-hand-holding-dollar me-1"></i> Dividendos
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link text-white" id="oportunidades-tab" data-bs-toggle="tab" data-bs-target="#oportunidades" type="button">
-              <i class="fa-solid fa-bullseye me-1"></i> Oportunidades
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link text-white" id="analise-tab" data-bs-toggle="tab" data-bs-target="#analise" type="button">
-              <i class="fa-solid fa-chart-pie me-1"></i> Análise
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link text-white" id="config-tab" data-bs-toggle="tab" data-bs-target="#config" type="button">
-              <i class="fa-solid fa-gear me-1"></i> Configurações
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
 
-  <div class="container">
-    <!-- Cards de Resumo -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-4">
-        <div class="card card-stat p-3 bg-white border-start border-4 border-primary rounded-3 shadow-sm">
-          <div class="text-muted small">Valor Total da Carteira</div>
-          <div class="fs-3 fw-bold text-dark" id="cardValorTotal">R$ 0,00</div>
-          <div class="text-muted small" id="statusAtualizacao">Aguardando atualização...</div>
-        </div>
+    <!-- CARDS DE RESUMO (TOPO) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+        <span class="text-sm text-gray-500">Valor Total da Carteira</span>
+        <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 mt-1">R$ 2.209,50</h2>
+        <span id="statusAtualizacao" class="text-xs text-gray-400">Aguardando atualização...</span>
       </div>
-      <div class="col-md-4">
-        <div class="card card-stat p-3 bg-white border-start border-4 border-success rounded-3 shadow-sm">
-          <div class="text-muted small">Proventos Recebidos</div>
-          <div class="fs-3 fw-bold text-success" id="cardProventosGeral">R$ 316,40</div>
-          <div class="text-muted small">Total acumulado (2023-2026)</div>
-        </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-emerald-500">
+        <span class="text-sm text-gray-500">Proventos Recebidos</span>
+        <h2 class="text-3xl font-bold text-emerald-600 mt-1">R$ 316,40</h2>
+        <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
       </div>
-      <div class="col-md-4">
-        <div class="card card-stat p-3 bg-white border-start border-4 border-info rounded-3 shadow-sm">
-          <div class="text-muted small">Lucro / Prejuízo (Ações)</div>
-          <div class="fs-3 fw-bold text-info" id="cardLucroPrejuizo">R$ 0,00</div>
-        </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-cyan-500">
+        <span class="text-sm text-gray-500">Lucro / Prejuízo (Ações)</span>
+        <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 mt-1">R$ 0,00 <span class="text-sm font-normal">(+0.00%)</span></h2>
       </div>
     </div>
 
-    <!-- Conteúdo das Abas -->
-    <div class="tab-content" id="mainTabsContent">
-      
-      <!-- ABA 1: CARTEIRA -->
-      <div class="tab-pane fade show active" id="carteira" role="tabpanel">
-        <div class="card p-4 shadow-sm border-0 mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="m-0 fw-bold"><i class="fa-solid fa-wallet text-primary me-2"></i>Minha Carteira</h5>
-            <div>
-              <button class="btn btn-success btn-sm me-2"><i class="fa-solid fa-plus me-1"></i> Nova Operação</button>
-              <button class="btn btn-outline-primary btn-sm" id="btnAtualizarCotacoes" onclick="atualizarCotacoesBrapi()">
-                <i class="fa-solid fa-arrows-rotate me-1"></i> Atualizar Preços (Brapi)
-              </button>
-            </div>
-          </div>
-
-          <div id="alertaToken" class="alert alert-warning alert-dismissible fade show d-none mb-3" role="alert">
-            <i class="fa-solid fa-triangle-exclamation me-2"></i>
-            <strong>Atenção:</strong> Insira seu Token da Brapi na aba <strong>Configurações</strong> para carregar cotações em tempo real.
-          </div>
-
-          <div class="table-responsive">
-            <table class="table table-hover align-middle">
-              <thead class="table-light">
-                <tr>
-                  <th>Ativo</th>
-                  <th>Qtd</th>
-                  <th>Preço Médio</th>
-                  <th>Preço Atual</th>
-                  <th>Preço Justo</th>
-                  <th>Variação Dia</th>
-                  <th>Valor Investido</th>
-                  <th>Valor Atual</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="tabelaCarteiraBody">
-                <!-- Preenchido dinamicamente via JS -->
-              </tbody>
-            </table>
-          </div>
+    <!-- SEÇÃO: CARTEIRA -->
+    <section id="sec-carteira" class="bg-white p-6 rounded-lg shadow-sm">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-wallet text-blue-600"></i> Minha Carteira
+        </h3>
+        <div class="flex gap-3">
+          <button onclick="adicionarOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i> Nova Operação
+          </button>
+          <button onclick="atualizarCotacoesBrapi()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-4 py-2 rounded-md font-medium text-sm flex items-center gap-2">
+            <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
+          </button>
         </div>
       </div>
 
-      <!-- ABA 2: DIVIDENDOS / PROVENTOS -->
-      <div class="tab-pane fade" id="dividendos" role="tabpanel">
-        <div class="card p-4 shadow-sm border-0 mb-4">
-          <h5 class="fw-bold mb-3"><i class="fa-solid fa-circle-plus text-success me-2"></i>Lançar Novo Provento</h5>
-          <form id="formProvento" class="row g-3">
-            <div class="col-md-3">
-              <label class="form-label fw-semibold">Ano</label>
-              <input type="number" id="provAno" class="form-control" value="2026" required>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label fw-semibold">Mês</label>
-              <select id="provMes" class="form-select" required>
-                <option value="1">Janeiro</option>
-                <option value="2">Fevereiro</option>
-                <option value="3">Março</option>
-                <option value="4">Abril</option>
-                <option value="5">Maio</option>
-                <option value="6">Junho</option>
-                <option value="7">Julho</option>
-                <option value="8">Agosto</option>
-                <option value="9">Setembro</option>
-                <option value="10">Outubro</option>
-                <option value="11">Novembro</option>
-                <option value="12">Dezembro</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label fw-semibold">Ativo</label>
-              <select id="provAtivo" class="form-select" required>
-                <option value="PETR4">PETR4</option>
-                <option value="KLBN3">KLBN3</option>
-                <option value="SAPR11">SAPR11</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label fw-semibold">Valor (R$)</label>
-              <input type="number" step="0.01" id="provValor" class="form-control" placeholder="0,00" required>
-            </div>
-            <div class="col-12 text-end">
-              <button type="submit" class="btn btn-success fw-semibold"><i class="fa-solid fa-plus me-1"></i> Adicionar Provento</button>
-            </div>
-          </form>
-        </div>
-
-        <div class="card p-4 shadow-sm border-0">
-          <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-            <h5 class="fw-bold m-0"><i class="fa-solid fa-list-check me-2"></i>Histórico de Proventos</h5>
-            
-            <div class="d-flex align-items-center gap-3">
-              <div class="btn-group btn-group-sm" role="group">
-                <button type="button" class="btn btn-outline-primary active" id="btnModoDetalhado" onclick="mudarModoExibicao('detalhado')">
-                  <i class="fa-solid fa-list me-1"></i> Detalhado
-                </button>
-                <button type="button" class="btn btn-outline-primary" id="btnModoResumido" onclick="mudarModoExibicao('resumido')">
-                  <i class="fa-solid fa-chart-column me-1"></i> Resumo por Ano
-                </button>
-              </div>
-
-              <div class="d-flex align-items-center gap-2">
-                <label for="filtroAno" class="fw-bold me-1 small">Ano:</label>
-                <select id="filtroAno" class="form-select form-select-sm w-auto" onchange="atualizarInterfaceProventos()">
-                  <option value="todos">Todos os Anos</option>
-                  <option value="2023">2023</option>
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="alert alert-light border d-flex justify-content-between align-items-center mb-3">
-            <span class="fw-semibold text-secondary">Total Exibido no Período:</span>
-            <strong id="totalExibido" class="fs-4 text-success">R$ 0,00</strong>
-          </div>
-
-          <div class="table-responsive">
-            <table class="table table-hover align-middle" id="tabelaProventos">
-              <thead class="table-light" id="tabelaProventosHead"></thead>
-              <tbody id="tabelaProventosBody"></tbody>
-            </table>
-          </div>
-        </div>
+      <!-- TABELA DE ATIVOS -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-200 bg-gray-50 text-gray-600 text-sm font-semibold">
+              <th class="py-3 px-4">Ativo</th>
+              <th class="py-3 px-4">Qtd</th>
+              <th class="py-3 px-4">Preço Médio</th>
+              <th class="py-3 px-4">Preço Atual</th>
+              <th class="py-3 px-4">Preço Justo</th>
+              <th class="py-3 px-4">Variação Dia</th>
+              <th class="py-3 px-4">Valor Investido</th>
+              <th class="py-3 px-4">Valor Atual</th>
+              <th class="py-3 px-4 text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaAtivos" class="divide-y divide-gray-100 text-sm">
+            <tr data-ticker="PETR4">
+              <td class="py-3 px-4 font-bold text-gray-800">PETR4</td>
+              <td class="py-3 px-4 qtd">10</td>
+              <td class="py-3 px-4 pm">R$ 32,21</td>
+              <td class="py-3 px-4 preco-atual font-semibold">R$ 32,21</td>
+              <td class="py-3 px-4">R$ 27,22</td>
+              <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+              <td class="py-3 px-4 valor-investido">R$ 322,10</td>
+              <td class="py-3 px-4 valor-atual font-semibold">R$ 322,10</td>
+              <td class="py-3 px-4 text-center">
+                <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+            <tr data-ticker="KLBN3">
+              <td class="py-3 px-4 font-bold text-gray-800">KLBN3</td>
+              <td class="py-3 px-4 qtd">225</td>
+              <td class="py-3 px-4 pm">R$ 6,28</td>
+              <td class="py-3 px-4 preco-atual font-semibold">R$ 6,28</td>
+              <td class="py-3 px-4">R$ 3,81</td>
+              <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+              <td class="py-3 px-4 valor-investido">R$ 1.413,00</td>
+              <td class="py-3 px-4 valor-atual font-semibold">R$ 1.413,00</td>
+              <td class="py-3 px-4 text-center">
+                <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+            <tr data-ticker="SAPR11">
+              <td class="py-3 px-4 font-bold text-gray-800">SAPR11</td>
+              <td class="py-3 px-4 qtd">20</td>
+              <td class="py-3 px-4 pm">R$ 23,72</td>
+              <td class="py-3 px-4 preco-atual font-semibold">R$ 23,72</td>
+              <td class="py-3 px-4">R$ 21,35</td>
+              <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+              <td class="py-3 px-4 valor-investido">R$ 474,40</td>
+              <td class="py-3 px-4 valor-atual font-semibold">R$ 474,40</td>
+              <td class="py-3 px-4 text-center">
+                <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+    </section>
 
-      <!-- ABA 3: OPORTUNIDADES -->
-      <div class="tab-pane fade" id="oportunidades" role="tabpanel">
-        <div class="card p-4 shadow-sm border-0 mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <h5 class="fw-bold m-0"><i class="fa-solid fa-bullseye text-danger me-2"></i>Radar de Oportunidades & Ações do Mercado</h5>
-              <p class="text-muted small m-0">Ações monitoradas para oportunidades de compra fora da sua carteira.</p>
-            </div>
-            <button class="btn btn-primary btn-sm"><i class="fa-solid fa-plus me-1"></i> Adicionar Ação ao Radar</button>
-          </div>
-
-          <div class="table-responsive">
-            <table class="table table-hover align-middle">
-              <thead class="table-light">
-                <tr>
-                  <th>Ativo</th>
-                  <th>Empresa</th>
-                  <th>Setor</th>
-                  <th>Preço Atual</th>
-                  <th>Preço Justo (Teto)</th>
-                  <th>Dividend Yield (12M)</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>BBAS3</strong></td>
-                  <td>Banco do Brasil</td>
-                  <td>Financeiro</td>
-                  <td>R$ 27,80</td>
-                  <td>R$ 35,00</td>
-                  <td class="text-success fw-bold">9.8%</td>
-                  <td><span class="badge bg-success"><i class="fa-solid fa-thumbs-up me-1"></i> Oportunidade</span></td>
-                </tr>
-                <tr>
-                  <td><strong>TAEE11</strong></td>
-                  <td>Taesa</td>
-                  <td>Energia Elétrica</td>
-                  <td>R$ 34,50</td>
-                  <td>R$ 36,00</td>
-                  <td class="text-success fw-bold">8.2%</td>
-                  <td><span class="badge bg-info text-dark">Preço Justo</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <!-- SEÇÃO: CONFIGURAÇÕES -->
+    <section id="sec-configuracoes" class="bg-white p-6 rounded-lg shadow-sm hidden">
+      <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-gear text-blue-600"></i> Configurações da API
+      </h3>
+      <div class="max-w-md">
+        <label for="brapiTokenInput" class="block text-sm font-medium text-gray-700 mb-2">Token de Acesso da Brapi (brapi.dev)</label>
+        <input type="text" id="brapiTokenInput" placeholder="Cole seu token da Brapi aqui" class="w-full p-2 border border-gray-300 rounded-md text-sm mb-4 focus:ring-2 focus:ring-blue-500 outline-none">
+        <button onclick="salvarConfiguracoes()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm">
+          Salvar Configurações
+        </button>
       </div>
+    </section>
 
-      <!-- ABA 4: ANÁLISE -->
-      <div class="tab-pane fade" id="analise" role="tabpanel">
-        <div class="card p-4 shadow-sm border-0">
-          <h5 class="fw-bold"><i class="fa-solid fa-chart-pie text-primary me-2"></i>Análise da Carteira</h5>
-          <p class="text-muted">Área reservada para gráficos de alocação de ativos e indicadores financeiros.</p>
-        </div>
-      </div>
+    <!-- OUTRAS SEÇÕES (Placeholder) -->
+    <section id="sec-dividendos" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Dividendos</h3></section>
+    <section id="sec-oportunidades" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Oportunidades</h3></section>
+    <section id="sec-analise" class="bg-white p-6 rounded-lg shadow-sm hidden"><h3 class="text-xl font-bold">Análise</h3></section>
 
-      <!-- ABA 5: CONFIGURAÇÕES (TOKEN BRAPI) -->
-      <div class="tab-pane fade" id="config" role="tabpanel">
-        <div class="card p-4 shadow-sm border-0">
-          <h5 class="fw-bold mb-3"><i class="fa-solid fa-gear text-primary me-2"></i>Configurações de Integração</h5>
-          
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label fw-bold">Token da API Brapi.dev</label>
-              <div class="input-group">
-                <input type="password" id="inputBrapiToken" class="form-control" placeholder="Cole aqui o seu token (ex: xxxxxxxxxxx)">
-                <button class="btn btn-primary" onclick="salvarTokenBrapi()"><i class="fa-solid fa-floppy-disk me-1"></i> Salvar Token</button>
-              </div>
-              <div class="form-text">
-                Obtenha seu token gratuito criando uma conta em <a href="https://brapi.dev" target="_blank">brapi.dev</a>.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  </main>
 
-    </div>
-  </div>
-
-  <!-- JS Bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Lógica de Negócio (JS) -->
+  <!-- LÓGICA JAVASCRIPT INTEGRAL -->
   <script>
-    // --- LÓGICA DE VERIFICAÇÃO AUTOMÁTICA DE ATUALIZAÇÕES DO SITE ---
-    const VERSAO_ATUAL = "1.0.0";
+    // 1. Ao carregar a página, restaura a chave salva no campo das configurações
+    document.addEventListener('DOMContentLoaded', () => {
+      const tokenSalvo = localStorage.getItem('brapi_token');
+      if (tokenSalvo) {
+        document.getElementById('brapiTokenInput').value = tokenSalvo;
+      }
+    });
 
-    async function verificarNovaVersao() {
-      try {
-        const resposta = await fetch(`version.json?t=${new Date().getTime()}`);
-        if (resposta.ok) {
-          const dados = await resposta.json();
-          if (dados.version !== VERSAO_ATUAL) {
-            document.getElementById('updateBanner').style.display = 'block';
-          }
-        }
-      } catch (e) { console.log("Aguardando verificação...", e); }
+    // 2. Navegação simples entre as abas do menu
+    function navegar(aba) {
+      const secoes = ['carteira', 'dividendos', 'oportunidades', 'analise', 'configuracoes'];
+      secoes.forEach(s => {
+        const el = document.getElementById(`sec-${s}`);
+        if (el) el.classList.add('hidden');
+      });
+      const ativa = document.getElementById(`sec-${aba}`);
+      if (ativa) ativa.classList.remove('hidden');
     }
-    verificarNovaVersao();
-    setInterval(verificarNovaVersao, 3000);
 
-    // --- CARTEIRA DE ATIVOS ---
-    let minhaCarteira = [
-      { ativo: 'PETR4', qtd: 10, precoMedio: 32.21, precoAtual: 32.21, precoJusto: 27.22, variacao: 0 },
-      { ativo: 'KLBN3', qtd: 225, precoMedio: 6.28, precoAtual: 6.28, precoJusto: 3.81, variacao: 0 },
-      { ativo: 'SAPR11', qtd: 20, precoMedio: 23.72, precoAtual: 23.72, precoJusto: 21.35, variacao: 0 }
-    ];
-
-    // --- BRAPI TEMPO REAL ---
-    function salvarTokenBrapi() {
-      const token = document.getElementById('inputBrapiToken').value.trim();
-      if (token) {
-        localStorage.setItem('brapiToken', token);
+    // 3. Salvar o Token da API limpo no localStorage
+    function salvarConfiguracoes() {
+      const input = document.getElementById('brapiTokenInput');
+      if (input && input.value.trim() !== "") {
+        const tokenLimpo = input.value.trim();
+        localStorage.setItem('brapi_token', tokenLimpo);
         alert('Token da Brapi salvo com sucesso!');
-        document.getElementById('alertaToken').classList.add('d-none');
-        atualizarCotacoesBrapi();
       } else {
-        alert('Por favor, digite um token válido.');
+        alert('Por favor, insira um token válido.');
       }
     }
 
+    // 4. Função PRINCIPAL para Atualizar Preços (Corrigida com Promise.all para evitar o erro 400)
     async function atualizarCotacoesBrapi() {
-      const token = localStorage.getItem('brapiToken') || document.getElementById('inputBrapiToken').value.trim();
-      
+      const token = localStorage.getItem('brapi_token');
+
       if (!token) {
-        document.getElementById('alertaToken').classList.remove('d-none');
-        renderizarCarteira();
+        alert("Token da Brapi não encontrado! Vá em Configurações e salve seu token.");
+        navegar('configuracoes');
         return;
       }
 
-      document.getElementById('alertaToken').classList.add('d-none');
-      const btn = document.getElementById('btnAtualizarCotacoes');
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Consultando B3...`;
+      const statusElement = document.getElementById('statusAtualizacao');
+      if (statusElement) statusElement.innerText = "Atualizando preços...";
 
-      const tickers = minhaCarteira.map(item => item.ativo).join(',');
-      
+      // Obtém dinamicamente todos os tickers presentes nas linhas da tabela
+      const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
+      const tickers = Array.from(linhas).map(linha => linha.getAttribute('data-ticker'));
+
+      if (tickers.length === 0) {
+        alert("Nenhum ativo encontrado na carteira.");
+        return;
+      }
+
       try {
-        const url = `https://brapi.dev/api/quote/${tickers}?token=${token}`;
-        const resposta = await fetch(url);
-        const dados = await resposta.json();
+        // Dispara requisições individuais em paralelo para cada ticker (resolve o erro 400 Bad Request)
+        const requisicoes = tickers.map(ticker =>
+          fetch(`https://brapi.dev/api/quote/${ticker}?token=${token}`)
+            .then(async res => {
+              if (!res.ok) {
+                throw new Error(`Erro no ativo ${ticker}: Status ${res.status}`);
+              }
+              return res.json();
+            })
+        );
 
-        if (dados && dados.results) {
-          dados.results.forEach(cotacao => {
-            const item = minhaCarteira.find(a => a.ativo === cotacao.symbol);
-            if (item) {
-              item.precoAtual = cotacao.regularMarketPrice || item.precoAtual;
-              item.variacao = cotacao.regularMarketChangePercent || 0;
-            }
-          });
+        const resultados = await Promise.all(requisicoes);
 
-          const agora = new Date();
-          document.getElementById('statusAtualizacao').innerText = `Atualizado às ${agora.toLocaleTimeString('pt-BR')}`;
+        // Atualiza a tabela elemento por elemento
+        resultados.forEach(data => {
+          if (data.results && data.results.length > 0) {
+            const ativo = data.results[0];
+            const ticker = ativo.symbol;
+            const precoAtual = ativo.regularMarketPrice;
+            const variacao = ativo.regularMarketChangePercent;
+
+            atualizarLinhaTabela(ticker, precoAtual, variacao);
+          }
+        });
+
+        recalcularTotais();
+
+        const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        if (statusElement) statusElement.innerText = `Atualizado às ${agora}`;
+        alert("Cotações atualizadas com sucesso!");
+
+      } catch (erro) {
+        console.error("Erro na atualização:", erro);
+        if (statusElement) statusElement.innerText = "Falha ao atualizar";
+        alert("Ocorreu um erro ao buscar os preços. Verifique se seu token na aba Configurações está correto e sem espaços.");
+      }
+    }
+
+    // 5. Atualiza os dados de uma linha específica no DOM
+    function atualizarLinhaTabela(ticker, precoAtual, variacao) {
+      const linha = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
+      if (!linha) return;
+
+      const celulaPreco = linha.querySelector('.preco-atual');
+      const celulaVariacao = linha.querySelector('.variacao');
+      const celulaQtd = linha.querySelector('.qtd');
+      const celulaValorAtual = linha.querySelector('.valor-atual');
+
+      if (celulaPreco && precoAtual !== undefined) {
+        celulaPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
+      }
+
+      if (celulaVariacao && variacao !== undefined) {
+        const sinal = variacao >= 0 ? '+' : '';
+        celulaVariacao.innerText = `${sinal}${variacao.toFixed(2)}%`;
+        if (variacao >= 0) {
+          celulaVariacao.className = "py-3 px-4 variacao text-emerald-600 font-medium";
+        } else {
+          celulaVariacao.className = "py-3 px-4 variacao text-red-500 font-medium";
         }
-      } catch (e) {
-        console.error("Erro ao consultar a Brapi:", e);
-        alert("Erro ao consultar cotações em tempo real. Verifique seu token da Brapi.");
-      } finally {
-        btn.innerHTML = `<i class="fa-solid fa-arrows-rotate me-1"></i> Atualizar Preços (Brapi)`;
-        renderizarCarteira();
+      }
+
+      // Recalcula o valor total daquele ativo (Quantidade * Preço Atual)
+      if (celulaQtd && celulaValorAtual && precoAtual !== undefined) {
+        const qtd = parseFloat(celulaQtd.innerText.replace(',', '.'));
+        const valorAtualTotal = qtd * precoAtual;
+        celulaValorAtual.innerText = `R$ ${valorAtualTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       }
     }
 
-    function renderizarCarteira() {
-      const body = document.getElementById('tabelaCarteiraBody');
-      let html = '';
-      let valorTotalCarteira = 0;
-      let valorTotalInvestido = 0;
+    // 6. Recalcula o valor total acumulado da carteira
+    function recalcularTotais() {
+      const valoresAtuais = document.querySelectorAll('#tabelaAtivos .valor-atual');
+      let totalGeral = 0;
 
-      minhaCarteira.forEach(item => {
-        const investido = item.qtd * item.precoMedio;
-        const atual = item.qtd * item.precoAtual;
+      valoresAtuais.forEach(el => {
+        const textoLimpo = el.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+        const valor = parseFloat(textoLimpo);
+        if (!isNaN(valor)) totalGeral += valor;
+      });
+
+      const totalElement = document.getElementById('totalCarteira');
+      if (totalElement) {
+        totalElement.innerText = `R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+    }
+
+    // Helper de remoção
+    function removerAtivo(btn) {
+      if (confirm("Deseja remover este ativo da carteira?")) {
+        const tr = btn.closest('tr');
+        tr.remove();
+        recalcularTotais();
+      }
+    }
+
+    // Helper de inclusão (exemplo)
+    function adicionarOperacao() {
+      const ticker = prompt("Digite o código do Ativo (ex: PETR4):")?.toUpperCase().trim();
+      if (!ticker) return;
+      const qtd = prompt("Digite a quantidade:", "10");
+      const pm = prompt("Digite o Preço Médio:", "10.00");
+
+      if (ticker && qtd && pm) {
+        const tbody = document.getElementById('tabelaAtivos');
+        const novaLinha = document.createElement('tr');
+        novaLinha.setAttribute('data-ticker', ticker);
+        novaLinha.className = "border-b border-gray-100 text-sm";
         
-        valorTotalInvestido += investido;
-        valorTotalCarteira += atual;
+        const valorInv = parseFloat(qtd) * parseFloat(pm);
 
-        const classeVar = item.variacao >= 0 ? 'text-success' : 'text-danger';
-        const sinalVar = item.variacao >= 0 ? '+' : '';
-
-        html += `
-          <tr>
-            <td><strong>${item.ativo}</strong></td>
-            <td>${item.qtd}</td>
-            <td>R$ ${item.precoMedio.toFixed(2).replace('.', ',')}</td>
-            <td class="fw-bold">R$ ${item.precoAtual.toFixed(2).replace('.', ',')}</td>
-            <td>R$ ${item.precoJusto.toFixed(2).replace('.', ',')}</td>
-            <td class="${classeVar} fw-bold">${sinalVar}${item.variacao.toFixed(2)}%</td>
-            <td>R$ ${investido.toFixed(2).replace('.', ',')}</td>
-            <td class="fw-bold">R$ ${atual.toFixed(2).replace('.', ',')}</td>
-            <td><button class="btn btn-link text-danger p-0"><i class="fa-solid fa-trash-can"></i></button></td>
-          </tr>
+        novaLinha.innerHTML = `
+          <td class="py-3 px-4 font-bold text-gray-800">${ticker}</td>
+          <td class="py-3 px-4 qtd">${qtd}</td>
+          <td class="py-3 px-4 pm">R$ ${parseFloat(pm).toFixed(2).replace('.', ',')}</td>
+          <td class="py-3 px-4 preco-atual font-semibold">R$ ${parseFloat(pm).toFixed(2).replace('.', ',')}</td>
+          <td class="py-3 px-4">R$ -</td>
+          <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+          <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+          <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
         `;
-      });
-
-      body.innerHTML = html;
-
-      // Atualizar Cards
-      document.getElementById('cardValorTotal').innerText = `R$ ${valorTotalCarteira.toFixed(2).replace('.', ',')}`;
-      
-      const lucro = valorTotalCarteira - valorTotalInvestido;
-      const percLucro = valorTotalInvestido > 0 ? (lucro / valorTotalInvestido) * 100 : 0;
-      const classeLucro = lucro >= 0 ? 'text-success' : 'text-danger';
-      const sinalLucro = lucro >= 0 ? '+' : '';
-
-      document.getElementById('cardLucroPrejuizo').innerHTML = `
-        <span class="${classeLucro}">R$ ${lucro.toFixed(2).replace('.', ',')}</span> 
-        <span class="fs-6 ${classeLucro}">(${sinalLucro}${percLucro.toFixed(2)}%)</span>
-      `;
-    }
-
-    // --- PROVENTOS ---
-    let proventos = [
-      { ano: 2023, mes: 11, ativo: 'KLBN3', valor: 7.15 },
-      { ano: 2024, mes: 5,  ativo: 'KLBN3', valor: 55.41 },
-      { ano: 2024, mes: 8,  ativo: 'PETR4', valor: 19.15 },
-      { ano: 2024, mes: 11, ativo: 'SAPR11', valor: 20.91 },
-      { ano: 2025, mes: 4,  ativo: 'KLBN3', valor: 45.16 },
-      { ano: 2025, mes: 6,  ativo: 'PETR4', valor: 13.82 },
-      { ano: 2025, mes: 12, ativo: 'SAPR11', valor: 52.71 },
-      { ano: 2026, mes: 2,  ativo: 'KLBN3', valor: 21.32 },
-      { ano: 2026, mes: 5,  ativo: 'PETR4', valor: 14.11 },
-      { ano: 2026, mes: 7,  ativo: 'SAPR11', valor: 66.66 }
-    ];
-
-    const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    let modoExibicao = 'detalhado';
-
-    function mudarModoExibicao(modo) {
-      modoExibicao = modo;
-      document.getElementById('btnModoDetalhado').classList.toggle('active', modo === 'detalhado');
-      document.getElementById('btnModoResumido').classList.toggle('active', modo === 'resumido');
-      atualizarInterfaceProventos();
-    }
-
-    function atualizarInterfaceProventos() {
-      const filtroAno = document.getElementById('filtroAno').value;
-      const totalGeral = proventos.reduce((acc, p) => acc + p.valor, 0);
-      document.getElementById('cardProventosGeral').innerText = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
-
-      let proventosFiltrados = filtroAno !== 'todos' ? proventos.filter(p => p.ano === parseInt(filtroAno)) : proventos;
-      proventosFiltrados.sort((a, b) => a.ano - b.ano || a.mes - b.mes);
-
-      const totalFiltrado = proventosFiltrados.reduce((acc, p) => acc + p.valor, 0);
-      document.getElementById('totalExibido').innerText = `R$ ${totalFiltrado.toFixed(2).replace('.', ',')}`;
-
-      const headEl = document.getElementById('tabelaProventosHead');
-      const bodyEl = document.getElementById('tabelaProventosBody');
-
-      if (modoExibicao === 'detalhado') {
-        headEl.innerHTML = `<tr><th>Ano</th><th>Mês</th><th>Ativo</th><th class="text-end">Valor Recebido</th></tr>`;
-        let html = '';
-        proventosFiltrados.forEach((item, index) => {
-          const proximoItem = proventosFiltrados[index + 1];
-          const ehUltimoDoAno = proximoItem && proximoItem.ano !== item.ano;
-          html += `
-            <tr class="${ehUltimoDoAno ? 'linha-separadora-ano' : ''}">
-              <td><strong>${item.ano}</strong></td>
-              <td>${nomesMeses[item.mes - 1]}</td>
-              <td><span class="badge bg-primary fs-6">${item.ativo}</span></td>
-              <td class="text-end fw-bold text-success">R$ ${item.valor.toFixed(2).replace('.', ',')}</td>
-            </tr>`;
-        });
-        bodyEl.innerHTML = html;
-      } else {
-        headEl.innerHTML = `<tr><th>Ano</th><th class="text-end">Total Recebido no Ano</th></tr>`;
-        const totaisPorAno = {};
-        proventosFiltrados.forEach(item => totaisPorAno[item.ano] = (totaisPorAno[item.ano] || 0) + item.valor);
-        const anosOrdenados = Object.keys(totaisPorAno).sort((a, b) => parseInt(a) - parseInt(b));
-
-        let html = '';
-        anosOrdenados.forEach(ano => {
-          html += `
-            <tr>
-              <td><strong class="fs-5 text-dark">${ano}</strong></td>
-              <td class="text-end fw-bold text-success fs-5">R$ ${totaisPorAno[ano].toFixed(2).replace('.', ',')}</td>
-            </tr>`;
-        });
-        bodyEl.innerHTML = html;
+        tbody.appendChild(novaLinha);
+        recalcularTotais();
       }
     }
-
-    document.getElementById('formProvento').addEventListener('submit', function(e) {
-      e.preventDefault();
-      proventos.push({
-        ano: parseInt(document.getElementById('provAno').value),
-        mes: parseInt(document.getElementById('provMes').value),
-        ativo: document.getElementById('provAtivo').value,
-        valor: parseFloat(document.getElementById('provValor').value)
-      });
-      atualizarInterfaceProventos();
-      document.getElementById('provValor').value = '';
-    });
-
-    // --- INICIALIZAÇÃO DA PÁGINA ---
-    document.addEventListener('DOMContentLoaded', () => {
-      const tokenSalvo = localStorage.getItem('brapiToken');
-      if (tokenSalvo) {
-        document.getElementById('inputBrapiToken').value = tokenSalvo;
-        atualizarCotacoesBrapi();
-      } else {
-        renderizarCarteira();
-      }
-      atualizarInterfaceProventos();
-    });
   </script>
 </body>
 </html>
