@@ -204,20 +204,22 @@
     </div>
 
     <script>
-        // CARTEIRA PADRÃO PREDETERMINADA
-        const DEFAULT_PORTFOLIO = [
+        // DADOS EXATOS DA SUA CARTEIRA
+        const EXACT_PORTFOLIO = [
             { symbol: 'PETR4', qty: 10, avgPrice: 32.21, fairPrice: 27.22 },
             { symbol: 'KLBN3', qty: 225, avgPrice: 6.28, fairPrice: 3.81 },
             { symbol: 'SAPR11', qty: 20, avgPrice: 23.72, fairPrice: 21.35 }
         ];
 
-        let portfolio = JSON.parse(localStorage.getItem('user_portfolio')) || DEFAULT_PORTFOLIO;
-
-        // Garante que a Klabin (KLBN3) esteja na lista caso o cache local do navegador esteja antigo
-        if (!portfolio.some(p => p.symbol.toUpperCase() === 'KLBN3')) {
-            portfolio.push({ symbol: 'KLBN3', qty: 225, avgPrice: 6.28, fairPrice: 3.81 });
-            localStorage.setItem('user_portfolio', JSON.stringify(portfolio));
+        // FORÇA A ATUALIZAÇÃO DO CACHE LOCAL PARA CORRIGIR VALORES ANTIGOS D0 NAVEGADOR
+        const portfolioVersion = "v2_correct_quantities";
+        if (localStorage.getItem("portfolio_version") !== portfolioVersion) {
+            localStorage.removeItem("user_portfolio");
+            localStorage.setItem("portfolio_version", portfolioVersion);
         }
+
+        let portfolio = JSON.parse(localStorage.getItem('user_portfolio')) || EXACT_PORTFOLIO;
+        localStorage.setItem('user_portfolio', JSON.stringify(portfolio));
 
         let priceCache = {};
         let changeCache = {};
@@ -230,7 +232,7 @@
             refreshData();
         });
 
-        // Faz chamadas individuais por ticker para respeitar os limites do plano gratuito da API Brapi
+        // Consulta cotações individualmente para não estourar o limite da API gratuita
         async function fetchPrices() {
             if (portfolio.length === 0) return;
 
