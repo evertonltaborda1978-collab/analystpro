@@ -9,7 +9,7 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
 
-  <!-- AVISO DE NOVA VERSÃO DISPONÍVEL (OCULTO POR PADRÃO) -->
+  <!-- AVISO DE NOVA VERSÃO DISPONÍVEL -->
   <div id="bannerAtualizacao" class="fixed top-0 left-0 right-0 bg-blue-600 text-white text-xs sm:text-sm py-2 px-4 z-50 flex items-center justify-between shadow-md hidden">
     <div class="flex items-center gap-2 mx-auto">
       <i class="fa-solid fa-circle-exclamation animate-bounce"></i>
@@ -61,9 +61,7 @@
     </div>
   </div>
 
-  <!-- ========================================================= -->
   <!-- TELA DE LOGIN / AUTENTICAÇÃO -->
-  <!-- ========================================================= -->
   <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100">
       <div class="text-center mb-6">
@@ -86,9 +84,7 @@
     </div>
   </div>
 
-  <!-- ========================================================= -->
   <!-- APLICAÇÃO PRINCIPAL -->
-  <!-- ========================================================= -->
   <div id="appConteudo" class="hidden">
     <header class="bg-blue-600 text-white shadow-md">
       <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -231,85 +227,27 @@
             <h4 class="text-2xl font-bold text-blue-700 mt-1">R$ 8,78 / mês</h4>
           </div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-gray-200 bg-gray-50 text-gray-600 text-sm font-semibold">
-                <th class="py-3 px-4">Ativo</th>
-                <th class="py-3 px-4">Tipo</th>
-                <th class="py-3 px-4">Data Com</th>
-                <th class="py-3 px-4">Data Pagamento</th>
-                <th class="py-3 px-4">Valor Total (R$)</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100 text-sm">
-              <tr>
-                <td class="py-3 px-4 font-bold text-gray-800">SAPR11</td>
-                <td class="py-3 px-4 text-gray-600">JCP / Dividendo</td>
-                <td class="py-3 px-4">15/12/2025</td>
-                <td class="py-3 px-4">28/12/2025</td>
-                <td class="py-3 px-4 font-semibold text-emerald-600">R$ 45,20</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4 font-bold text-gray-800">PETR4</td>
-                <td class="py-3 px-4 text-gray-600">Dividendo Extra</td>
-                <td class="py-3 px-4">10/11/2025</td>
-                <td class="py-3 px-4">25/11/2025</td>
-                <td class="py-3 px-4 font-semibold text-emerald-600">R$ 88,50</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4 font-bold text-gray-800">KLBN3</td>
-                <td class="py-3 px-4 text-gray-600">Dividendo Trimestral</td>
-                <td class="py-3 px-4">02/08/2025</td>
-                <td class="py-3 px-4">18/08/2025</td>
-                <td class="py-3 px-4 font-semibold text-emerald-600">R$ 182,70</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </section>
 
-      <!-- SEÇÃO: OPORTUNIDADES -->
+      <!-- SEÇÃO: OPORTUNIDADES (RADAR DINÂMICO) -->
       <section id="sec-oportunidades" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
-        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-          <i class="fa-solid fa-bullseye text-blue-600"></i> Radar de Oportunidades (Value Investing)
-        </h3>
-        <p class="text-sm text-gray-600">Ativos monitorados com base no Preço Justo (Método Graham / Dividend Yield):</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          
-          <!-- SAPR11 -->
-          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-op-ticker="SAPR11">
-            <span id="badge-SAPR11" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">🟢 Bom para comprar / Oportunidade</span>
-            <h4 class="text-lg font-bold text-gray-800 mt-2">SAPR11</h4>
-            <p class="text-xs text-gray-500 mt-1">Sanepar Unit</p>
-            <div class="mt-4 space-y-1 text-sm">
-              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-SAPR11" class="font-semibold text-emerald-600">R$ 21,86</span></div>
-              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-SAPR11" class="font-semibold text-gray-700">R$ 21,35</span></div>
-            </div>
+        <div class="flex justify-between items-center flex-wrap gap-4">
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <i class="fa-solid fa-bullseye text-blue-600"></i> Radar de Oportunidades
+            </h3>
+            <p class="text-sm text-gray-600 mt-1">Monitore e adicione ações para acompanhar oportunidades pelo Preço Justo:</p>
           </div>
-
-          <!-- PETR4 -->
-          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-op-ticker="PETR4">
-            <span id="badge-PETR4" class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">🔵 Aguardar / Neutro</span>
-            <h4 class="text-lg font-bold text-gray-800 mt-2">PETR4</h4>
-            <p class="text-xs text-gray-500 mt-1">Petrobras PN</p>
-            <div class="mt-4 space-y-1 text-sm">
-              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-PETR4" class="font-semibold text-blue-600">R$ 32,21</span></div>
-              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-PETR4" class="font-semibold text-gray-700">R$ 27,22</span></div>
-            </div>
+          <div class="flex gap-2">
+            <input type="text" id="novoTickerRadar" placeholder="Ex: CPLE6, CXSE3" class="px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none">
+            <button onclick="adicionarAtivoRadar()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-plus"></i> Adicionar ao Radar
+            </button>
           </div>
+        </div>
 
-          <!-- KLBN3 -->
-          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-op-ticker="KLBN3">
-            <span id="badge-KLBN3" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">🟢 Bom para comprar / Oportunidade</span>
-            <h4 class="text-lg font-bold text-gray-800 mt-2">KLBN3</h4>
-            <p class="text-xs text-gray-500 mt-1">Klabin ON</p>
-            <div class="mt-4 space-y-1 text-sm">
-              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-KLBN3" class="font-semibold text-emerald-600">R$ 6,28</span></div>
-              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-KLBN3" class="font-semibold text-gray-700">R$ 3,81</span></div>
-            </div>
-          </div>
-
+        <div id="gridRadar" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Os cards do radar serão injetados aqui automaticamente -->
         </div>
       </section>
 
@@ -318,7 +256,7 @@
         <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
           <i class="fa-solid fa-chart-pie text-cyan-600"></i> Análise de Alocação de Ativos
         </h3>
-        <p class="text-sm text-gray-600">Distribuição percentual da sua carteira por tipo de empresa e setor:</p>
+        <p class="text-sm text-gray-600">Distribuição percentual da sua carteira por setor:</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="p-4 border border-gray-100 rounded-lg bg-gray-50 space-y-3">
             <h4 class="font-semibold text-gray-700">Alocação Setorial</h4>
@@ -330,15 +268,11 @@
               <div class="flex justify-between text-xs font-medium mb-1"><span>Saneamento (SAPR11)</span> <span>34%</span></div>
               <div class="w-full bg-gray-200 h-2.5 rounded-full"><div class="bg-emerald-600 h-2.5 rounded-full" style="width: 34%"></div></div>
             </div>
-            <div>
-              <div class="flex justify-between text-xs font-medium mb-1"><span>Petróleo e Gás (PETR4)</span> <span>10%</span></div>
-              <div class="w-full bg-gray-200 h-2.5 rounded-full"><div class="bg-cyan-600 h-2.5 rounded-full" style="width: 10%"></div></div>
-            </div>
           </div>
           <div class="p-4 border border-gray-100 rounded-lg bg-gray-50 flex flex-col justify-center items-center text-center">
             <i class="fa-solid fa-shield-halved text-4xl text-emerald-600 mb-2"></i>
             <h4 class="font-bold text-gray-800">Saúde da Carteira: Boa</h4>
-            <p class="text-xs text-gray-500 mt-1">Sua carteira possui ótima diversificação entre setores defensivos (saneamento) e geradores de caixa (commodities).</p>
+            <p class="text-xs text-gray-500 mt-1">Sua carteira possui ótima diversificação entre setores defensivos e geradores de caixa.</p>
           </div>
         </div>
       </section>
@@ -363,12 +297,14 @@
   </div>
 
   <script>
-    // VERSÃO ATUAL DO APLICATIVO LOCAL
-    const VERSAO_ATUAL = "1.0.0";
+    const VERSAO_ATUAL = "1.0.2";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
     }
+
+    // Lista padrão de ativos do radar salva no navegador
+    let tickersRadar = JSON.parse(localStorage.getItem('radar_personalizado')) || ['SAPR11', 'PETR4', 'KLBN3', 'BBAS3', 'VALE3', 'TAEE11'];
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('telaLogin').classList.remove('hidden');
@@ -377,22 +313,22 @@
       if (tokenSalvo) {
         document.getElementById('brapiTokenInput').value = tokenSalvo;
       }
+      renderizarCardsRadar();
       recalcularTotais();
       verificarAtualizacaoApp();
     });
 
-    // Função que verifica o arquivo version.json no GitHub
     async function verificarAtualizacaoApp() {
       try {
         const resposta = await fetch('./version.json?t=' + new Date().getTime());
         if (resposta.ok) {
-          const dados =- await resposta.json(); // aguarda dados
+          const dados = await resposta.json();
           if (dados && dados.versao && dados.versao !== VERSAO_ATUAL) {
             document.getElementById('bannerAtualizacao').classList.remove('hidden');
           }
         }
       } catch (e) {
-        console.log("Verificação de versão ignorada offline ou arquivo ausente.");
+        console.log("Verificação de versão ignorada.");
       }
     }
 
@@ -422,10 +358,7 @@
         testarStatusBrapi();
         recalcularTotais();
         mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
-        
-        setTimeout(() => {
-          atualizarCotacoesBrapi(false);
-        }, 800);
+        setTimeout(() => { atualizarCotacoesBrapi(false); }, 800);
       } else {
         mostrarNotificacao("Senha incorreta! Tente novamente.", "erro");
       }
@@ -481,6 +414,53 @@
       }
     }
 
+    function renderizarCardsRadar() {
+      const grid = document.getElementById('gridRadar');
+      grid.innerHTML = '';
+      tickersRadar.forEach(ticker => {
+        grid.innerHTML += `
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50 relative" data-op-ticker="${ticker}">
+            <button onclick="removerAtivoRadar('${ticker}')" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-xs" title="Remover do Radar"><i class="fa-solid fa-xmark"></i></button>
+            <span id="badge-${ticker}" class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">🔵 Carregando...</span>
+            <h4 class="text-lg font-bold text-gray-800 mt-2">${ticker}</h4>
+            <p id="nome-${ticker}" class="text-xs text-gray-500 mt-1">Buscando dados...</p>
+            <div class="mt-4 space-y-1 text-sm">
+              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-${ticker}" class="font-semibold text-blue-600">R$ 0,00</span></div>
+              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-${ticker}" class="font-semibold text-gray-700">R$ 0,00</span></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function adicionarAtivoRadar() {
+      const input = document.getElementById('novoTickerRadar');
+      const ticker = input.value.toUpperCase().trim();
+      if (!ticker) {
+        mostrarNotificacao("Digite o código do ativo (ex: CPLE6).", "aviso");
+        return;
+      }
+      if (tickersRadar.includes(ticker)) {
+        mostrarNotificacao("Este ativo já está no seu radar!", "aviso");
+        return;
+      }
+      tickersRadar.push(ticker);
+      localStorage.setItem('radar_personalizado', JSON.stringify(tickersRadar));
+      input.value = '';
+      renderizarCardsRadar();
+      atualizarCotacoesBrapi(false);
+      mostrarNotificacao(`Ativo ${ticker} adicionado ao radar!`, "sucesso");
+    }
+
+    function removerAtivoRadar(ticker) {
+      if (confirm(`Deseja remover ${ticker} do radar?`)) {
+        tickersRadar = tickersRadar.filter(t => t !== ticker);
+        localStorage.setItem('radar_personalizado', JSON.stringify(tickersRadar));
+        renderizarCardsRadar();
+        mostrarNotificacao(`Ativo ${ticker} removido do radar.`, "info");
+      }
+    }
+
     async function atualizarCotacoesBrapi(exibirNotificacoes = true) {
       const token = localStorage.getItem('brapi_token');
       if (!token) {
@@ -492,8 +472,6 @@
 
       const linhasTabela = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
       const tickersTabela = Array.from(linhasTabela).map(l => l.getAttribute('data-ticker'));
-      const tickersRadar = ['SAPR11', 'PETR4', 'KLBN3'];
-      
       const todosTickers = Array.from(new Set([...tickersTabela, ...tickersRadar]));
 
       let atualizados = 0;
@@ -515,6 +493,10 @@
               const ativo = data.results[0];
               const precoAtualApi = parseFloat(ativo.regularMarketPrice);
               const variacao = ativo.regularMarketChangePercent;
+              const nomeEmpresa = ativo.longName || ativo.shortName || ticker;
+
+              const nomeEl = document.getElementById(`nome-${ticker}`);
+              if (nomeEl) nomeEl.innerText = nomeEmpresa;
               
               const linhaTabela = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
               if (linhaTabela) {
@@ -522,7 +504,6 @@
                 if (celulaPreco) {
                   const textoPrecoTela = celulaPreco.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
                   const precoTelaAtual = parseFloat(textoPrecoTela);
-                  
                   if (!isNaN(precoTelaAtual) && precoTelaAtual.toFixed(2) !== precoAtualApi.toFixed(2)) {
                     houveMudanca = true;
                   }
@@ -532,10 +513,9 @@
               let precoJusto = null;
               if (ativo.eps && ativo.bookValue) {
                 precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
-              } else if (ticker === 'SAPR11') { precoJusto = 21.35; }
-              else if (ticker === 'PETR4') { precoJusto = 27.22; }
-              else if (ticker === 'KLBN3') { precoJusto = 3.81; }
-              else { precoJusto = precoAtualApi * 0.9; }
+              } else { 
+                precoJusto = precoAtualApi * 0.95; // Estimativa de segurança caso faltem dados fundamentalistas
+              }
 
               atualizarLinhaTabela(ticker, precoAtualApi, variacao, precoJusto);
               atualizarRadarOportunidades(ticker, precoAtualApi, precoJusto);
@@ -543,22 +523,18 @@
             }
           }
         } catch (err) { 
-          console.error("Erro ao buscar ativo via API:", err); 
+          console.error("Erro ao buscar ativo:", err); 
         }
       }
       recalcularTotais();
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Erro de conexão/CORS";
+      if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Erro de conexão";
       
       if (exibirNotificacoes) {
         if (atualizados > 0) {
-          if (houveMudanca) {
-            mostrarNotificacao("Preços atualizados com sucesso via Brapi!", "sucesso");
-          } else {
-            mostrarNotificacao("Os preços já estão atualizados!", "info");
-          }
+          mostrarNotificacao("Preços e radar atualizados com sucesso!", "sucesso");
         } else {
-          mostrarNotificacao("Não foi possível conectar à Brapi. Verifique o seu token.", "erro");
+          mostrarNotificacao("Erro ao conectar à Brapi. Verifique o token.", "erro");
         }
       }
     }
@@ -688,12 +664,11 @@
         const precoAtual = parseFloat(precoAtualStr) || novoPrecoMedio;
         linhaExistente.querySelector('.valor-atual').innerText = `R$ ${(totalQtd * precoAtual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-        mostrarNotificacao(`Aporte adicionado em ${ticker}! Quantidade total: ${totalQtd}`, "sucesso");
+        mostrarNotificacao(`Aporte adicionado em ${ticker}!`, "sucesso");
       } else {
         const novaLinha = document.createElement('tr');
         novaLinha.setAttribute('data-ticker', ticker);
         novaLinha.className = "border-b border-gray-100 text-sm";
-        
         const valorInv = novaQtd * novoPm;
 
         novaLinha.innerHTML = `
@@ -710,7 +685,7 @@
           </td>
         `;
         tbody.appendChild(novaLinha);
-        mostrarNotificacao(`Novo ativo ${ticker} cadastrado com sucesso!`, "sucesso");
+        mostrarNotificacao(`Novo ativo ${ticker} cadastrado!`, "sucesso");
       }
 
       fecharModalOperacao();
