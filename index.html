@@ -389,7 +389,7 @@
         recalcularTotais();
         mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
         
-        // Garante a execução da atualização de cotações de forma robusta e automática após o login
+        // Atualização automática ao logar
         setTimeout(() => {
           atualizarCotacoesBrapi();
         }, 800);
@@ -413,7 +413,7 @@
         return;
       }
       try {
-        const res = await fetch(`https://brapi.dev/api/quote/PETR4?token=${token}`);
+        const res = await fetch(`https://corsproxy.io/?https://brapi.dev/api/quote/PETR4?token=${token}`);
         if (res.ok) {
           statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800";
           statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Brapi: Online</span>`;
@@ -451,6 +451,7 @@
     async function atualizarCotacoesBrapi() {
       const token = localStorage.getItem('brapi_token');
       if (!token) {
+        mostrarNotificacao("Insira o Token da Brapi nas Configurações.", "aviso");
         return;
       }
       const statusElement = document.getElementById('statusAtualizacao');
@@ -463,39 +464,66 @@
       const todosTickers = Array.from(new Set([...tickersTabela, ...tickersRadar]));
 
       let atualizados = 0;
+      let houveMudanca = false;
+
       for (const ticker of todosTickers) {
         try {
-          let url = `https://brapi.dev/api/quote/${ticker}?token=${token}&fundamental=true`;
+          let url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}?token=${token}&fundamental=true`;
           let res = await fetch(url);
-          if (res.status === 404) {
-            url = `https://brapi.dev/api/quote/${ticker}.SA?token=${token}&fundamental=true`;
+          
+          if (!res.ok && res.status === 404) {
+            url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}.SA?token=${token}&fundamental=true`;
             res = await fetch(url);
           }
+
           if (res.ok) {
             const data = await res.json();
             if (data.results && data.results.length > 0) {
               const ativo = data.results[0];
-              const precoAtual = ativo.regularMarketPrice;
+              const precoAtualApi = ativo.regularMarketPrice;
               const variacao = ativo.regularMarketChangePercent;
               
+              const linhaTabela = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
+              if (linhaTabela) {
+                const celulaPreco = linhaTabela.querySelector('.preco-atual');
+                if (celulaPreco) {
+                  const precoTelaAtual = parseFloat(celulaPreco.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+                  if (Math.abs(precoTelaAtual - precoAtualApi) > 0.001) {
+                    houveMudanca = true;
+                  }
+                }
+              }
+
               let precoJusto = null;
               if (ativo.eps && ativo.bookValue) {
                 precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
               } else if (ticker === 'SAPR11') { precoJusto = 21.35; }
               else if (ticker === 'PETR4') { precoJusto = 27.22; }
               else if (ticker === 'KLBN3') { precoJusto = 3.81; }
-              else { precoJusto = precoAtual * 0.9; }
+              else { precoJusto = precoAtualApi * 0.9; }
 
-              atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto);
-              atualizarRadarOportunidades(ticker, precoAtual, precoJusto);
+              atualizarLinhaTabela(ticker, precoAtualApi, variacao, precoJusto);
+              atualizarRadarOportunidades(ticker, precoAtualApi, precoJusto);
               atualizados++;
             }
           }
-        } catch (err) { console.error(err); }
+        } catch (err) { 
+          console.error("Erro ao buscar ativo via API:", err); 
+        }
       }
       recalcularTotais();
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Falha ao atualizar";
+      if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Erro de conexão/CORS";
+      
+      if (atualizados > 0) {
+        if (houveMudanca) {
+          mostrarNotificacao("Preços atualizados com sucesso via Brapi!", "sucesso");
+        } else {
+          mostrarNotificacao("Os preços já estão atualizados!", "info");
+        }
+      } else {
+        mostrarNotificacao("Não foi possível conectar à Brapi. Verifique o seu token.", "erro");
+      }
     }
 
     function atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto) {
