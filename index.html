@@ -119,7 +119,7 @@
 
         <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-emerald-500">
           <span class="text-sm text-gray-500">Proventos Recebidos</span>
-          <h2 class="text-3xl font-bold text-emerald-600 mt-1">R$ 316,40</h2>
+          <h2 id="totalProventosHeader" class="text-3xl font-bold text-emerald-600 mt-1">R$ 0,00</h2>
           <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
         </div>
 
@@ -212,24 +212,51 @@
         </div>
       </section>
 
-      <!-- SEÇÃO: DIVIDENDOS -->
+      <!-- SEÇÃO: DIVIDENDOS (PROFISSIONAL) -->
       <section id="sec-dividendos" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
-        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-          <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> Histórico de Proventos e Dividendos
-        </h3>
+        <div class="flex justify-between items-center flex-wrap gap-4">
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> Histórico de Proventos e Dividendos
+            </h3>
+            <p class="text-sm text-gray-600 mt-1">Acompanhe todos os JCPs e Dividendos recebidos na sua carteira:</p>
+          </div>
+          <button onclick="abrirModalDividendo()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-plus"></i> Registrar Provento
+          </button>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg">
             <span class="text-xs font-semibold text-emerald-800 uppercase">Total Acumulado de Proventos</span>
-            <h4 class="text-2xl font-bold text-emerald-700 mt-1">R$ 316,40</h4>
+            <h4 id="valorTotalProventos" class="text-2xl font-bold text-emerald-700 mt-1">R$ 0,00</h4>
           </div>
           <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
             <span class="text-xs font-semibold text-blue-800 uppercase">Média Mensal Estimada</span>
-            <h4 class="text-2xl font-bold text-blue-700 mt-1">R$ 8,78 / mês</h4>
+            <h4 id="mediaMensalProventos" class="text-2xl font-bold text-blue-700 mt-1">R$ 0,00 / mês</h4>
           </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-200 bg-gray-50 text-gray-600 text-sm font-semibold">
+                <th class="py-3 px-4">Ativo</th>
+                <th class="py-3 px-4">Tipo</th>
+                <th class="py-3 px-4">Data Com</th>
+                <th class="py-3 px-4">Data Pagamento</th>
+                <th class="py-3 px-4">Valor Total (R$)</th>
+                <th class="py-3 px-4 text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaDividendos" class="divide-y divide-gray-100 text-sm">
+              <!-- Dados inseridos via script -->
+            </tbody>
+          </table>
         </div>
       </section>
 
-      <!-- SEÇÃO: OPORTUNIDADES (RADAR DINÂMICO) -->
+      <!-- SEÇÃO: OPORTUNIDADES -->
       <section id="sec-oportunidades" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
         <div class="flex justify-between items-center flex-wrap gap-4">
           <div>
@@ -247,7 +274,7 @@
         </div>
 
         <div id="gridRadar" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Os cards do radar serão injetados aqui automaticamente -->
+          <!-- Cards do radar dinâmico -->
         </div>
       </section>
 
@@ -296,15 +323,70 @@
     </main>
   </div>
 
+  <!-- MODAL PARA CADASTRAR PROVENTO -->
+  <div id="modalDividendo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <i class="fa-solid fa-plus-circle text-emerald-600"></i> Registrar Novo Provento
+        </h3>
+        <button onclick="fecharModalDividendo()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Ticker do Ativo</label>
+          <input type="text" id="divTicker" placeholder="Ex: SAPR11" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Tipo de Provento</label>
+          <select id="divTipo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+            <option value="JCP / Dividendo">JCP / Dividendo</option>
+            <option value="Dividendo Extra">Dividendo Extra</option>
+            <option value="Dividendo Trimestral">Dividendo Trimestral</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Data Com</label>
+            <input type="text" id="divDataCom" placeholder="Ex: 15/12/2025" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Data Pagamento</label>
+            <input type="text" id="divDataPag" placeholder="Ex: 28/12/2025" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Valor Total (R$)</label>
+          <input type="number" step="0.01" id="divValor" placeholder="Ex: 45.20" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+        
+        <div class="flex gap-3 pt-2">
+          <button onclick="fecharModalDividendo()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 rounded-lg text-sm transition">
+            Cancelar
+          </button>
+          <button onclick="salvarNovoDividendo()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg text-sm transition">
+            Salvar Provento
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const VERSAO_ATUAL = "1.0.2";
+    const VERSAO_ATUAL = "1.0.3";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
     }
 
-    // Lista padrão de ativos do radar salva no navegador
     let tickersRadar = JSON.parse(localStorage.getItem('radar_personalizado')) || ['SAPR11', 'PETR4', 'KLBN3', 'BBAS3', 'VALE3', 'TAEE11'];
+    
+    let listaDividendos = JSON.parse(localStorage.getItem('dividendos_salvos')) || [
+      { ticker: 'SAPR11', tipo: 'JCP / Dividendo', dataCom: '15/12/2025', dataPag: '28/12/2025', valor: 45.20 },
+      { ticker: 'PETR4', tipo: 'Dividendo Extra', dataCom: '10/11/2025', dataPag: '25/11/2025', valor: 88.50 },
+      { ticker: 'KLBN3', tipo: 'Dividendo Trimestral', dataCom: '02/08/2025', dataPag: '18/08/2025', valor: 182.70 }
+    ];
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('telaLogin').classList.remove('hidden');
@@ -314,6 +396,7 @@
         document.getElementById('brapiTokenInput').value = tokenSalvo;
       }
       renderizarCardsRadar();
+      renderizarTabelaDividendos();
       recalcularTotais();
       verificarAtualizacaoApp();
     });
@@ -414,6 +497,72 @@
       }
     }
 
+    function renderizarTabelaDividendos() {
+      const tbody = document.getElementById('tabelaDividendos');
+      tbody.innerHTML = '';
+      let total = 0;
+
+      listaDividendos.forEach((item, index) => {
+        total += item.valor;
+        tbody.innerHTML += `
+          <tr>
+            <td class="py-3 px-4 font-bold text-gray-800">${item.ticker}</td>
+            <td class="py-3 px-4 text-gray-600">${item.tipo}</td>
+            <td class="py-3 px-4">${item.dataCom}</td>
+            <td class="py-3 px-4">${item.dataPag}</td>
+            <td class="py-3 px-4 font-semibold text-emerald-600">R$ ${item.valor.toFixed(2).replace('.', ',')}</td>
+            <td class="py-3 px-4 text-center">
+              <button onclick="removerDividendo(${index})" class="text-red-500 hover:text-red-700" title="Excluir Provento"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('valorTotalProventos').innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('totalProventosHeader').innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('mediaMensalProventos').innerText = `R$ ${(total / 36).toFixed(2).replace('.', ',')} / mês`;
+    }
+
+    function abrirModalDividendo() {
+      document.getElementById('divTicker').value = '';
+      document.getElementById('divDataCom').value = '';
+      document.getElementById('divDataPag').value = '';
+      document.getElementById('divValor').value = '';
+      document.getElementById('modalDividendo').classList.remove('hidden');
+    }
+
+    function fecharModalDividendo() {
+      document.getElementById('modalDividendo').classList.add('hidden');
+    }
+
+    function salvarNovoDividendo() {
+      const ticker = document.getElementById('divTicker').value.toUpperCase().trim();
+      const tipo = document.getElementById('divTipo').value;
+      const dataCom = document.getElementById('divDataCom').value.trim();
+      const dataPag = document.getElementById('divDataPag').value.trim();
+      const valor = parseFloat(document.getElementById('divValor').value);
+
+      if (!ticker || !dataCom || !dataPag || isNaN(valor)) {
+        mostrarNotificacao("Preencha todos os campos corretamente.", "aviso");
+        return;
+      }
+
+      listaDividendos.push({ ticker, tipo, dataCom, dataPag, valor });
+      localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
+      renderizarTabelaDividendos();
+      fecharModalDividendo();
+      mostrarNotificacao("Provento registrado com sucesso!", "sucesso");
+    }
+
+    function removerDividendo(index) {
+      if (confirm("Deseja excluir este registro de provento?")) {
+        listaDividendos.splice(index, 1);
+        localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
+        renderizarTabelaDividendos();
+        mostrarNotificacao("Provento removido.", "info");
+      }
+    }
+
     function renderizarCardsRadar() {
       const grid = document.getElementById('gridRadar');
       grid.innerHTML = '';
@@ -457,7 +606,7 @@
         tickersRadar = tickersRadar.filter(t => t !== ticker);
         localStorage.setItem('radar_personalizado', JSON.stringify(tickersRadar));
         renderizarCardsRadar();
-        mostrarNotificacao(`Ativo ${ticker} removido do radar.`, "info");
+        mostrarNotificacao(`Ativo ${ticker} removido.`, "info");
       }
     }
 
@@ -514,7 +663,7 @@
               if (ativo.eps && ativo.bookValue) {
                 precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
               } else { 
-                precoJusto = precoAtualApi * 0.95; // Estimativa de segurança caso faltem dados fundamentalistas
+                precoJusto = precoAtualApi * 0.95;
               }
 
               atualizarLinhaTabela(ticker, precoAtualApi, variacao, precoJusto);
@@ -532,7 +681,7 @@
       
       if (exibirNotificacoes) {
         if (atualizados > 0) {
-          mostrarNotificacao("Preços e radar atualizados com sucesso!", "sucesso");
+          mostrarNotificacao("Preços atualizados com sucesso!", "sucesso");
         } else {
           mostrarNotificacao("Erro ao conectar à Brapi. Verifique o token.", "erro");
         }
@@ -705,7 +854,7 @@
           valorAtual: l.querySelector('.valor-atual')?.innerText || "R$ 0,00"
         });
       });
-      const blob = new Blob([JSON.stringify({ ativos }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ ativos, dividendos: listaDividendos }, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -745,8 +894,13 @@
               tbody.appendChild(tr);
             });
             recalcularTotais();
-            mostrarNotificacao("Backup restaurado!", "sucesso");
           }
+          if (dados && Array.isArray(dados.dividendos)) {
+            listaDividendos = dados.dividendos;
+            localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
+            renderizarTabelaDividendos();
+          }
+          mostrarNotificacao("Backup restaurado com sucesso!", "sucesso");
         } catch (err) { mostrarNotificacao("Erro ao ler backup.", "erro"); }
       };
       reader.readAsText(file);
