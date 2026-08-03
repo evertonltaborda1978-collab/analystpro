@@ -388,6 +388,11 @@
         testarStatusBrapi();
         recalcularTotais();
         mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
+        
+        // Dispara a atualização automática de cotações assim que entra no sistema
+        setTimeout(() => {
+          atualizarCotacoesBrapi();
+        }, 500);
       } else {
         mostrarNotificacao("Senha incorreta! Tente novamente.", "erro");
       }
@@ -446,14 +451,11 @@
     async function atualizarCotacoesBrapi() {
       const token = localStorage.getItem('brapi_token');
       if (!token) {
-        mostrarNotificacao("Token não encontrado. Salve sua chave nas Configurações.", "aviso");
-        navegar('configuracoes');
         return;
       }
       const statusElement = document.getElementById('statusAtualizacao');
       if (statusElement) statusElement.innerText = "Atualizando preços...";
 
-      // Recolhe os tickers da tabela da carteira E do radar de oportunidades
       const linhasTabela = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
       const tickersTabela = Array.from(linhasTabela).map(l => l.getAttribute('data-ticker'));
       const tickersRadar = ['SAPR11', 'PETR4', 'KLBN3'];
@@ -476,7 +478,6 @@
               const precoAtual = ativo.regularMarketPrice;
               const variacao = ativo.regularMarketChangePercent;
               
-              // Cálculo de Preço Justo (Graham ou referência padrão)
               let precoJusto = null;
               if (ativo.eps && ativo.bookValue) {
                 precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
@@ -495,7 +496,6 @@
       recalcularTotais();
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Falha ao atualizar";
-      if (atualizados > 0) mostrarNotificacao("Cotações e radar atualizados com sucesso!", "sucesso");
     }
 
     function atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto) {
