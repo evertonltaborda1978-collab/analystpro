@@ -75,7 +75,7 @@
       <div id="formLogin" class="space-y-4">
         <div>
           <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Senha de Acesso</label>
-          <input type="password" id="senhaAcesso" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <input type="password" id="senhaAcesso" value="" autocomplete="current-password" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
         <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
           Entrar no Sistema
@@ -374,7 +374,7 @@
   </div>
 
   <script>
-    // VERSÃO DO SISTEMA (Basta alterar este número quando quiser avisar que há nova versão!)
+    // VERSÃO DO SISTEMA (Altere este número na próxima mudança para disparar o aviso)
     const VERSAO_ATUAL = "1.0.3";
 
     if (!localStorage.getItem('app_senha')) {
@@ -392,6 +392,11 @@
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('telaLogin').classList.remove('hidden');
       document.getElementById('appConteudo').classList.add('hidden');
+      
+      // Garante campo de senha 100% limpo ao abrir
+      const campoSenha = document.getElementById('senhaAcesso');
+      if (campoSenha) campoSenha.value = '';
+
       const tokenSalvo = localStorage.getItem('brapi_token');
       if (tokenSalvo) {
         document.getElementById('brapiTokenInput').value = tokenSalvo;
@@ -402,13 +407,12 @@
       verificarAtualizacaoApp();
     });
 
-    // VERIFICAÇÃO AUTOMÁTICA DE VERSÃO (Sem precisar criar arquivo version.json separado)
+    // VERIFICAÇÃO AUTOMÁTICA DE VERSÃO
     async function verificarAtualizacaoApp() {
       try {
         const resposta = await fetch('./index.html?t=' + new Date().getTime());
         if (resposta.ok) {
           const htmlTexto = await resposta.text();
-          // Procura no código online se há uma versão diferente declarada
           const match = htmlTexto.match(/const VERSAO_ATUAL = "([^"]+)"/);
           if (match && match[1]) {
             const versaoOnline = match[1];
@@ -457,6 +461,8 @@
     function bloquearApp() {
       document.getElementById('appConteudo').classList.add('hidden');
       document.getElementById('telaLogin').classList.remove('hidden');
+      const campoSenha = document.getElementById('senhaAcesso');
+      if (campoSenha) campoSenha.value = '';
       mostrarNotificacao("Sessão encerrada.", "info");
     }
 
