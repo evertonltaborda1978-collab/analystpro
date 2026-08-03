@@ -166,7 +166,7 @@
                 <td class="py-3 px-4 qtd">10</td>
                 <td class="py-3 px-4 pm">R$ 32,21</td>
                 <td class="py-3 px-4 preco-atual font-semibold">R$ 32,21</td>
-                <td class="py-3 px-4">R$ 27,22</td>
+                <td class="py-3 px-4 preco-justo-tabela">R$ 27,22</td>
                 <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
                 <td class="py-3 px-4 valor-investido">R$ 322,10</td>
                 <td class="py-3 px-4 valor-atual font-semibold">R$ 322,10</td>
@@ -179,7 +179,7 @@
                 <td class="py-3 px-4 qtd">225</td>
                 <td class="py-3 px-4 pm">R$ 6,28</td>
                 <td class="py-3 px-4 preco-atual font-semibold">R$ 6,28</td>
-                <td class="py-3 px-4">R$ 3,81</td>
+                <td class="py-3 px-4 preco-justo-tabela">R$ 3,81</td>
                 <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
                 <td class="py-3 px-4 valor-investido">R$ 1.413,00</td>
                 <td class="py-3 px-4 valor-atual font-semibold">R$ 1.413,00</td>
@@ -192,7 +192,7 @@
                 <td class="py-3 px-4 qtd">40</td>
                 <td class="py-3 px-4 pm">R$ 21,86</td>
                 <td class="py-3 px-4 preco-atual font-semibold">R$ 21,86</td>
-                <td class="py-3 px-4">R$ 21,35</td>
+                <td class="py-3 px-4 preco-justo-tabela">R$ 21,35</td>
                 <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
                 <td class="py-3 px-4 valor-investido">R$ 874,40</td>
                 <td class="py-3 px-4 valor-atual font-semibold">R$ 874,40</td>
@@ -265,33 +265,40 @@
         </h3>
         <p class="text-sm text-gray-600">Ativos monitorados com base no Preço Justo (Método Graham / Dividend Yield):</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-            <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Oportunidade</span>
+          
+          <!-- SAPR11 -->
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-op-ticker="SAPR11">
+            <span id="badge-SAPR11" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Oportunidade</span>
             <h4 class="text-lg font-bold text-gray-800 mt-2">SAPR11</h4>
             <p class="text-xs text-gray-500 mt-1">Sanepar Unit</p>
             <div class="mt-4 space-y-1 text-sm">
-              <div class="flex justify-between"><span>Preço Atual:</span> <span class="font-semibold text-emerald-600">R$ 21,86</span></div>
-              <div class="flex justify-between"><span>Preço Justo:</span> <span class="font-semibold text-gray-700">R$ 21,35</span></div>
+              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-SAPR11" class="font-semibold text-emerald-600">R$ 21,86</span></div>
+              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-SAPR11" class="font-semibold text-gray-700">R$ 21,35</span></div>
             </div>
           </div>
-          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-            <span class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Neutro / Monitorando</span>
+
+          <!-- PETR4 -->
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-op-ticker="PETR4">
+            <span id="badge-PETR4" class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Neutro / Monitorando</span>
             <h4 class="text-lg font-bold text-gray-800 mt-2">PETR4</h4>
             <p class="text-xs text-gray-500 mt-1">Petrobras PN</p>
             <div class="mt-4 space-y-1 text-sm">
-              <div class="flex justify-between"><span>Preço Atual:</span> <span class="font-semibold text-blue-600">R$ 32,21</span></div>
-              <div class="flex justify-between"><span>Preço Justo:</span> <span class="font-semibold text-gray-700">R$ 27,22</span></div>
+              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-PETR4" class="font-semibold text-blue-600">R$ 32,21</span></div>
+              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-PETR4" class="font-semibold text-gray-700">R$ 27,22</span></div>
             </div>
           </div>
-          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-            <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Descontado</span>
+
+          <!-- KLBN3 -->
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-op-ticker="KLBN3">
+            <span id="badge-KLBN3" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Descontado</span>
             <h4 class="text-lg font-bold text-gray-800 mt-2">KLBN3</h4>
             <p class="text-xs text-gray-500 mt-1">Klabin ON</p>
             <div class="mt-4 space-y-1 text-sm">
-              <div class="flex justify-between"><span>Preço Atual:</span> <span class="font-semibold text-emerald-600">R$ 6,28</span></div>
-              <div class="flex justify-between"><span>Preço Justo:</span> <span class="font-semibold text-gray-700">R$ 3,81</span></div>
+              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-KLBN3" class="font-semibold text-emerald-600">R$ 6,28</span></div>
+              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-KLBN3" class="font-semibold text-gray-700">R$ 3,81</span></div>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -447,22 +454,37 @@
       if (statusElement) statusElement.innerText = "Atualizando preços...";
 
       const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
-      const tickers = Array.from(new Set(Array.from(linhas).map(l => l.getAttribute('data-ticker'))));
+      const tickersTabela = Array.from(new Set(Array.from(linhas).map(l => l.getAttribute('data-ticker'))));
+      const tickersRadar = ['SAPR11', 'PETR4', 'KLBN3'];
+      const todosTickers = Array.from(new Set([...tickersTabela, ...tickersRadar]));
 
       let atualizados = 0;
-      for (const ticker of tickers) {
+      for (const ticker of todosTickers) {
         try {
-          let url = `https://brapi.dev/api/quote/${ticker}?token=${token}`;
+          let url = `https://brapi.dev/api/quote/${ticker}?token=${token}&fundamental=true`;
           let res = await fetch(url);
           if (res.status === 404) {
-            url = `https://brapi.dev/api/quote/${ticker}.SA?token=${token}`;
+            url = `https://brapi.dev/api/quote/${ticker}.SA?token=${token}&fundamental=true`;
             res = await fetch(url);
           }
           if (res.ok) {
             const data = await res.json();
             if (data.results && data.results.length > 0) {
               const ativo = data.results[0];
-              atualizarLinhaTabela(ticker, ativo.regularMarketPrice, ativo.regularMarketChangePercent);
+              const precoAtual = ativo.regularMarketPrice;
+              const variacao = ativo.regularMarketChangePercent;
+              
+              // Cálculo inteligente de Preço Justo (Graham: Raiz de 22.5 * LPA * VPA se disponíveis, senão mantém estimativa segura)
+              let precoJusto = null;
+              if (ativo.eps && ativo.bookValue) {
+                precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
+              } else if (ticker === 'SAPR11') { precoJusto = 21.35; }
+              else if (ticker === 'PETR4') { precoJusto = 27.22; }
+              else if (ticker === 'KLBN3') { precoJusto = 3.81; }
+              else { precoJusto = precoAtual * 0.9; }
+
+              atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto);
+              atualizarRadarOportunidades(ticker, precoAtual, precoJusto);
               atualizados++;
             }
           }
@@ -471,19 +493,23 @@
       recalcularTotais();
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Falha ao atualizar";
-      if (atualizados > 0) mostrarNotificacao("Cotações atualizadas com sucesso!", "sucesso");
+      if (atualizados > 0) mostrarNotificacao("Cotações e preços justos atualizados com sucesso!", "sucesso");
     }
 
-    function atualizarLinhaTabela(ticker, precoAtual, variacao) {
+    function atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto) {
       const linhas = document.querySelectorAll(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
       linhas.forEach(linha => {
         const celulaPreco = linha.querySelector('.preco-atual');
+        const celulaJusto = linha.querySelector('.preco-justo-tabela');
         const celulaVariacao = linha.querySelector('.variacao');
         const celulaQtd = linha.querySelector('.qtd');
         const celulaValorAtual = linha.querySelector('.valor-atual');
 
         if (celulaPreco && precoAtual !== undefined) {
           celulaPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
+        }
+        if (celulaJusto && precoJusto !== undefined) {
+          celulaJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}`;
         }
         if (celulaVariacao && variacao !== undefined) {
           const sinal = variacao >= 0 ? '+' : '';
@@ -495,6 +521,31 @@
           celulaValorAtual.innerText = `R$ ${(qtd * precoAtual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         }
       });
+    }
+
+    function atualizarRadarOportunidades(ticker, precoAtual, precoJusto) {
+      const card = document.querySelector(`[data-op-ticker="${ticker}"]`);
+      if (!card) return;
+
+      const spanPreco = document.getElementById(`op-preco-${ticker}`);
+      const spanJusto = document.getElementById(`op-justo-${ticker}`);
+      const badge = document.getElementById(`badge-${ticker}`);
+
+      if (spanPreco) spanPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
+      if (spanJusto) spanJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}`;
+
+      if (badge) {
+        if (precoAtual < precoJusto) {
+          badge.innerText = "Descontado";
+          badge.className = "text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded";
+        } else if (Math.abs(precoAtual - precoJusto) / precoJusto <= 0.05) {
+          badge.innerText = "Neutro / Monitorando";
+          badge.className = "text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded";
+        } else {
+          badge.innerText = "Acima do Justo";
+          badge.className = "text-xs font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded";
+        }
+      }
     }
 
     function recalcularTotais() {
@@ -583,7 +634,7 @@
           <td class="py-3 px-4 qtd">${novaQtd}</td>
           <td class="py-3 px-4 pm">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
           <td class="py-3 px-4 preco-atual font-semibold">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
-          <td class="py-3 px-4">R$ -</td>
+          <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
           <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
           <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
           <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
@@ -641,7 +692,7 @@
                 <td class="py-3 px-4 qtd">${a.qtd}</td>
                 <td class="py-3 px-4 pm">${a.pm}</td>
                 <td class="py-3 px-4 preco-atual font-semibold">${a.precoAtual}</td>
-                <td class="py-3 px-4">R$ -</td>
+                <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
                 <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
                 <td class="py-3 px-4 valor-investido">${a.valorInvestido}</td>
                 <td class="py-3 px-4 valor-atual font-semibold">${a.valorAtual}</td>
