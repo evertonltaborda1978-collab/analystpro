@@ -268,7 +268,7 @@
           
           <!-- SAPR11 -->
           <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-op-ticker="SAPR11">
-            <span id="badge-SAPR11" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Oportunidade</span>
+            <span id="badge-SAPR11" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">🟢 Bom para comprar / Oportunidade</span>
             <h4 class="text-lg font-bold text-gray-800 mt-2">SAPR11</h4>
             <p class="text-xs text-gray-500 mt-1">Sanepar Unit</p>
             <div class="mt-4 space-y-1 text-sm">
@@ -279,7 +279,7 @@
 
           <!-- PETR4 -->
           <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-op-ticker="PETR4">
-            <span id="badge-PETR4" class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Neutro / Monitorando</span>
+            <span id="badge-PETR4" class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">🔵 Aguardar / Neutro</span>
             <h4 class="text-lg font-bold text-gray-800 mt-2">PETR4</h4>
             <p class="text-xs text-gray-500 mt-1">Petrobras PN</p>
             <div class="mt-4 space-y-1 text-sm">
@@ -290,7 +290,7 @@
 
           <!-- KLBN3 -->
           <div class="border border-gray-200 rounded-lg p-4 bg-gray-50" data-op-ticker="KLBN3">
-            <span id="badge-KLBN3" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Descontado</span>
+            <span id="badge-KLBN3" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">🟢 Bom para comprar / Oportunidade</span>
             <h4 class="text-lg font-bold text-gray-800 mt-2">KLBN3</h4>
             <p class="text-xs text-gray-500 mt-1">Klabin ON</p>
             <div class="mt-4 space-y-1 text-sm">
@@ -389,7 +389,6 @@
         recalcularTotais();
         mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
         
-        // Atualização automática ao logar (passando 'false' para não poluir com notificações automáticas no login)
         setTimeout(() => {
           atualizarCotacoesBrapi(false);
         }, 800);
@@ -570,13 +569,13 @@
 
       if (badge) {
         if (precoAtual < precoJusto) {
-          badge.innerText = "Descontado";
+          badge.innerHTML = "🟢 Bom para comprar / Oportunidade";
           badge.className = "text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded";
         } else if (Math.abs(precoAtual - precoJusto) / precoJusto <= 0.05) {
-          badge.innerText = "Neutro / Monitorando";
+          badge.innerHTML = "🔵 Aguardar / Neutro";
           badge.className = "text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded";
         } else {
-          badge.innerText = "Acima do Justo";
+          badge.innerHTML = "🟠 Evitar novas compras no momento";
           badge.className = "text-xs font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded";
         }
       }
