@@ -389,10 +389,10 @@
         recalcularTotais();
         mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
         
-        // Dispara a atualização automática de cotações assim que entra no sistema
+        // Garante a execução da atualização de cotações de forma robusta e automática após o login
         setTimeout(() => {
           atualizarCotacoesBrapi();
-        }, 500);
+        }, 800);
       } else {
         mostrarNotificacao("Senha incorreta! Tente novamente.", "erro");
       }
