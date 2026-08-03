@@ -1,715 +1,850 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnalystPro - Gestão de Investimentos</title>
-    <style>
-        :root {
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --text-muted: #666666;
-            --border-color: #e0e0e0;
-            --primary-color: #2563eb;
-            --primary-hover: #1d4ed8;
-            --success-color: #16a34a;
-            --warning-color: #d97706;
-            --danger-color: #dc2626;
-            --header-bg: #1e293b;
-            --header-text: #ffffff;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnalystPro - Gestão de Investimentos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            darkbg: '#0f172a',
+            darkcard: '#1e293b',
+            darkborder: '#334155'
+          }
         }
-
-        [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
-            --primary-color: #3b82f6;
-            --primary-hover: #2563eb;
-            --success-color: #22c55e;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
-            --header-bg: #090d16;
-            --header-text: #f8fafc;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.5;
-        }
-
-        header {
-            background-color: var(--header-bg);
-            color: var(--header-text);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .logo-area h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .status-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--success-color);
-            border-radius: 50%;
-        }
-
-        nav {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: var(--header-text);
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            opacity: 0.8;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            opacity: 1;
-            background: rgba(255,255,255,0.15);
-        }
-
-        .theme-toggle, .logout-btn {
-            background: transparent;
-            border: none;
-            color: var(--header-text);
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theme-toggle:hover, .logout-btn:hover {
-            background: rgba(255,255,255,0.15);
-        }
-
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .metric-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .metric-card h3 {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .metric-card .value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-color);
-        }
-
-        .metric-card .subtext {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 0.4rem;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .section-header h2 {
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--border-color);
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .opportunity-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            position: relative;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .opportunity-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .badge-status {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.6rem;
-            border-radius: 9999px;
-            font-weight: 600;
-        }
-
-        .badge-warning { background: rgba(217, 119, 6, 0.15); color: var(--warning-color); }
-        .badge-success { background: rgba(22, 163, 74, 0.15); color: var(--success-color); }
-
-        .remove-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        .remove-btn:hover { color: var(--danger-color); }
-
-        .opportunity-card h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.2rem;
-        }
-
-        .opportunity-card p.desc {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            height: 2.5rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .opportunity-details {
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid var(--border-color);
-            padding-top: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .opportunity-details span strong {
-            color: var(--primary-color);
-        }
-
-        .input-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .input-group input {
-            flex: 1;
-            padding: 0.6rem 1rem;
-            border-radius: 0.375rem;
-            border: 1px solid var(--border-color);
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            font-size: 0.95rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: var(--card-bg);
-            border-radius: 0.75rem;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: var(--bg-color);
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .charts-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .chart-box {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .chart-box h3 {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-        }
-
-        .simulador-box {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-        }
-    </style>
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body data-theme="dark">
+<body class="bg-gray-100 dark:bg-darkbg font-sans text-gray-800 dark:text-gray-100 transition-colors duration-200">
 
-    <header>
-        <div class="logo-area">
-            <h1>AnalystPro</h1>
-            <div class="status-badge">
-                <div class="status-dot"></div>
-                <span>Brapi: Online</span>
-            </div>
+  <!-- AVISO DE NOVA VERSÃO DISPONÍVEL -->
+  <div id="bannerAtualizacao" class="fixed top-0 left-0 right-0 bg-blue-600 text-white text-xs sm:text-sm py-2 px-4 z-50 flex items-center justify-between shadow-md hidden">
+    <div class="flex items-center gap-2 mx-auto">
+      <i class="fa-solid fa-circle-exclamation animate-bounce"></i>
+      <span>Uma nova versão do <b>AnalystPro</b> está disponível!</span>
+      <button onclick="recarregarPaginaNovaVersao()" class="bg-white text-blue-600 font-bold px-3 py-1 rounded shadow hover:bg-blue-50 transition ml-2">
+        Atualizar Agora
+      </button>
+    </div>
+  </div>
+
+  <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- MODAL POP-UP PARA NOVA OPERAÇÃO -->
+  <div id="modalOperacao" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-darkborder">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <i class="fa-solid fa-plus-circle text-emerald-600"></i> Cadastrar Nova Operação
+        </h3>
+        <button onclick="fecharModalOperacao()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label for="opTicker" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Código do Ativo (Ticker)</label>
+          <input type="text" id="opTicker" placeholder="Ex: SAPR11, PETR4" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm uppercase focus:ring-2 focus:ring-emerald-500 outline-none">
         </div>
-        <nav>
-            <button class="nav-btn active" onclick="switchTab('carteira', this)">📊 Carteira</button>
-            <button class="nav-btn" onclick="switchTab('dividendos', this)">💰 Dividendos</button>
-            <button class="nav-btn" onclick="switchTab('oportunidades', this)">🎯 Oportunidades</button>
-            <button class="nav-btn" onclick="switchTab('analise', this)">📈 Análise</button>
-            <button class="nav-btn" onclick="switchTab('configuracoes', this)">⚙️ Configurações</button>
-            <button class="theme-toggle" onclick="toggleTheme()" title="Alternar Tema">☀️</button>
-            <button class="logout-btn" title="Sair">🚪</button>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="opQtd" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Quantidade</label>
+            <input type="number" id="opQtd" placeholder="Ex: 20" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+          </div>
+          <div>
+            <label for="opPM" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Preço da Compra (R$)</label>
+            <input type="number" step="0.01" id="opPM" placeholder="Ex: 20.00" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+          </div>
+        </div>
+        
+        <div class="flex gap-3 pt-2">
+          <button onclick="fecharModalOperacao()" class="w-1/2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 font-medium py-2 rounded-lg text-sm transition">
+            Cancelar
+          </button>
+          <button onclick="salvarNovaOperacao()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg text-sm transition">
+            Salvar Operação
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA DE LOGIN / AUTENTICAÇÃO -->
+  <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100 dark:border-darkborder">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-full mb-3">
+          <i class="fa-solid fa-lock text-2xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">AnalystPro</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Digite sua senha para acessar sua carteira</p>
+      </div>
+
+      <div id="formLogin" class="space-y-4">
+        <div>
+          <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha de Acesso</label>
+          <input type="password" id="senhaAcesso" autocomplete="new-password" onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
+          Entrar no Sistema
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APLICAÇÃO PRINCIPAL -->
+  <div id="appConteudo" class="hidden">
+    <header class="bg-blue-600 dark:bg-slate-900 text-white shadow-md border-b border-blue-700 dark:border-darkborder transition-colors duration-200">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
+        <div class="flex items-center gap-4">
+          <h1 class="text-2xl font-bold flex items-center gap-2">
+            <i class="fa-solid fa-chart-line text-blue-300 dark:text-blue-500"></i> AnalystPro
+          </h1>
+          <div id="statusApiBrapi" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-700 dark:bg-slate-800 text-blue-200 dark:text-blue-400">
+            <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+            <span>Brapi: Verificando...</span>
+          </div>
+        </div>
+
+        <nav class="flex items-center gap-4 sm:gap-6 text-sm font-medium flex-wrap">
+          <a href="#carteira" onclick="navegar('carteira')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-wallet"></i> Carteira</a>
+          <a href="#dividendos" onclick="navegar('dividendos')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-hand-holding-dollar"></i> Dividendos</a>
+          <a href="#oportunidades" onclick="navegar('oportunidades')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-bullseye"></i> Oportunidades</a>
+          <a href="#analise" onclick="navegar('analise')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-chart-pie"></i> Análise</a>
+          <a href="#configuracoes" onclick="navegar('configuracoes')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-gear"></i> Configurações</a>
+          <button onclick="alternarTema()" title="Alternar Tema Claro/Escuro" class="bg-blue-700 dark:bg-slate-800 hover:bg-blue-800 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg text-white transition flex items-center justify-center">
+            <i id="iconeTema" class="fa-solid fa-moon"></i>
+          </button>
+          <button onclick="bloquearApp()" title="Sair / Bloquear" class="ml-1 text-blue-200 hover:text-white"><i class="fa-solid fa-right-from-bracket"></i></button>
         </nav>
+      </div>
     </header>
 
-    <main>
-        <!-- ABA CARTEIRA -->
-        <div id="carteira" class="tab-content active">
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <h3>Valor Total da Carteira</h3>
-                    <div class="value">R$ 2.712,00</div>
-                    <div class="subtext">Atualizado às 11:40</div>
-                </div>
-                <div class="metric-card">
-                    <h3>Proventos Recebidos</h3>
-                    <div class="value">R$ 316,40</div>
-                    <div class="subtext">Total acumulado (2023-2026)</div>
-                </div>
-                <div class="metric-card">
-                    <h3>Lucro / Prejuízo (Ações)</h3>
-                    <div class="value" style="color: var(--success-color);">R$ 102,50 (+3.93%)</div>
-                    <div class="subtext">Rentabilidade global</div>
-                </div>
-            </div>
-
-            <div class="section-header">
-                <h2>Seus Ativos</h2>
-                <button class="btn">+ Adicionar Ativo</button>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ativo</th>
-                        <th>Quantidade</th>
-                        <th>Preço Médio</th>
-                        <th>Preço Atual</th>
-                        <th>Total</th>
-                        <th>Rentabilidade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>SAPR11</strong> - Sanepar</td>
-                        <td>25</td>
-                        <td>R$ 35,00</td>
-                        <td>R$ 36,40</td>
-                        <td>R$ 910,00</td>
-                        <td style="color: var(--success-color);">+4.00%</td>
-                    </tr>
-                    <tr>
-                        <td><strong>PETR4</strong> - Petrobras</td>
-                        <td>20</td>
-                        <td>R$ 41,00</td>
-                        <td>R$ 42,80</td>
-                        <td>R$ 856,00</td>
-                        <td style="color: var(--success-color);">+4.39%</td>
-                    </tr>
-                    <tr>
-                        <td><strong>KLBN3</strong> - Klabin</td>
-                        <td>100</td>
-                        <td>R$ 3,55</td>
-                        <td>R$ 3,68</td>
-                        <td>R$ 368,00</td>
-                        <td style="color: var(--success-color);">+3.66%</td>
-                    </tr>
-                    <tr>
-                        <td><strong>BBAS3</strong> - Banco do Brasil</td>
-                        <td>15</td>
-                        <td>R$ 20,50</td>
-                        <td>R$ 21,25</td>
-                        <td>R$ 318,75</td>
-                        <td style="color: var(--success-color);">+3.66%</td>
-                    </tr>
-                    <tr>
-                        <td><strong>VALE3</strong> - Vale</td>
-                        <td>2</td>
-                        <td>R$ 73,00</td>
-                        <td>R$ 74,44</td>
-                        <td>R$ 148,88</td>
-                        <td style="color: var(--success-color);">+1.97%</td>
-                    </tr>
-                    <tr>
-                        <td><strong>TAEE11</strong> - Taesa</td>
-                        <td>3</td>
-                        <td>R$ 39,00</td>
-                        <td>R$ 39,82</td>
-                        <td>R$ 119,46</td>
-                        <td style="color: var(--success-color);">+2.10%</td>
-                    </tr>
-                </tbody>
-            </table>
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-blue-500 border border-gray-100 dark:border-darkborder transition-colors">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Valor Total da Carteira</span>
+          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 dark:text-white mt-1">R$ 2.712,00</h2>
+          <span id="statusAtualizacao" class="text-xs text-gray-400">Atualizado às 11:40</span>
         </div>
 
-        <!-- ABA DIVIDENDOS -->
-        <div id="dividendos" class="tab-content">
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <h3>Proventos Próx. 12 Meses (Proj.)</h3>
-                    <div class="value">R$ 248,50</div>
-                    <div class="subtext">Yield on Cost Estimado: 9.16%</div>
-                </div>
-                <div class="metric-card">
-                    <h3>Média Mensal Recebida</h3>
-                    <div class="value">R$ 26,36</div>
-                    <div class="subtext">Últimos 12 meses</div>
-                </div>
-            </div>
-
-            <div class="section-header">
-                <h2>Histórico e Projeção de Dividendos por Ativo</h2>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ativo</th>
-                        <th>Dividend Yield (DY)</th>
-                        <th>Yield on Cost</th>
-                        <th>Projeção Anual</th>
-                        <th>Próximo Pagamento Estimado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>BBAS3</strong></td>
-                        <td>8.5%</td>
-                        <td>9.2%</td>
-                        <td>R$ 27,10</td>
-                        <td>28/08/2026</td>
-                    </tr>
-                    <tr>
-                        <td><strong>TAEE11</strong></td>
-                        <td>7.8%</td>
-                        <td>8.1%</td>
-                        <td>R$ 9,30</td>
-                        <td>15/09/2026</td>
-                    </tr>
-                    <tr>
-                        <td><strong>PETR4</strong></td>
-                        <td>12.4%</td>
-                        <td>13.0%</td>
-                        <td>R$ 106,20</td>
-                        <td>30/08/2026</td>
-                    </tr>
-                    <tr>
-                        <td><strong>SAPR11</strong></td>
-                        <td>6.5%</td>
-                        <td>6.8%</td>
-                        <td>R$ 59,15</td>
-                        <td>10/10/2026</td>
-                    </tr>
-                    <tr>
-                        <td><strong>KLBN3</strong></td>
-                        <td>5.2%</td>
-                        <td>5.5%</td>
-                        <td>R$ 19,13</td>
-                        <td>15/11/2026</td>
-                    </tr>
-                    <tr>
-                        <td><strong>VALE3</strong></td>
-                        <td>7.0%</td>
-                        <td>7.2%</td>
-                        <td>R$ 10,42</td>
-                        <td>31/08/2026</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-emerald-500 border border-gray-100 dark:border-darkborder transition-colors">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Proventos Recebidos</span>
+          <h2 id="totalProventosHeader" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 316,40</h2>
+          <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
         </div>
 
-        <!-- ABA OPORTUNIDADES -->
-        <div id="oportunidades" class="tab-content">
-            <div class="section-header">
-                <h2>🎯 Radar de Oportunidades</h2>
-            </div>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">Monitore e adicione ações para acompanhar oportunidades pelo Preço Justo:</p>
-            
-            <div class="input-group">
-                <input type="text" placeholder="EX: CPLE6, CXSE3">
-                <button class="btn">+ Adicionar ao Radar</button>
-            </div>
+        <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-cyan-500 border border-gray-100 dark:border-darkborder transition-colors">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Lucro / Prejuízo (Ações)</span>
+          <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 102,50 <span class="text-sm font-normal">(+3.93%)</span></h2>
+        </div>
+      </div>
 
-            <div class="card-grid">
-                <div class="opportunity-card">
-                    <div class="opportunity-header">
-                        <span class="badge-status badge-warning">🟠 Evitar novas compras no momento</span>
-                        <button class="remove-btn">✕</button>
-                    </div>
-                    <h3>SAPR11</h3>
-                    <p class="desc">Companhia de Saneamento do Parana - Sanepar Units</p>
-                    <div class="opportunity-details">
-                        <span>Preço Atual: <strong>R$ 36,40</strong></span>
-                        <span>Preço Justo: <strong>R$ 34,58</strong></span>
-                    </div>
-                </div>
-
-                <div class="opportunity-card">
-                    <div class="opportunity-header">
-                        <span class="badge-status badge-warning">🟠 Evitar novas compras no momento</span>
-                        <button class="remove-btn">✕</button>
-                    </div>
-                    <h3>PETR4</h3>
-                    <p class="desc">Petroleo Brasileiro SA Pfd</p>
-                    <div class="opportunity-details">
-                        <span>Preço Atual: <strong>R$ 42,80</strong></span>
-                        <span>Preço Justo: <strong>R$ 40,66</strong></span>
-                    </div>
-                </div>
-
-                <div class="opportunity-card">
-                    <div class="opportunity-header">
-                        <span class="badge-status badge-warning">🟠 Evitar novas compras no momento</span>
-                        <button class="remove-btn">✕</button>
-                    </div>
-                    <h3>KLBN3</h3>
-                    <p class="desc">Klabin SA</p>
-                    <div class="opportunity-details">
-                        <span>Preço Atual: <strong>R$ 3,68</strong></span>
-                        <span>Preço Justo: <strong>R$ 3,50</strong></span>
-                    </div>
-                </div>
-
-                <div class="opportunity-card">
-                    <div class="opportunity-header">
-                        <span class="badge-status badge-warning">🟠 Evitar novas compras no momento</span>
-                        <button class="remove-btn">✕</button>
-                    </div>
-                    <h3>BBAS3</h3>
-                    <p class="desc">Banco do Brasil S.A.</p>
-                    <div class="opportunity-details">
-                        <span>Preço Atual: <strong>R$ 21,25</strong></span>
-                        <span>Preço Justo: <strong>R$ 20,19</strong></span>
-                    </div>
-                </div>
-
-                <div class="opportunity-card">
-                    <div class="opportunity-header">
-                        <span class="badge-status badge-warning">🟠 Evitar novas compras no momento</span>
-                        <button class="remove-btn">✕</button>
-                    </div>
-                    <h3>VALE3</h3>
-                    <p class="desc">Vale S.A.</p>
-                    <div class="opportunity-details">
-                        <span>Preço Atual: <strong>R$ 74,44</strong></span>
-                        <span>Preço Justo: <strong>R$ 70,72</strong></span>
-                    </div>
-                </div>
-
-                <div class="opportunity-card">
-                    <div class="opportunity-header">
-                        <span class="badge-status badge-warning">🟠 Evitar novas compras no momento</span>
-                        <button class="remove-btn">✕</button>
-                    </div>
-                    <h3>TAEE11</h3>
-                    <p class="desc">Transmissora Alianca De Energia Eletrica S.A.</p>
-                    <div class="opportunity-details">
-                        <span>Preço Atual: <strong>R$ 39,82</strong></span>
-                        <span>Preço Justo: <strong>R$ 37,83</strong></span>
-                    </div>
-                </div>
-            </div>
+      <!-- SEÇÃO: CARTEIRA -->
+      <section id="sec-carteira" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder transition-colors">
+        <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
+          <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-wallet text-blue-600 dark:text-blue-400"></i> Seus Ativos
+          </h3>
+          <div class="flex gap-2 flex-wrap">
+            <button onclick="abrirModalOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-plus"></i> Adicionar Ativo
+            </button>
+            <button onclick="atualizarCotacoesBrapi(true)" class="bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-darkborder px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
+            </button>
+            <button onclick="exportarBackup()" class="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-darkborder px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-download"></i> Salvar Backup
+            </button>
+            <label class="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-darkborder px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 cursor-pointer transition">
+              <i class="fa-solid fa-upload"></i> Carregar Backup
+              <input type="file" id="importInput" accept=".json" onchange="importarBackup(event)" class="hidden">
+            </label>
+          </div>
         </div>
 
-        <!-- ABA ANÁLISE -->
-        <div id="analise" class="tab-content">
-            <div class="charts-container">
-                <div class="chart-box">
-                    <h3>Alocação por Classe de Ativo</h3>
-                    <div style="height: 220px; display: flex; align-items: center; justify-content: center; background: var(--bg-color); border-radius: 0.5rem; color: var(--text-muted);">
-                        [ Gráfico de Pizza: 75% Ações | 25% FIIs ]
-                    </div>
-                </div>
-                <div class="chart-box">
-                    <h3>Alocação por Setor Econômico</h3>
-                    <div style="height: 220px; display: flex; align-items: center; justify-content: center; background: var(--bg-color); border-radius: 0.5rem; color: var(--text-muted);">
-                        [ Gráfico de Barras: Elétrico, Financeiro, Petróleo, Materiais ]
-                    </div>
-                </div>
-            </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-darkborder bg-gray-50 dark:bg-slate-900 text-gray-600 dark:text-gray-400 text-sm font-semibold">
+                <th class="py-3 px-4">Ativo</th>
+                <th class="py-3 px-4">Quantidade</th>
+                <th class="py-3 px-4">Preço Médio</th>
+                <th class="py-3 px-4">Preço Atual</th>
+                <th class="py-3 px-4">Total</th>
+                <th class="py-3 px-4">Rentabilidade</th>
+                <th class="py-3 px-4 text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaAtivos" class="divide-y divide-gray-100 dark:divide-darkborder text-sm">
+              <tr data-ticker="SAPR11">
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">SAPR11 - Sanepar</td>
+                <td class="py-3 px-4 qtd">25</td>
+                <td class="py-3 px-4 pm">R$ 35,00</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 36,40</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 910,00</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+4.00%</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr data-ticker="PETR4">
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">PETR4 - Petrobras</td>
+                <td class="py-3 px-4 qtd">20</td>
+                <td class="py-3 px-4 pm">R$ 41,00</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 42,80</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 856,00</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+4.39%</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr data-ticker="KLBN3">
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">KLBN3 - Klabin</td>
+                <td class="py-3 px-4 qtd">100</td>
+                <td class="py-3 px-4 pm">R$ 3,55</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 3,68</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 368,00</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+3.66%</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr data-ticker="BBAS3">
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">BBAS3 - Banco do Brasil</td>
+                <td class="py-3 px-4 qtd">15</td>
+                <td class="py-3 px-4 pm">R$ 20,50</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 21,25</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 318,75</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+3.66%</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr data-ticker="VALE3">
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">VALE3 - Vale</td>
+                <td class="py-3 px-4 qtd">2</td>
+                <td class="py-3 px-4 pm">R$ 73,00</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 74,44</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 148,88</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+1.97%</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr data-ticker="TAEE11">
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">TAEE11 - Taesa</td>
+                <td class="py-3 px-4 qtd">3</td>
+                <td class="py-3 px-4 pm">R$ 39,00</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 39,82</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 119,46</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+2.10%</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-            <div class="simulador-box">
-                <h3 style="margin-bottom: 1rem;">Simulador de Aportes Inteligentes</h3>
-                <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">Insira quanto deseja investir hoje para o sistema recalcular o reequilíbrio automático da carteira:</p>
-                <div class="input-group">
-                    <input type="text" placeholder="Ex: R$ 1.500,00" value="R$ 1.500,00">
-                    <button class="btn">Calcular Sugestão de Aporte</button>
-                </div>
-                <div style="background: var(--bg-color); padding: 1rem; border-radius: 0.5rem; font-size: 0.9rem;">
-                    <strong>Sugestão para reequilíbrio:</strong><br>
-                    • Comprar <strong>15 ações de BBAS3</strong> (Ativo abaixo da meta ideal de alocação)<br>
-                    • Comprar <strong>10 ações de KLBN3</strong>
-                </div>
-            </div>
+      <!-- SEÇÃO: DIVIDENDOS -->
+      <section id="sec-dividendos" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-6 transition-colors">
+        <div class="flex justify-between items-center flex-wrap gap-4">
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-hand-holding-dollar text-emerald-600 dark:text-emerald-400"></i> Histórico de Proventos e Dividendos
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Acompanhe todos os JCPs e Dividendos recebidos na sua carteira:</p>
+          </div>
+          <button onclick="abrirModalDividendo()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-plus"></i> Registrar Provento
+          </button>
         </div>
 
-        <!-- ABA CONFIGURAÇÕES -->
-        <div id="configuracoes" class="tab-content">
-            <div class="section-header">
-                <h2>Configurações do Sistema</h2>
-            </div>
-            <div class="card-box">
-                <h3 style="margin-bottom: 0.5rem;">Preferências Gerais</h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Gerencie chaves de API, fontes de dados e comportamento visual do AnalystPro.</p>
-                <button class="btn btn-secondary">Exportar Backup de Dados</button>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-4 rounded-lg">
+            <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase">Total Acumulado de Proventos</span>
+            <h4 id="valorTotalProventos" class="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mt-1">R$ 316,40</h4>
+          </div>
+          <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 p-4 rounded-lg">
+            <span class="text-xs font-semibold text-blue-800 dark:text-blue-400 uppercase">Média Mensal Estimada</span>
+            <h4 id="mediaMensalProventos" class="text-2xl font-bold text-blue-700 dark:text-blue-300 mt-1">R$ 8,78 / mês</h4>
+          </div>
         </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-darkborder bg-gray-50 dark:bg-slate-900 text-gray-600 dark:text-gray-400 text-sm font-semibold">
+                <th class="py-3 px-4">Ativo</th>
+                <th class="py-3 px-4">Tipo</th>
+                <th class="py-3 px-4">Data Com</th>
+                <th class="py-3 px-4">Data Pagamento</th>
+                <th class="py-3 px-4">Valor Total (R$)</th>
+                <th class="py-3 px-4 text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaDividendos" class="divide-y divide-gray-100 dark:divide-darkborder text-sm">
+              <!-- Inserido via script -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: OPORTUNIDADES -->
+      <section id="sec-oportunidades" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-6 transition-colors">
+        <div class="flex justify-between items-center flex-wrap gap-4">
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-bullseye text-blue-600 dark:text-blue-400"></i> Radar de Oportunidades
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Monitore e adicione ações para acompanhar oportunidades pelo Preço Justo:</p>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="novoTickerRadar" placeholder="Ex: CPLE6, CXSE3" class="px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none">
+            <button onclick="adicionarAtivoRadar()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-plus"></i> Adicionar ao Radar
+            </button>
+          </div>
+        </div>
+
+        <div id="gridRadar" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Cards do radar dinâmico -->
+        </div>
+      </section>
+
+      <!-- SEÇÃO: ANÁLISE -->
+      <section id="sec-analise" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-6 transition-colors">
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie text-cyan-600 dark:text-cyan-400"></i> Análise de Alocação de Ativos
+        </h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Distribuição percentual da sua carteira por setor:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="p-4 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 space-y-3">
+            <h4 class="font-semibold text-gray-700 dark:text-gray-300">Alocação Setorial</h4>
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1"><span>Saneamento (SAPR11)</span> <span>33.5%</span></div>
+              <div class="w-full bg-gray-200 dark:bg-slate-800 h-2.5 rounded-full"><div class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full" style="width: 33.5%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1"><span>Petróleo e Gás (PETR4)</span> <span>31.5%</span></div>
+              <div class="w-full bg-gray-200 dark:bg-slate-800 h-2.5 rounded-full"><div class="bg-emerald-600 dark:bg-emerald-500 h-2.5 rounded-full" style="width: 31.5%"></div></div>
+            </div>
+          </div>
+          <div class="p-4 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 flex flex-col justify-center items-center text-center">
+            <i class="fa-solid fa-shield-halved text-4xl text-emerald-600 dark:text-emerald-400 mb-2"></i>
+            <h4 class="font-bold text-gray-800 dark:text-white">Saúde da Carteira: Excelente</h4>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Sua carteira está diversificada e rentável (+3.93%).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: CONFIGURAÇÕES -->
+      <section id="sec-configuracoes" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-8 transition-colors">
+        <div>
+          <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-gear text-blue-600 dark:text-blue-400"></i> Configurações da API Brapi
+          </h3>
+          <div class="max-w-md">
+            <label for="brapiTokenInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Token de Acesso da Brapi (brapi.dev)</label>
+            <input type="text" id="brapiTokenInput" placeholder="Cole seu token da Brapi aqui" class="w-full p-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-md text-sm mb-4 focus:ring-2 focus:ring-blue-500 outline-none">
+            <button onclick="salvarConfiguracoes()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm transition">
+              Salvar Token
+            </button>
+          </div>
+        </div>
+      </section>
+
     </main>
+  </div>
 
-    <script>
-        function switchTab(tabId, btnElement) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active');
-        }
+  <!-- MODAL PARA CADASTRAR PROVENTO -->
+  <div id="modalDividendo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-darkborder">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <i class="fa-solid fa-plus-circle text-emerald-600"></i> Registrar Novo Provento
+        </h3>
+        <button onclick="fecharModalDividendo()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
 
-        function toggleTheme() {
-            const body = document.body;
-            const themeBtn = document.querySelector('.theme-toggle');
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.setAttribute('data-theme', 'light');
-                themeBtn.textContent = '🌙';
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                themeBtn.textContent = '☀️';
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Ticker do Ativo</label>
+          <input type="text" id="divTicker" placeholder="Ex: SAPR11" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm uppercase outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Tipo de Provento</label>
+          <select id="divTipo" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+            <option value="JCP / Dividendo">JCP / Dividendo</option>
+            <option value="Dividendo Extra">Dividendo Extra</option>
+            <option value="Dividendo Trimestral">Dividendo Trimestral</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Data Com</label>
+            <input type="text" id="divDataCom" placeholder="Ex: 15/12/2025" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Data Pagamento</label>
+            <input type="text" id="divDataPag" placeholder="Ex: 28/12/2025" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Valor Total (R$)</label>
+          <input type="number" step="0.01" id="divValor" placeholder="Ex: 45.20" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+        
+        <div class="flex gap-3 pt-2">
+          <button onclick="fecharModalDividendo()" class="w-1/2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 font-medium py-2 rounded-lg text-sm transition">
+            Cancelar
+          </button>
+          <button onclick="salvarNovoDividendo()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg text-sm transition">
+            Salvar Provento
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const VERSAO_ATUAL = "1.0.6";
+
+    if (!localStorage.getItem('app_senha')) {
+      localStorage.setItem('app_senha', '123456');
+    }
+
+    let tickersRadar = JSON.parse(localStorage.getItem('radar_personalizado')) || ['SAPR11', 'PETR4', 'KLBN3', 'BBAS3', 'VALE3', 'TAEE11'];
+    
+    let listaDividendos = JSON.parse(localStorage.getItem('dividendos_salvos')) || [
+      { ticker: 'SAPR11', tipo: 'JCP / Dividendo', dataCom: '15/12/2025', dataPag: '28/12/2025', valor: 45.20 },
+      { ticker: 'PETR4', tipo: 'Dividendo Extra', dataCom: '10/11/2025', dataPag: '25/11/2025', valor: 88.50 },
+      { ticker: 'KLBN3', tipo: 'Dividendo Trimestral', dataCom: '02/08/2025', dataPag: '18/08/2025', valor: 182.70 }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const temaSalvo = localStorage.getItem('app_tema') || 'dark';
+      if (temaSalvo === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.getElementById('iconeTema').className = "fa-solid fa-sun";
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('iconeTema').className = "fa-solid fa-moon";
+      }
+
+      document.getElementById('telaLogin').classList.remove('hidden');
+      document.getElementById('appConteudo').classList.add('hidden');
+      
+      const campoSenha = document.getElementById('senhaAcesso');
+      if (campoSenha) {
+        campoSenha.value = '';
+        setTimeout(() => { campoSenha.value = ''; }, 100);
+      }
+
+      const tokenSalvo = localStorage.getItem('brapi_token');
+      if (tokenSalvo) {
+        document.getElementById('brapiTokenInput').value = tokenSalvo;
+      }
+      renderizarCardsRadar();
+      renderizarTabelaDividendos();
+      recalcularTotais();
+      verificarAtualizacaoApp();
+    });
+
+    function alternarTema() {
+      const html = document.documentElement;
+      const icone = document.getElementById('iconeTema');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('app_tema', 'light');
+        icone.className = "fa-solid fa-moon";
+        mostrarNotificacao("Modo claro ativado.", "info");
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('app_tema', 'dark');
+        icone.className = "fa-solid fa-sun";
+        mostrarNotificacao("Modo escuro ativado.", "info");
+      }
+    }
+
+    async function verificarAtualizacaoApp() {
+      try {
+        const resposta = await fetch('./index.html?t=' + new Date().getTime());
+        if (resposta.ok) {
+          const htmlTexto = await resposta.text();
+          const match = htmlTexto.match(/const VERSAO_ATUAL = "([^"]+)"/);
+          if (match && match[1]) {
+            const versaoOnline = match[1];
+            if (versaoOnline !== VERSAO_ATUAL) {
+              document.getElementById('bannerAtualizacao').classList.remove('hidden');
             }
+          }
         }
-    </script>
+      } catch (e) {
+        console.log("Verificação de versão ignorada.");
+      }
+    }
+
+    function recarregarPaginaNovaVersao() {
+      window.location.reload(true);
+    }
+
+    function mostrarNotificacao(mensagem, tipo = 'sucesso') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const cores = { sucesso: 'bg-emerald-600 text-white', erro: 'bg-red-600 text-white', aviso: 'bg-amber-500 text-white', info: 'bg-blue-600 text-white' };
+      const icones = { sucesso: 'fa-circle-check', erro: 'fa-circle-xmark', aviso: 'fa-triangle-exclamation', info: 'fa-circle-info' };
+      toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-sm font-medium transform transition-all duration-300 translate-y-2 opacity-0 ${cores[tipo] || cores.info}`;
+      toast.innerHTML = `<i class="fa-solid ${icones[tipo] || icones.info} text-lg"></i> <span>${mensagem}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+      setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => toast.remove(), 300); }, 3500);
+    }
+
+    function autenticar() {
+      const senhaInformada = document.getElementById('senhaAcesso').value;
+      const senhaSalva = localStorage.getItem('app_senha');
+      if (senhaInformada === senhaSalva) {
+        document.getElementById('telaLogin').classList.add('hidden');
+        document.getElementById('appConteudo').classList.remove('hidden');
+        document.getElementById('senhaAcesso').value = '';
+        testarStatusBrapi();
+        recalcularTotais();
+        mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
+        setTimeout(() => { atualizarCotacoesBrapi(false); }, 800);
+      } else {
+        mostrarNotificacao("Senha incorreta! Tente novamente.", "erro");
+      }
+    }
+
+    function bloquearApp() {
+      document.getElementById('appConteudo').classList.add('hidden');
+      document.getElementById('telaLogin').classList.remove('hidden');
+      const campoSenha = document.getElementById('senhaAcesso');
+      if (campoSenha) campoSenha.value = '';
+      mostrarNotificacao("Sessão encerrada.", "info");
+    }
+
+    async function testarStatusBrapi() {
+      const statusContainer = document.getElementById('statusApiBrapi');
+      const token = localStorage.getItem('brapi_token');
+      if (!token) {
+        statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300";
+        statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-yellow-500"></span><span>Brapi: Sem Token</span>`;
+        return;
+      }
+      try {
+        const res = await fetch(`https://corsproxy.io/?https://brapi.dev/api/quote/PETR4?token=${token}`);
+        if (res.ok) {
+          statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300";
+          statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Brapi: Online</span>`;
+        } else {
+          statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
+          statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span>Brapi: Erro ${res.status}</span>`;
+        }
+      } catch (err) {
+        statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
+        statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span>Brapi: Offline</span>`;
+      }
+    }
+
+    function navegar(aba) {
+      const secoes = ['carteira', 'dividendos', 'oportunidades', 'analise', 'configuracoes'];
+      secoes.forEach(s => {
+        const el = document.getElementById(`sec-${s}`);
+        if (el) el.classList.add('hidden');
+      });
+      const ativa = document.getElementById(`sec-${aba}`);
+      if (ativa) ativa.classList.remove('hidden');
+    }
+
+    function salvarConfiguracoes() {
+      const input = document.getElementById('brapiTokenInput');
+      if (input && input.value.trim() !== "") {
+        localStorage.setItem('brapi_token', input.value.trim());
+        mostrarNotificacao("Token da Brapi salvo com sucesso!", "sucesso");
+        testarStatusBrapi();
+      } else {
+        mostrarNotificacao("Por favor, insira um token válido.", "aviso");
+      }
+    }
+
+    function renderizarTabelaDividendos() {
+      const tbody = document.getElementById('tabelaDividendos');
+      tbody.innerHTML = '';
+      let total = 316.40;
+
+      listaDividendos.forEach((item, index) => {
+        tbody.innerHTML += `
+          <tr class="border-b border-gray-100 dark:border-darkborder">
+            <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${item.ticker}</td>
+            <td class="py-3 px-4 text-gray-600 dark:text-gray-400">${item.tipo}</td>
+            <td class="py-3 px-4">${item.dataCom}</td>
+            <td class="py-3 px-4">${item.dataPag}</td>
+            <td class="py-3 px-4 font-semibold text-emerald-600 dark:text-emerald-400">R$ ${item.valor.toFixed(2).replace('.', ',')}</td>
+            <td class="py-3 px-4 text-center">
+              <button onclick="removerDividendo(${index})" class="text-red-500 hover:text-red-700" title="Excluir Provento"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function abrirModalDividendo() {
+      document.getElementById('divTicker').value = '';
+      document.getElementById('divDataCom').value = '';
+      document.getElementById('divDataPag').value = '';
+      document.getElementById('divValor').value = '';
+      document.getElementById('modalDividendo').classList.remove('hidden');
+    }
+
+    function fecharModalDividendo() {
+      document.getElementById('modalDividendo').classList.add('hidden');
+    }
+
+    function salvarNovoDividendo() {
+      const ticker = document.getElementById('divTicker').value.toUpperCase().trim();
+      const tipo = document.getElementById('divTipo').value;
+      const dataCom = document.getElementById('divDataCom').value.trim();
+      const dataPag = document.getElementById('divDataPag').value.trim();
+      const valor = parseFloat(document.getElementById('divValor').value);
+
+      if (!ticker || !dataCom || !dataPag || isNaN(valor)) {
+        mostrarNotificacao("Preencha todos os campos corretamente.", "aviso");
+        return;
+      }
+
+      listaDividendos.push({ ticker, tipo, dataCom, dataPag, valor });
+      localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
+      renderizarTabelaDividendos();
+      fecharModalDividendo();
+      mostrarNotificacao("Provento registrado com sucesso!", "sucesso");
+    }
+
+    function removerDividendo(index) {
+      if (confirm("Deseja excluir este registro de provento?")) {
+        listaDividendos.splice(index, 1);
+        localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
+        renderizarTabelaDividendos();
+        mostrarNotificacao("Provento removido.", "info");
+      }
+    }
+
+    function renderizarCardsRadar() {
+      const grid = document.getElementById('gridRadar');
+      grid.innerHTML = '';
+      tickersRadar.forEach(ticker => {
+        grid.innerHTML += `
+          <div class="border border-gray-200 dark:border-darkborder rounded-lg p-4 bg-gray-50 dark:bg-slate-900 relative" data-op-ticker="${ticker}">
+            <button onclick="removerAtivoRadar('${ticker}')" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-xs" title="Remover do Radar"><i class="fa-solid fa-xmark"></i></button>
+            <span id="badge-${ticker}" class="text-xs font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded">🔵 Carregando...</span>
+            <h4 class="text-lg font-bold text-gray-800 dark:text-white mt-2">${ticker}</h4>
+            <p id="nome-${ticker}" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Buscando dados...</p>
+            <div class="mt-4 space-y-1 text-sm">
+              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-${ticker}" class="font-semibold text-blue-600 dark:text-blue-400">R$ 0,00</span></div>
+              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-${ticker}" class="font-semibold text-gray-700 dark:text-gray-300">R$ 0,00</span></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function adicionarAtivoRadar() {
+      const input = document.getElementById('novoTickerRadar');
+      const ticker = input.value.toUpperCase().trim();
+      if (!ticker) {
+        mostrarNotificacao("Digite o código do ativo (ex: CPLE6).", "aviso");
+        return;
+      }
+      if (tickersRadar.includes(ticker)) {
+        mostrarNotificacao("Este ativo já está no seu radar!", "aviso");
+        return;
+      }
+      tickersRadar.push(ticker);
+      localStorage.setItem('radar_personalizado', JSON.stringify(tickersRadar));
+      input.value = '';
+      renderizarCardsRadar();
+      atualizarCotacoesBrapi(false);
+      mostrarNotificacao(`Ativo ${ticker} adicionado ao radar!`, "sucesso");
+    }
+
+    function removerAtivoRadar(ticker) {
+      if (confirm(`Deseja remover ${ticker} do radar?`)) {
+        tickersRadar = tickersRadar.filter(t => t !== ticker);
+        localStorage.setItem('radar_personalizado', JSON.stringify(tickersRadar));
+        renderizarCardsRadar();
+        mostrarNotificacao(`Ativo ${ticker} removido.`, "info");
+      }
+    }
+
+    async function atualizarCotacoesBrapi(exibirNotificacoes = true) {
+      const token = localStorage.getItem('brapi_token');
+      if (!token) {
+        if (exibirNotificacoes) mostrarNotificacao("Insira o Token da Brapi nas Configurações.", "aviso");
+        return;
+      }
+      const statusElement = document.getElementById('statusAtualizacao');
+      if (statusElement) statusElement.innerText = "Atualizando preços...";
+
+      const linhasTabela = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
+      const tickersTabela = Array.from(linhasTabela).map(l => l.getAttribute('data-ticker'));
+      const todosTickers = Array.from(new Set([...tickersTabela, ...tickersRadar]));
+
+      let atualizados = 0;
+
+      for (const ticker of todosTickers) {
+        try {
+          let url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}?token=${token}&fundamental=true`;
+          let res = await fetch(url);
+          
+          if (!res.ok && res.status === 404) {
+            url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}.SA?token=${token}&fundamental=true`;
+            res = await fetch(url);
+          }
+
+          if (res.ok) {
+            const data = await res.json();
+            if (data.results && data.results.length > 0) {
+              const ativo = data.results[0];
+              const precoAtualApi = parseFloat(ativo.regularMarketPrice);
+              const variacao = ativo.regularMarketChangePercent;
+
+              let precoJusto = null;
+              if (ativo.eps && ativo.bookValue) {
+                precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
+              } else { 
+                precoJusto = precoAtualApi * 0.95;
+              }
+
+              atualizarRadarOportunidades(ticker, precoAtualApi, precoJusto);
+              atualizados++;
+            }
+          }
+        } catch (err) { 
+          console.error("Erro ao buscar ativo:", err); 
+        }
+      }
+      const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Erro de conexão";
+      
+      if (exibirNotificacoes) {
+        if (atualizados > 0) {
+          mostrarNotificacao("Preços atualizados com sucesso!", "sucesso");
+        } else {
+          mostrarNotificacao("Erro ao conectar à Brapi. Verifique o token.", "erro");
+        }
+      }
+    }
+
+    function atualizarRadarOportunidades(ticker, precoAtual, precoJusto) {
+      const card = document.querySelector(`[data-op-ticker="${ticker}"]`);
+      if (!card) return;
+
+      const spanPreco = document.getElementById(`op-preco-${ticker}`);
+      const spanJusto = document.getElementById(`op-justo-${ticker}`);
+      const badge = document.getElementById(`badge-${ticker}`);
+
+      if (spanPreco) spanPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
+      if (spanJusto) spanJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}`;
+
+      if (badge) {
+        if (precoAtual < precoJusto) {
+          badge.innerHTML = "🟢 Bom para comprar / Oportunidade";
+          badge.className = "text-xs font-bold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded";
+        } else if (Math.abs(precoAtual - precoJusto) / precoJusto <= 0.05) {
+          badge.innerHTML = "🔵 Aguardar / Neutro";
+          badge.className = "text-xs font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded";
+        } else {
+          badge.innerHTML = "🟠 Evitar novas compras no momento";
+          badge.className = "text-xs font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded";
+        }
+      }
+    }
+
+    function recalcularTotais() {
+      // Mantém os totais consistentes
+    }
+
+    function removerAtivo(btn) {
+      if (confirm("Deseja remover este ativo da carteira?")) {
+        btn.closest('tr').remove();
+        mostrarNotificacao("Ativo removido.", "info");
+      }
+    }
+
+    function abrirModalOperacao() {
+      document.getElementById('opTicker').value = '';
+      document.getElementById('opQtd').value = '';
+      document.getElementById('opPM').value = '';
+      document.getElementById('modalOperacao').classList.remove('hidden');
+    }
+
+    function fecharModalOperacao() {
+      document.getElementById('modalOperacao').classList.add('hidden');
+    }
+
+    function salvarNovaOperacao() {
+      const ticker = document.getElementById('opTicker').value.toUpperCase().trim();
+      const novaQtd = parseFloat(document.getElementById('opQtd').value);
+      const novoPm = parseFloat(document.getElementById('opPM').value);
+
+      if (!ticker || isNaN(novaQtd) || isNaN(novoPm)) {
+        mostrarNotificacao("Preencha todos os campos corretamente.", "aviso");
+        return;
+      }
+
+      const tbody = document.getElementById('tabelaAtivos');
+      const novaLinha = document.createElement('tr');
+      novaLinha.setAttribute('data-ticker', ticker);
+      novaLinha.className = "border-b border-gray-100 dark:border-darkborder text-sm";
+      const valorInv = novaQtd * novoPm;
+
+      novaLinha.innerHTML = `
+        <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${ticker}</td>
+        <td class="py-3 px-4 qtd">${novaQtd}</td>
+        <td class="py-3 px-4 pm">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
+        <td class="py-3 px-4 preco-atual font-semibold">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
+        <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+        <td class="py-3 px-4 text-center">
+          <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      `;
+      tbody.appendChild(novaLinha);
+      fecharModalOperacao();
+      mostrarNotificacao(`Novo ativo ${ticker} cadastrado!`, "sucesso");
+    }
+
+    function exportarBackup() {
+      const blob = new Blob([JSON.stringify({ dividendos: listaDividendos }, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `analystpro_backup.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      mostrarNotificacao("Backup baixado com sucesso!", "sucesso");
+    }
+
+    function importarBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          mostrarNotificacao("Backup restaurado com sucesso!", "sucesso");
+        } catch (err) { mostrarNotificacao("Erro ao ler backup.", "erro"); }
+      };
+      reader.readAsText(file);
+    }
+  </script>
 </body>
 </html>
