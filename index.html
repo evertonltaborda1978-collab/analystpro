@@ -231,30 +231,6 @@
 
       <!-- SEÇÃO: DIVIDENDOS -->
       <section id="sec-dividendos" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-6 transition-colors">
-        
-        <!-- ÍCONES / ATALHOS DE DIVIDENDOS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <div onclick="abrirModalDividendo()" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-darkborder rounded-lg cursor-pointer hover:border-emerald-500 transition group">
-            <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
-              <i class="fa-solid fa-hand-holding-dollar"></i>
-            </div>
-            <div>
-              <h4 class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-emerald-600 transition">Registrar Provento</h4>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Adicionar novo dividendo / JCP</p>
-            </div>
-          </div>
-
-          <div onclick="mostrarProximosDividendosModal()" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-darkborder rounded-lg cursor-pointer hover:border-blue-500 transition group">
-            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
-              <i class="fa-solid fa-calendar-alt"></i>
-            </div>
-            <div>
-              <h4 class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-blue-600 transition">Próximos Dividendos</h4>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Visualizar Datas COM e Pagamentos</p>
-            </div>
-          </div>
-        </div>
-
         <div class="flex justify-between items-center flex-wrap gap-4">
           <div>
             <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
@@ -262,6 +238,9 @@
             </h3>
             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Acompanhe todos os JCPs e Dividendos recebidos na sua carteira:</p>
           </div>
+          <button onclick="abrirModalDividendo()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-plus"></i> Registrar Provento
+          </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -609,10 +588,6 @@
 
     function fecharModalDividendo() {
       document.getElementById('modalDividendo').classList.add('hidden');
-    }
-
-    function mostrarProximosDividendosModal() {
-      mostrarNotificacao("Acompanhe as próximas Datas COM na aba de Oportunidades.", "info");
     }
 
     function salvarNovoDividendo() {
