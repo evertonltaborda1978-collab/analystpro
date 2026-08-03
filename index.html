@@ -453,9 +453,11 @@
       const statusElement = document.getElementById('statusAtualizacao');
       if (statusElement) statusElement.innerText = "Atualizando preços...";
 
-      const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
-      const tickersTabela = Array.from(new Set(Array.from(linhas).map(l => l.getAttribute('data-ticker'))));
+      // Recolhe os tickers da tabela da carteira E do radar de oportunidades
+      const linhasTabela = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
+      const tickersTabela = Array.from(linhasTabela).map(l => l.getAttribute('data-ticker'));
       const tickersRadar = ['SAPR11', 'PETR4', 'KLBN3'];
+      
       const todosTickers = Array.from(new Set([...tickersTabela, ...tickersRadar]));
 
       let atualizados = 0;
@@ -474,7 +476,7 @@
               const precoAtual = ativo.regularMarketPrice;
               const variacao = ativo.regularMarketChangePercent;
               
-              // Cálculo inteligente de Preço Justo (Graham: Raiz de 22.5 * LPA * VPA se disponíveis, senão mantém estimativa segura)
+              // Cálculo de Preço Justo (Graham ou referência padrão)
               let precoJusto = null;
               if (ativo.eps && ativo.bookValue) {
                 precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
@@ -493,7 +495,7 @@
       recalcularTotais();
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Falha ao atualizar";
-      if (atualizados > 0) mostrarNotificacao("Cotações e preços justos atualizados com sucesso!", "sucesso");
+      if (atualizados > 0) mostrarNotificacao("Cotações e radar atualizados com sucesso!", "sucesso");
     }
 
     function atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto) {
