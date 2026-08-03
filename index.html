@@ -132,7 +132,7 @@
             <button onclick="abrirModalOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-plus"></i> Nova Operação
             </button>
-            <button onclick="atualizarCotacoesBrapi()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
+            <button onclick="atualizarCotacoesBrapi(true)" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
             </button>
             <button onclick="exportarBackup()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
@@ -389,9 +389,9 @@
         recalcularTotais();
         mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
         
-        // Atualização automática ao logar
+        // Atualização automática ao logar (passando 'false' para não poluir com notificações automáticas no login)
         setTimeout(() => {
-          atualizarCotacoesBrapi();
+          atualizarCotacoesBrapi(false);
         }, 800);
       } else {
         mostrarNotificacao("Senha incorreta! Tente novamente.", "erro");
@@ -448,10 +448,10 @@
       }
     }
 
-    async function atualizarCotacoesBrapi() {
+    async function atualizarCotacoesBrapi(exibirNotificacoes = true) {
       const token = localStorage.getItem('brapi_token');
       if (!token) {
-        mostrarNotificacao("Insira o Token da Brapi nas Configurações.", "aviso");
+        if (exibirNotificacoes) mostrarNotificacao("Insira o Token da Brapi nas Configurações.", "aviso");
         return;
       }
       const statusElement = document.getElementById('statusAtualizacao');
@@ -480,15 +480,17 @@
             const data = await res.json();
             if (data.results && data.results.length > 0) {
               const ativo = data.results[0];
-              const precoAtualApi = ativo.regularMarketPrice;
+              const precoAtualApi = parseFloat(ativo.regularMarketPrice);
               const variacao = ativo.regularMarketChangePercent;
               
               const linhaTabela = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
               if (linhaTabela) {
                 const celulaPreco = linhaTabela.querySelector('.preco-atual');
                 if (celulaPreco) {
-                  const precoTelaAtual = parseFloat(celulaPreco.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
-                  if (Math.abs(precoTelaAtual - precoAtualApi) > 0.001) {
+                  const textoPrecoTela = celulaPreco.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+                  const precoTelaAtual = parseFloat(textoPrecoTela);
+                  
+                  if (!isNaN(precoTelaAtual) && precoTelaAtual.toFixed(2) !== precoAtualApi.toFixed(2)) {
                     houveMudanca = true;
                   }
                 }
@@ -515,14 +517,16 @@
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Erro de conexão/CORS";
       
-      if (atualizados > 0) {
-        if (houveMudanca) {
-          mostrarNotificacao("Preços atualizados com sucesso via Brapi!", "sucesso");
+      if (exibirNotificacoes) {
+        if (atualizados > 0) {
+          if (houveMudanca) {
+            mostrarNotificacao("Preços atualizados com sucesso via Brapi!", "sucesso");
+          } else {
+            mostrarNotificacao("Os preços já estão atualizados!", "info");
+          }
         } else {
-          mostrarNotificacao("Os preços já estão atualizados!", "info");
+          mostrarNotificacao("Não foi possível conectar à Brapi. Verifique o seu token.", "erro");
         }
-      } else {
-        mostrarNotificacao("Não foi possível conectar à Brapi. Verifique o seu token.", "erro");
       }
     }
 
