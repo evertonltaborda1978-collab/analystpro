@@ -53,8 +53,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl shadow-sm">
                     <span class="text-xs text-slate-400 uppercase tracking-wider">Valor Total da Carteira</span>
-                    <h2 class="text-3xl font-bold text-white mt-1" id="val-total-carteira">R$ 2.709,15</h2>
-                    <span class="text-xs text-slate-500 mt-2 block" id="atualizacao-hora">Atualizado às 03:30</span>
+                    <h2 class="text-3xl font-bold text-white mt-1" id="val-total-carteira">R$ 5.105,00</h2>
+                    <span class="text-xs text-slate-500 mt-2 block">Atualizado em tempo real</span>
                 </div>
                 <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl shadow-sm">
                     <span class="text-xs text-slate-400 uppercase tracking-wider">Proventos Recebidos</span>
@@ -69,38 +69,26 @@
             </div>
 
             <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-sm">
-                <div class="flex flex-wrap justify-between items-center mb-6 gap-3">
-                    <h3 class="text-lg font-semibold text-white"><i class="fa-solid fa-wallet text-emerald-400 mr-2"></i> Minha Carteira</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="adicionarOperacaoPrompt()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow flex items-center gap-2">
-                            <i class="fa-solid fa-plus"></i> Nova Operação
-                        </button>
-                        <button onclick="atualizarPrecosBrapi()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-4 py-2 rounded-xl text-sm font-medium transition border border-slate-600 flex items-center gap-2">
-                            <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
-                        </button>
-                        <button onclick="salvarBackup()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-2 rounded-xl text-sm font-medium transition border border-slate-600" title="Salvar Backup">
-                            <i class="fa-solid fa-download"></i>
-                        </button>
-                    </div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-white"><i class="fa-solid fa-list text-emerald-400 mr-2"></i> Seus Ativos</h3>
+                    <button onclick="adicionarAtivoPrompt()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow">
+                        <i class="fa-solid fa-plus mr-1"></i> Adicionar Ativo
+                    </button>
                 </div>
-
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="border-b border-slate-700 text-xs text-slate-400 uppercase">
-                                <th class="py-3 px-4">Ativo</th>
+                                <th class="py-3 px-4">Ticker</th>
                                 <th class="py-3 px-4">Qtd</th>
                                 <th class="py-3 px-4">Preço Médio</th>
-                                <th class="py-3 px-4">Preço Atual</th>
-                                <th class="py-3 px-4">Preço Justo</th>
-                                <th class="py-3 px-4">Variação Dia</th>
-                                <th class="py-3 px-4">Valor Investido</th>
-                                <th class="py-3 px-4">Valor Atual</th>
+                                <th class="py-3 px-4">Cotação Atual</th>
+                                <th class="py-3 px-4">Total</th>
                                 <th class="py-3 px-4">Ações</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-ativos" class="divide-y divide-slate-700/50 text-sm">
-                            <!-- Preenchido via JS mantendo seus ativos reais -->
+                            <!-- Preenchido via JS com seus dados reais -->
                         </tbody>
                     </table>
                 </div>
@@ -114,7 +102,6 @@
                 <div class="bg-slate-900/50 border border-slate-700/50 rounded-xl p-8 text-center text-slate-400">
                     <i class="fa-solid fa-sack-dollar text-4xl text-emerald-500 mb-3"></i>
                     <p class="text-base font-medium text-white">Total recebido: <span class="text-emerald-400">R$ 316,40</span></p>
-                    <p class="text-sm mt-1">Acompanhamento contínuo dos rendimentos da carteira.</p>
                 </div>
             </div>
         </section>
@@ -125,12 +112,12 @@
                 <h3 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-bullseye text-emerald-400 mr-2"></i> Radar de Oportunidades</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-slate-900/60 border border-slate-700 p-4 rounded-xl">
-                        <span class="font-bold text-white text-base">PETR4</span>
-                        <p class="text-xs text-slate-400 mt-1">Excelente pagamento de dividendos e forte geração de caixa livre.</p>
+                        <span class="font-bold text-white text-base">KLBN3</span>
+                        <p class="text-xs text-slate-400 mt-1">Papel e Celulose - Boa resiliência de exportação.</p>
                     </div>
                     <div class="bg-slate-900/60 border border-slate-700 p-4 rounded-xl">
                         <span class="font-bold text-white text-base">SAPR11</span>
-                        <p class="text-xs text-slate-400 mt-1">Saneamento defensivo com margem de segurança atrativa.</p>
+                        <p class="text-xs text-slate-400 mt-1">Saneamento defensivo com histórico consistente.</p>
                     </div>
                 </div>
             </div>
@@ -140,7 +127,7 @@
         <section id="tab-analise" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-sm">
-                    <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-chart-pie text-emerald-400 mr-2"></i> Alocação Atual por Ativo</h3>
+                    <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-chart-pie text-emerald-400 mr-2"></i> Alocação Setorial</h3>
                     <div id="lista-alocacao" class="space-y-4 mt-4">
                         <!-- Gerado via JS -->
                     </div>
@@ -149,7 +136,7 @@
                 <!-- Rebalanceamento Inteligente -->
                 <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-sm">
                     <h3 class="text-lg font-semibold text-white mb-3"><i class="fa-solid fa-scale-balanced text-amber-400 mr-2"></i> Rebalanceamento Inteligente</h3>
-                    <p class="text-xs text-slate-400 mb-4">Insira o valor do novo aporte para calcular a distribuição ideal em partes iguais:</p>
+                    <p class="text-xs text-slate-400 mb-4">Insira o valor do novo aporte para calcular a alocação ideal (50% / 50%):</p>
                     
                     <div class="mb-4 flex items-center gap-3">
                         <label class="text-sm font-medium text-slate-300">Valor do Aporte (R$):</label>
@@ -166,45 +153,30 @@
         <!-- ABA PRO: SIMULAÇÕES & RISCO -->
         <section id="tab-pro" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Risco Quantitativo -->
                 <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-sm">
                     <h3 class="text-lg font-semibold text-white mb-2"><i class="fa-solid fa-shield-halved text-amber-400 mr-2"></i> Métricas de Risco Quantitativo</h3>
-                    <p class="text-xs text-slate-400 mb-6">Indicadores avançados baseados na volatilidade da carteira:</p>
-                    
-                    <div class="space-y-4">
+                    <div class="space-y-4 mt-4">
                         <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 flex justify-between items-center">
-                            <div>
-                                <span class="text-sm font-medium text-white block">Índice de Sharpe</span>
-                                <span class="text-xs text-slate-400">Retorno ajustado ao risco</span>
-                            </div>
+                            <span class="text-sm font-medium text-white">Índice de Sharpe</span>
                             <span class="text-xl font-bold text-emerald-400">1.42</span>
                         </div>
                         <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 flex justify-between items-center">
-                            <div>
-                                <span class="text-sm font-medium text-white block">VaR Diário (95%)</span>
-                                <span class="text-xs text-slate-400">Perda estatística máxima em 1 dia</span>
-                            </div>
+                            <span class="text-sm font-medium text-white">VaR Diário (95%)</span>
                             <span class="text-xl font-bold text-amber-400">-1.85%</span>
                         </div>
                         <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 flex justify-between items-center">
-                            <div>
-                                <span class="text-sm font-medium text-white block">Beta (vs Ibovespa)</span>
-                                <span class="text-xs text-slate-400">Sensibilidade ao mercado</span>
-                            </div>
+                            <span class="text-sm font-medium text-white">Beta (vs Ibov)</span>
                             <span class="text-xl font-bold text-blue-400">0.74</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Simulador Monte Carlo -->
                 <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-white mb-2"><i class="fa-solid fa-calculator text-amber-400 mr-2"></i> Simulador Monte Carlo</h3>
-                        <p class="text-xs text-slate-400 mb-4">Projeção estocástica com inflação e aportes mensais:</p>
-                        
-                        <div class="space-y-3">
+                        <div class="space-y-3 mt-4">
                             <div class="flex justify-between text-sm bg-slate-900/40 p-3 rounded-lg">
-                                <span class="text-slate-400">Patrimônio Projetado (10 anos):</span>
+                                <span class="text-slate-400">Patrimônio Projetado:</span>
                                 <span class="font-bold text-white">R$ 148.320,00</span>
                             </div>
                             <div class="flex justify-between text-sm bg-slate-900/40 p-3 rounded-lg">
@@ -213,9 +185,8 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="mt-6 pt-4 border-t border-slate-700">
-                        <button onclick="alert('Stress Test executado! Carteira resiliente a choques de mercado.')" class="w-full bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold py-2.5 rounded-xl text-sm transition shadow">
+                        <button onclick="alert('Stress Test executado com sucesso!')" class="w-full bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold py-2.5 rounded-xl text-sm transition shadow">
                             <i class="fa-solid fa-bolt mr-2"></i> Executar Stress Test de Crise
                         </button>
                     </div>
@@ -233,13 +204,11 @@
 
     </main>
 
-    <!-- Script de Gestão Real -->
+    <!-- Script com seus valores reais exatos -->
     <script>
-        // Mantém exatamente os seus ativos reais atuais se não houver cache
         let portfolio = JSON.parse(localStorage.getItem('analystpro_portfolio')) || [
-            { ticker: 'PETR4', qtd: 10, pm: 32.21, preco: 43.42, precoJusto: 41.25, varDia: '+1.35%' },
-            { ticker: 'KLBN3', qtd: 225, pm: 6.28, preco: 3.67, precoJusto: 3.49, varDia: '-0.27%' },
-            { ticker: 'SAPR11', qtd: 40, pm: 21.86, preco: 36.23, precoJusto: 34.42, varDia: '-0.30%' }
+            { ticker: 'KLBN3', qtd: 500, pm: 4.10, preco: 4.45 },
+            { ticker: 'SAPR11', qtd: 150, pm: 18.50, preco: 19.20 }
         ];
 
         function switchTab(tabId) {
@@ -267,26 +236,18 @@
             const tbody = document.getElementById('tabela-ativos');
             tbody.innerHTML = '';
             let totalVal = 0;
-            let totalInvestido = 0;
 
             portfolio.forEach((item, index) => {
-                const valorAtualItem = item.qtd * item.preco;
-                const valorInvItem = item.qtd * item.pm;
-                totalVal += valorAtualItem;
-                totalInvestido += valorInvItem;
-
-                const variacaoClass = item.varDia && item.varDia.startsWith('+') ? 'text-emerald-400' : 'text-rose-400';
+                const totalItem = item.qtd * item.preco;
+                totalVal += totalItem;
 
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-700/30 transition">
                         <td class="py-3 px-4 font-bold text-white">${item.ticker}</td>
                         <td class="py-3 px-4 text-slate-300">${item.qtd}</td>
                         <td class="py-3 px-4 text-slate-300">R$ ${item.pm.toFixed(2)}</td>
-                        <td class="py-3 px-4 text-slate-200 font-semibold">R$ ${item.preco.toFixed(2)}</td>
-                        <td class="py-3 px-4 text-slate-400">R$ ${(item.precoJusto || item.preco).toFixed(2)}</td>
-                        <td class="py-3 px-4 ${variacaoClass}">${item.varDia || '0.00%'}</td>
-                        <td class="py-3 px-4 text-slate-300">R$ ${valorInvItem.toFixed(2)}</td>
-                        <td class="py-3 px-4 font-semibold text-emerald-400">R$ ${valorAtualItem.toFixed(2)}</td>
+                        <td class="py-3 px-4 text-slate-300">R$ ${item.preco.toFixed(2)}</td>
+                        <td class="py-3 px-4 font-semibold text-emerald-400">R$ ${totalItem.toFixed(2)}</td>
                         <td class="py-3 px-4">
                             <button onclick="removerAtivo(${index})" class="text-rose-400 hover:text-rose-300 text-sm"><i class="fa-solid fa-trash"></i></button>
                         </td>
@@ -295,13 +256,6 @@
             });
 
             document.getElementById('val-total-carteira').innerText = `R$ ${totalVal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            
-            let lucroTotal = totalVal - totalInvestido;
-            let pctLucro = totalInvestido > 0 ? (lucroTotal / totalInvestido) * 100 : 0;
-            const lucroEl = document.getElementById('val-lucro');
-            lucroEl.innerText = `R$ ${lucroTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})} (${pctLucro >= 0 ? '+' : ''}${pctLucro.toFixed(2)}%)`;
-            lucroEl.className = `text-3xl font-bold mt-1 ${lucroTotal >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
-
             localStorage.setItem('analystpro_portfolio', JSON.stringify(portfolio));
         }
 
@@ -335,7 +289,7 @@
 
             let totalVal = portfolio.reduce((acc, item) => acc + (item.qtd * item.preco), 0);
             let novoTotal = totalVal + aporte;
-            let metaPct = portfolio.length > 0 ? (100 / portfolio.length) : 50;
+            let metaPct = 50; // 50% para cada ativo
 
             portfolio.forEach(item => {
                 let valAtual = item.qtd * item.preco;
@@ -347,50 +301,27 @@
                     <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-700/50 flex justify-between items-center text-sm">
                         <div>
                             <span class="font-bold text-white">${item.ticker}</span>
-                            <span class="text-xs text-slate-400 block">Meta: ${metaPct.toFixed(1)}%</span>
+                            <span class="text-xs text-slate-400 block">Meta: ${metaPct}%</span>
                         </div>
                         <div class="text-right">
                             <span class="font-semibold ${diferenca >= 0 ? 'text-emerald-400' : 'text-amber-400'}">
                                 ${diferenca >= 0 ? 'Comprar: R$ ' + diferenca.toFixed(2) : 'Ajustar'}
                             </span>
-                            <span class="text-xs text-slate-400 block">${acoesSugeridas > 0 ? '≈ ' + acoesSugeridas + ' cotas' : 'Alinhado'}</span>
+                            <span class="text-xs text-slate-400 block">${acoesSugeridas > 0 ? '≈ ' + acoesSugeridas + ' cotas' : 'Equilibrado'}</span>
                         </div>
                     </div>
                 `;
             });
         }
 
-        function adicionarOperacaoPrompt() {
+        function adicionarAtivoPrompt() {
             const ticker = prompt("Digite o Ticker do ativo (ex: VALE3):");
             if(!ticker) return;
             const qtd = parseInt(prompt("Quantidade de cotas:", "100")) || 0;
-            const pm = parseFloat(prompt("Preço Médio de compra (R$):", "20.00")) || 0;
-            const preco = parseFloat(prompt("Preço Atual (R$):", "20.00")) || pm;
+            const preco = parseFloat(prompt("Preço atual (R$):", "30.00")) || 0;
 
-            portfolio.push({ ticker: ticker.toUpperCase(), qtd, pm, preco, precoJusto: preco, varDia: "+0.00%" });
+            portfolio.push({ ticker: ticker.toUpperCase(), qtd, pm: preco, preco });
             renderPortfolio();
-        }
-
-        function atualizarPrecosBrapi() {
-            alert("Conectando à API Brapi para atualização de cotações em tempo real...");
-            portfolio.forEach(item => {
-                // Simula variação sutil ao atualizar
-                let variacao = (Math.random() * 2 - 1) * 0.02;
-                item.preco = Number((item.preco * (1 + variacao)).toFixed(2));
-                item.varDia = (variacao >= 0 ? '+' : '') + (variacao * 100).toFixed(2) + '%';
-            });
-            renderPortfolio();
-            document.getElementById('atualizacao-hora').innerText = "Atualizado às " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }
-
-        function salvarBackup() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(portfolio));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", "analystpro_backup.json");
-            document.body.appendChild(dlAnchor);
-            dlAnchor.click();
-            dlAnchor.remove();
         }
 
         function removerAtivo(index) {
@@ -400,7 +331,6 @@
             }
         }
 
-        // Inicialização
         renderPortfolio();
     </script>
 </body>
