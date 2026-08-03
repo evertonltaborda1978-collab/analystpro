@@ -9,6 +9,17 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
 
+  <!-- AVISO DE NOVA VERSÃO DISPONÍVEL (OCULTO POR PADRÃO) -->
+  <div id="bannerAtualizacao" class="fixed top-0 left-0 right-0 bg-blue-600 text-white text-xs sm:text-sm py-2 px-4 z-50 flex items-center justify-between shadow-md hidden">
+    <div class="flex items-center gap-2 mx-auto">
+      <i class="fa-solid fa-circle-exclamation animate-bounce"></i>
+      <span>Uma nova versão do <b>AnalystPro</b> está disponível!</span>
+      <button onclick="recarregarPaginaNovaVersao()" class="bg-white text-blue-600 font-bold px-3 py-1 rounded shadow hover:bg-blue-50 transition ml-2">
+        Atualizar Agora
+      </button>
+    </div>
+  </div>
+
   <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
@@ -352,6 +363,9 @@
   </div>
 
   <script>
+    // VERSÃO ATUAL DO APLICATIVO LOCAL
+    const VERSAO_ATUAL = "1.0.0";
+
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
     }
@@ -364,7 +378,27 @@
         document.getElementById('brapiTokenInput').value = tokenSalvo;
       }
       recalcularTotais();
+      verificarAtualizacaoApp();
     });
+
+    // Função que verifica o arquivo version.json no GitHub
+    async function verificarAtualizacaoApp() {
+      try {
+        const resposta = await fetch('./version.json?t=' + new Date().getTime());
+        if (resposta.ok) {
+          const dados =- await resposta.json(); // aguarda dados
+          if (dados && dados.versao && dados.versao !== VERSAO_ATUAL) {
+            document.getElementById('bannerAtualizacao').classList.remove('hidden');
+          }
+        }
+      } catch (e) {
+        console.log("Verificação de versão ignorada offline ou arquivo ausente.");
+      }
+    }
+
+    function recarregarPaginaNovaVersao() {
+      window.location.reload(true);
+    }
 
     function mostrarNotificacao(mensagem, tipo = 'sucesso') {
       const container = document.getElementById('toastContainer');
