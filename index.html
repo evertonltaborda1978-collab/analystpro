@@ -130,19 +130,19 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-blue-500 border border-gray-100 dark:border-darkborder transition-colors">
           <span class="text-sm text-gray-500 dark:text-gray-400">Valor Total da Carteira</span>
-          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 dark:text-white mt-1">R$ 2.712,00</h2>
-          <span id="statusAtualizacao" class="text-xs text-gray-400">Atualizado às 11:40</span>
+          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 dark:text-white mt-1">R$ 0,00</h2>
+          <span id="statusAtualizacao" class="text-xs text-gray-400">Aguardando atualização...</span>
         </div>
 
         <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-emerald-500 border border-gray-100 dark:border-darkborder transition-colors">
           <span class="text-sm text-gray-500 dark:text-gray-400">Proventos Recebidos</span>
-          <h2 id="totalProventosHeader" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 316,40</h2>
+          <h2 id="totalProventosHeader" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00</h2>
           <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
         </div>
 
         <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-cyan-500 border border-gray-100 dark:border-darkborder transition-colors">
           <span class="text-sm text-gray-500 dark:text-gray-400">Lucro / Prejuízo (Ações)</span>
-          <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 102,50 <span class="text-sm font-normal">(+3.93%)</span></h2>
+          <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00 <span class="text-sm font-normal">(+0.00%)</span></h2>
         </div>
       </div>
 
@@ -150,11 +150,11 @@
       <section id="sec-carteira" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder transition-colors">
         <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
           <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-            <i class="fa-solid fa-wallet text-blue-600 dark:text-blue-400"></i> Seus Ativos
+            <i class="fa-solid fa-wallet text-blue-600 dark:text-blue-400"></i> Minha Carteira
           </h3>
           <div class="flex gap-2 flex-wrap">
             <button onclick="abrirModalOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 transition">
-              <i class="fa-solid fa-plus"></i> Adicionar Ativo
+              <i class="fa-solid fa-plus"></i> Nova Operação
             </button>
             <button onclick="atualizarCotacoesBrapi(true)" class="bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-darkborder px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 transition">
               <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
@@ -174,77 +174,52 @@
             <thead>
               <tr class="border-b border-gray-200 dark:border-darkborder bg-gray-50 dark:bg-slate-900 text-gray-600 dark:text-gray-400 text-sm font-semibold">
                 <th class="py-3 px-4">Ativo</th>
-                <th class="py-3 px-4">Quantidade</th>
+                <th class="py-3 px-4">Qtd</th>
                 <th class="py-3 px-4">Preço Médio</th>
                 <th class="py-3 px-4">Preço Atual</th>
-                <th class="py-3 px-4">Total</th>
-                <th class="py-3 px-4">Rentabilidade</th>
+                <th class="py-3 px-4">Preço Justo</th>
+                <th class="py-3 px-4">Variação Dia</th>
+                <th class="py-3 px-4">Valor Investido</th>
+                <th class="py-3 px-4">Valor Atual</th>
                 <th class="py-3 px-4 text-center">Ações</th>
               </tr>
             </thead>
             <tbody id="tabelaAtivos" class="divide-y divide-gray-100 dark:divide-darkborder text-sm">
-              <tr data-ticker="SAPR11">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">SAPR11 - Sanepar</td>
-                <td class="py-3 px-4 qtd">25</td>
-                <td class="py-3 px-4 pm">R$ 35,00</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 36,40</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 910,00</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+4.00%</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                </td>
-              </tr>
               <tr data-ticker="PETR4">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">PETR4 - Petrobras</td>
-                <td class="py-3 px-4 qtd">20</td>
-                <td class="py-3 px-4 pm">R$ 41,00</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 42,80</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 856,00</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+4.39%</td>
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">PETR4</td>
+                <td class="py-3 px-4 qtd">10</td>
+                <td class="py-3 px-4 pm">R$ 32,21</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 32,21</td>
+                <td class="py-3 px-4 preco-justo-tabela">R$ 27,22</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+                <td class="py-3 px-4 valor-investido">R$ 322,10</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 322,10</td>
                 <td class="py-3 px-4 text-center">
                   <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
                 </td>
               </tr>
               <tr data-ticker="KLBN3">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">KLBN3 - Klabin</td>
-                <td class="py-3 px-4 qtd">100</td>
-                <td class="py-3 px-4 pm">R$ 3,55</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 3,68</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 368,00</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+3.66%</td>
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">KLBN3</td>
+                <td class="py-3 px-4 qtd">225</td>
+                <td class="py-3 px-4 pm">R$ 6,28</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 6,28</td>
+                <td class="py-3 px-4 preco-justo-tabela">R$ 3,81</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+                <td class="py-3 px-4 valor-investido">R$ 1.413,00</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 1.413,00</td>
                 <td class="py-3 px-4 text-center">
                   <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
                 </td>
               </tr>
-              <tr data-ticker="BBAS3">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">BBAS3 - Banco do Brasil</td>
-                <td class="py-3 px-4 qtd">15</td>
-                <td class="py-3 px-4 pm">R$ 20,50</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 21,25</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 318,75</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+3.66%</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                </td>
-              </tr>
-              <tr data-ticker="VALE3">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">VALE3 - Vale</td>
-                <td class="py-3 px-4 qtd">2</td>
-                <td class="py-3 px-4 pm">R$ 73,00</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 74,44</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 148,88</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+1.97%</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                </td>
-              </tr>
-              <tr data-ticker="TAEE11">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">TAEE11 - Taesa</td>
-                <td class="py-3 px-4 qtd">3</td>
-                <td class="py-3 px-4 pm">R$ 39,00</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 39,82</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 119,46</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+2.10%</td>
+              <tr data-ticker="SAPR11">
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">SAPR11</td>
+                <td class="py-3 px-4 qtd">40</td>
+                <td class="py-3 px-4 pm">R$ 21,86</td>
+                <td class="py-3 px-4 preco-atual font-semibold">R$ 21,86</td>
+                <td class="py-3 px-4 preco-justo-tabela">R$ 21,35</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+                <td class="py-3 px-4 valor-investido">R$ 874,40</td>
+                <td class="py-3 px-4 valor-atual font-semibold">R$ 874,40</td>
                 <td class="py-3 px-4 text-center">
                   <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
                 </td>
@@ -271,11 +246,11 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-4 rounded-lg">
             <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase">Total Acumulado de Proventos</span>
-            <h4 id="valorTotalProventos" class="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mt-1">R$ 316,40</h4>
+            <h4 id="valorTotalProventos" class="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mt-1">R$ 0,00</h4>
           </div>
           <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 p-4 rounded-lg">
             <span class="text-xs font-semibold text-blue-800 dark:text-blue-400 uppercase">Média Mensal Estimada</span>
-            <h4 id="mediaMensalProventos" class="text-2xl font-bold text-blue-700 dark:text-blue-300 mt-1">R$ 8,78 / mês</h4>
+            <h4 id="mediaMensalProventos" class="text-2xl font-bold text-blue-700 dark:text-blue-300 mt-1">R$ 0,00 / mês</h4>
           </div>
         </div>
 
@@ -330,18 +305,18 @@
           <div class="p-4 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 space-y-3">
             <h4 class="font-semibold text-gray-700 dark:text-gray-300">Alocação Setorial</h4>
             <div>
-              <div class="flex justify-between text-xs font-medium mb-1"><span>Saneamento (SAPR11)</span> <span>33.5%</span></div>
-              <div class="w-full bg-gray-200 dark:bg-slate-800 h-2.5 rounded-full"><div class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full" style="width: 33.5%"></div></div>
+              <div class="flex justify-between text-xs font-medium mb-1"><span>Papel e Celulose (KLBN3)</span> <span>56%</span></div>
+              <div class="w-full bg-gray-200 dark:bg-slate-800 h-2.5 rounded-full"><div class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full" style="width: 56%"></div></div>
             </div>
             <div>
-              <div class="flex justify-between text-xs font-medium mb-1"><span>Petróleo e Gás (PETR4)</span> <span>31.5%</span></div>
-              <div class="w-full bg-gray-200 dark:bg-slate-800 h-2.5 rounded-full"><div class="bg-emerald-600 dark:bg-emerald-500 h-2.5 rounded-full" style="width: 31.5%"></div></div>
+              <div class="flex justify-between text-xs font-medium mb-1"><span>Saneamento (SAPR11)</span> <span>34%</span></div>
+              <div class="w-full bg-gray-200 dark:bg-slate-800 h-2.5 rounded-full"><div class="bg-emerald-600 dark:bg-emerald-500 h-2.5 rounded-full" style="width: 34%"></div></div>
             </div>
           </div>
           <div class="p-4 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 flex flex-col justify-center items-center text-center">
             <i class="fa-solid fa-shield-halved text-4xl text-emerald-600 dark:text-emerald-400 mb-2"></i>
-            <h4 class="font-bold text-gray-800 dark:text-white">Saúde da Carteira: Excelente</h4>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Sua carteira está diversificada e rentável (+3.93%).</p>
+            <h4 class="font-bold text-gray-800 dark:text-white">Saúde da Carteira: Boa</h4>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Sua carteira possui ótima diversificação entre setores defensivos e geradores de caixa.</p>
           </div>
         </div>
       </section>
@@ -580,9 +555,10 @@
     function renderizarTabelaDividendos() {
       const tbody = document.getElementById('tabelaDividendos');
       tbody.innerHTML = '';
-      let total = 316.40;
+      let total = 0;
 
       listaDividendos.forEach((item, index) => {
+        total += item.valor;
         tbody.innerHTML += `
           <tr class="border-b border-gray-100 dark:border-darkborder">
             <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${item.ticker}</td>
@@ -596,6 +572,10 @@
           </tr>
         `;
       });
+
+      document.getElementById('valorTotalProventos').innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('totalProventosHeader').innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('mediaMensalProventos').innerText = `R$ ${(total / 36).toFixed(2).replace('.', ',')} / mês`;
     }
 
     function abrirModalDividendo() {
@@ -716,6 +696,10 @@
               const ativo = data.results[0];
               const precoAtualApi = parseFloat(ativo.regularMarketPrice);
               const variacao = ativo.regularMarketChangePercent;
+              const nomeEmpresa = ativo.longName || ativo.shortName || ticker;
+
+              const nomeEl = document.getElementById(`nome-${ticker}`);
+              if (nomeEl) nomeEl.innerText = nomeEmpresa;
 
               let precoJusto = null;
               if (ativo.eps && ativo.bookValue) {
@@ -724,6 +708,7 @@
                 precoJusto = precoAtualApi * 0.95;
               }
 
+              atualizarLinhaTabela(ticker, precoAtualApi, variacao, precoJusto);
               atualizarRadarOportunidades(ticker, precoAtualApi, precoJusto);
               atualizados++;
             }
@@ -732,6 +717,7 @@
           console.error("Erro ao buscar ativo:", err); 
         }
       }
+      recalcularTotais();
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Erro de conexão";
       
@@ -742,6 +728,33 @@
           mostrarNotificacao("Erro ao conectar à Brapi. Verifique o token.", "erro");
         }
       }
+    }
+
+    function atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto) {
+      const linhas = document.querySelectorAll(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
+      linhas.forEach(linha => {
+        const celulaPreco = linha.querySelector('.preco-atual');
+        const celulaJusto = linha.querySelector('.preco-justo-tabela');
+        const celulaVariacao = linha.querySelector('.variacao');
+        const celulaQtd = linha.querySelector('.qtd');
+        const celulaValorAtual = linha.querySelector('.valor-atual');
+
+        if (celulaPreco && precoAtual !== undefined) {
+          celulaPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
+        }
+        if (celulaJusto && precoJusto !== undefined) {
+          celulaJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}`;
+        }
+        if (celulaVariacao && variacao !== undefined) {
+          const sinal = variacao >= 0 ? '+' : '';
+          celulaVariacao.innerText = `${sinal}${variacao.toFixed(2)}%`;
+          celulaVariacao.className = variacao >= 0 ? "py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium" : "py-3 px-4 variacao text-red-500 font-medium";
+        }
+        if (celulaQtd && celulaValorAtual && precoAtual !== undefined) {
+          const qtd = parseFloat(celulaQtd.innerText.replace(',', '.'));
+          celulaValorAtual.innerText = `R$ ${(qtd * precoAtual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+      });
     }
 
     function atualizarRadarOportunidades(ticker, precoAtual, precoJusto) {
@@ -770,12 +783,32 @@
     }
 
     function recalcularTotais() {
-      // Mantém os totais consistentes
+      const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
+      let totalInvestido = 0;
+      let totalAtual = 0;
+
+      linhas.forEach(linha => {
+        const vInv = parseFloat(linha.querySelector('.valor-investido')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
+        const vAtu = parseFloat(linha.querySelector('.valor-atual')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
+        totalInvestido += vInv;
+        totalAtual += vAtu;
+      });
+
+      document.getElementById('totalCarteira').innerText = `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      
+      const lucroElem = document.getElementById('lucroPrejuizo');
+      const diferenca = totalAtual - totalInvestido;
+      const percentual = totalInvestido > 0 ? (diferenca / totalInvestido) * 100 : 0;
+      const sinal = diferenca >= 0 ? '+' : '';
+
+      lucroElem.innerHTML = `R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-sm font-normal">(${sinal}${percentual.toFixed(2)}%)</span>`;
+      lucroElem.className = diferenca >= 0 ? "text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-3xl font-bold text-red-500 mt-1";
     }
 
     function removerAtivo(btn) {
       if (confirm("Deseja remover este ativo da carteira?")) {
         btn.closest('tr').remove();
+        recalcularTotais();
         mostrarNotificacao("Ativo removido.", "info");
       }
     }
@@ -802,36 +835,75 @@
       }
 
       const tbody = document.getElementById('tabelaAtivos');
-      const novaLinha = document.createElement('tr');
-      novaLinha.setAttribute('data-ticker', ticker);
-      novaLinha.className = "border-b border-gray-100 dark:border-darkborder text-sm";
-      const valorInv = novaQtd * novoPm;
+      const linhaExistente = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
 
-      novaLinha.innerHTML = `
-        <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${ticker}</td>
-        <td class="py-3 px-4 qtd">${novaQtd}</td>
-        <td class="py-3 px-4 pm">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
-        <td class="py-3 px-4 preco-atual font-semibold">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
-        <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-        <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
-        <td class="py-3 px-4 text-center">
-          <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-        </td>
-      `;
-      tbody.appendChild(novaLinha);
+      if (linhaExistente) {
+        const qtdAntiga = parseFloat(linhaExistente.querySelector('.qtd').innerText.replace(',', '.'));
+        const pmAntigo = parseFloat(linhaExistente.querySelector('.pm').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+
+        const totalQtd = qtdAntiga + novaQtd;
+        const totalInvestidoAntigo = qtdAntiga * pmAntigo;
+        const totalInvestidoNovoAporte = novaQtd * novoPm;
+        const novoPrecoMedio = (totalInvestidoAntigo + totalInvestidoNovoAporte) / totalQtd;
+        const novoValorInvTotal = totalInvestidoAntigo + totalInvestidoNovoAporte;
+
+        linhaExistente.querySelector('.qtd').innerText = totalQtd;
+        linhaExistente.querySelector('.pm').innerText = `R$ ${novoPrecoMedio.toFixed(2).replace('.', ',')}`;
+        linhaExistente.querySelector('.valor-investido').innerText = `R$ ${novoValorInvTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        const precoAtualStr = linhaExistente.querySelector('.preco-atual').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+        const precoAtual = parseFloat(precoAtualStr) || novoPrecoMedio;
+        linhaExistente.querySelector('.valor-atual').innerText = `R$ ${(totalQtd * precoAtual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        mostrarNotificacao(`Aporte adicionado em ${ticker}!`, "sucesso");
+      } else {
+        const novaLinha = document.createElement('tr');
+        novaLinha.setAttribute('data-ticker', ticker);
+        novaLinha.className = "border-b border-gray-100 dark:border-darkborder text-sm";
+        const valorInv = novaQtd * novoPm;
+
+        novaLinha.innerHTML = `
+          <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${ticker}</td>
+          <td class="py-3 px-4 qtd">${novaQtd}</td>
+          <td class="py-3 px-4 pm">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
+          <td class="py-3 px-4 preco-atual font-semibold">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
+          <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
+          <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+          <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(novaLinha);
+        mostrarNotificacao(`Novo ativo ${ticker} cadastrado!`, "sucesso");
+      }
+
       fecharModalOperacao();
-      mostrarNotificacao(`Novo ativo ${ticker} cadastrado!`, "sucesso");
+      recalcularTotais();
     }
 
     function exportarBackup() {
-      const blob = new Blob([JSON.stringify({ dividendos: listaDividendos }, null, 2)], { type: 'application/json' });
+      const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
+      const ativos = [];
+      linhas.forEach(l => {
+        ativos.push({
+          ticker: l.getAttribute('data-ticker'),
+          qtd: l.querySelector('.qtd')?.innerText || "0",
+          pm: l.querySelector('.pm')?.innerText || "R$ 0,00",
+          precoAtual: l.querySelector('.preco-atual')?.innerText || "R$ 0,00",
+          valorInvestido: l.querySelector('.valor-investido')?.innerText || "R$ 0,00",
+          valorAtual: l.querySelector('.valor-atual')?.innerText || "R$ 0,00"
+        });
+      });
+      const blob = new Blob([JSON.stringify({ ativos, dividendos: listaDividendos }, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `analystpro_backup.json`;
       a.click();
       URL.revokeObjectURL(url);
-      mostrarNotificacao("Backup baixado com sucesso!", "sucesso");
+      mostrarNotificacao("Backup baixado!", "sucesso");
     }
 
     function importarBackup(event) {
@@ -840,6 +912,36 @@
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
+          const dados = JSON.parse(e.target.result);
+          if (dados && Array.isArray(dados.ativos)) {
+            const tbody = document.getElementById('tabelaAtivos');
+            tbody.innerHTML = '';
+            dados.ativos.forEach(a => {
+              const tr = document.createElement('tr');
+              tr.setAttribute('data-ticker', a.ticker);
+              tr.className = "border-b border-gray-100 dark:border-darkborder text-sm";
+              tr.innerHTML = `
+                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${a.ticker}</td>
+                <td class="py-3 px-4 qtd">${a.qtd}</td>
+                <td class="py-3 px-4 pm">${a.pm}</td>
+                <td class="py-3 px-4 preco-atual font-semibold">${a.precoAtual}</td>
+                <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
+                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+                <td class="py-3 px-4 valor-investido">${a.valorInvestido}</td>
+                <td class="py-3 px-4 valor-atual font-semibold">${a.valorAtual}</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              `;
+              tbody.appendChild(tr);
+            });
+            recalcularTotais();
+          }
+          if (dados && Array.isArray(dados.dividendos)) {
+            listaDividendos = dados.dividendos;
+            localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
+            renderizarTabelaDividendos();
+          }
           mostrarNotificacao("Backup restaurado com sucesso!", "sucesso");
         } catch (err) { mostrarNotificacao("Erro ao ler backup.", "erro"); }
       };
