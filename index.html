@@ -75,7 +75,7 @@
       <div id="formLogin" class="space-y-4">
         <div>
           <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Senha de Acesso</label>
-          <input type="password" id="senhaAcesso" autocomplete="new-password" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <input type="password" id="senhaAcesso" autocomplete="new-password" onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
         <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
           Entrar no Sistema
@@ -374,7 +374,7 @@
   </div>
 
   <script>
-    // VERSÃO ATUALIZADA PARA 1.0.4 (Para forçar o banner de aviso a aparecer!)
+    // VERSÃO ATUALIZADA PARA 1.0.4
     const VERSAO_ATUAL = "1.0.4";
 
     if (!localStorage.getItem('app_senha')) {
@@ -393,7 +393,6 @@
       document.getElementById('telaLogin').classList.remove('hidden');
       document.getElementById('appConteudo').classList.add('hidden');
       
-      // Limpeza forçada do campo de senha para evitar preenchimento automático
       const campoSenha = document.getElementById('senhaAcesso');
       if (campoSenha) {
         campoSenha.value = '';
@@ -410,7 +409,6 @@
       verificarAtualizacaoApp();
     });
 
-    // VERIFICAÇÃO AUTOMÁTICA DE VERSÃO
     async function verificarAtualizacaoApp() {
       try {
         const resposta = await fetch('./index.html?t=' + new Date().getTime());
