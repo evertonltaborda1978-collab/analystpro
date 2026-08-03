@@ -212,7 +212,7 @@
         </div>
       </section>
 
-      <!-- SEÇÃO: DIVIDENDOS (PROFISSIONAL) -->
+      <!-- SEÇÃO: DIVIDENDOS -->
       <section id="sec-dividendos" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
         <div class="flex justify-between items-center flex-wrap gap-4">
           <div>
@@ -250,7 +250,7 @@
               </tr>
             </thead>
             <tbody id="tabelaDividendos" class="divide-y divide-gray-100 text-sm">
-              <!-- Dados inseridos via script -->
+              <!-- Inserido via script -->
             </tbody>
           </table>
         </div>
@@ -374,6 +374,7 @@
   </div>
 
   <script>
+    // VERSÃO DO SISTEMA (Basta alterar este número quando quiser avisar que há nova versão!)
     const VERSAO_ATUAL = "1.0.3";
 
     if (!localStorage.getItem('app_senha')) {
@@ -401,13 +402,19 @@
       verificarAtualizacaoApp();
     });
 
+    // VERIFICAÇÃO AUTOMÁTICA DE VERSÃO (Sem precisar criar arquivo version.json separado)
     async function verificarAtualizacaoApp() {
       try {
-        const resposta = await fetch('./version.json?t=' + new Date().getTime());
+        const resposta = await fetch('./index.html?t=' + new Date().getTime());
         if (resposta.ok) {
-          const dados = await resposta.json();
-          if (dados && dados.versao && dados.versao !== VERSAO_ATUAL) {
-            document.getElementById('bannerAtualizacao').classList.remove('hidden');
+          const htmlTexto = await resposta.text();
+          // Procura no código online se há uma versão diferente declarada
+          const match = htmlTexto.match(/const VERSAO_ATUAL = "([^"]+)"/);
+          if (match && match[1]) {
+            const versaoOnline = match[1];
+            if (versaoOnline !== VERSAO_ATUAL) {
+              document.getElementById('bannerAtualizacao').classList.remove('hidden');
+            }
           }
         }
       } catch (e) {
@@ -624,7 +631,6 @@
       const todosTickers = Array.from(new Set([...tickersTabela, ...tickersRadar]));
 
       let atualizados = 0;
-      let houveMudanca = false;
 
       for (const ticker of todosTickers) {
         try {
@@ -646,18 +652,6 @@
 
               const nomeEl = document.getElementById(`nome-${ticker}`);
               if (nomeEl) nomeEl.innerText = nomeEmpresa;
-              
-              const linhaTabela = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
-              if (linhaTabela) {
-                const celulaPreco = linhaTabela.querySelector('.preco-atual');
-                if (celulaPreco) {
-                  const textoPrecoTela = celulaPreco.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
-                  const precoTelaAtual = parseFloat(textoPrecoTela);
-                  if (!isNaN(precoTelaAtual) && precoTelaAtual.toFixed(2) !== precoAtualApi.toFixed(2)) {
-                    houveMudanca = true;
-                  }
-                }
-              }
 
               let precoJusto = null;
               if (ativo.eps && ativo.bookValue) {
