@@ -1,27 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AnalystPro - Gestão de Investimentos</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            darkbg: '#0f172a',
-            darkcard: '#1e293b',
-            darkborder: '#334155'
-          }
-        }
-      }
-    }
-  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 dark:bg-darkbg font-sans text-gray-800 dark:text-gray-100 transition-colors duration-200">
+<body class="bg-gray-100 font-sans text-gray-800">
 
   <!-- AVISO DE NOVA VERSÃO DISPONÍVEL -->
   <div id="bannerAtualizacao" class="fixed top-0 left-0 right-0 bg-blue-600 text-white text-xs sm:text-sm py-2 px-4 z-50 flex items-center justify-between shadow-md hidden">
@@ -39,30 +25,32 @@
 
   <!-- MODAL POP-UP PARA NOVA OPERAÇÃO -->
   <div id="modalOperacao" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-darkborder">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
           <i class="fa-solid fa-plus-circle text-emerald-600"></i> Cadastrar Nova Operação
         </h3>
-        <button onclick="fecharModalOperacao()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <button onclick="fecharModalOperacao()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
+
       <div class="space-y-4">
         <div>
-          <label for="opTicker" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Código do Ativo (Ticker)</label>
-          <input type="text" id="opTicker" placeholder="Ex: SAPR11, PETR4" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm uppercase focus:ring-2 focus:ring-emerald-500 outline-none">
+          <label for="opTicker" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Código do Ativo (Ticker)</label>
+          <input type="text" id="opTicker" placeholder="Ex: SAPR11, PETR4" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-emerald-500 outline-none">
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="opQtd" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Quantidade</label>
-            <input type="number" id="opQtd" placeholder="Ex: 20" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <label for="opQtd" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Quantidade</label>
+            <input type="number" id="opQtd" placeholder="Ex: 20" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
           <div>
-            <label for="opPM" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Preço da Compra (R$)</label>
-            <input type="number" step="0.01" id="opPM" placeholder="Ex: 20.00" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <label for="opPM" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Preço da Compra (R$)</label>
+            <input type="number" step="0.01" id="opPM" placeholder="Ex: 20.00" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
           </div>
         </div>
+        
         <div class="flex gap-3 pt-2">
-          <button onclick="fecharModalOperacao()" class="w-1/2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 font-medium py-2 rounded-lg text-sm transition">
+          <button onclick="fecharModalOperacao()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 rounded-lg text-sm transition">
             Cancelar
           </button>
           <button onclick="salvarNovaOperacao()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg text-sm transition">
@@ -75,18 +63,19 @@
 
   <!-- TELA DE LOGIN / AUTENTICAÇÃO -->
   <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100 dark:border-darkborder">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100">
       <div class="text-center mb-6">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-full mb-3">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-3">
           <i class="fa-solid fa-lock text-2xl"></i>
         </div>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">AnalystPro</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Digite sua senha para acessar sua carteira</p>
+        <h2 class="text-2xl font-bold text-gray-900">AnalystPro</h2>
+        <p class="text-sm text-gray-500 mt-1">Digite sua senha para acessar sua carteira</p>
       </div>
+
       <div id="formLogin" class="space-y-4">
         <div>
-          <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha de Acesso</label>
-          <input type="password" id="senhaAcesso" autocomplete="new-password" onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 mb-1">Senha de Acesso</label>
+          <input type="password" id="senhaAcesso" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
         <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
           Entrar no Sistema
@@ -97,75 +86,76 @@
 
   <!-- APLICAÇÃO PRINCIPAL -->
   <div id="appConteudo" class="hidden">
-    <header class="bg-blue-600 dark:bg-slate-900 text-white shadow-md border-b border-blue-700 dark:border-darkborder transition-colors duration-200">
-      <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
+    <header class="bg-blue-600 text-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <div class="flex items-center gap-4">
           <h1 class="text-2xl font-bold flex items-center gap-2">
-            <i class="fa-solid fa-chart-line text-blue-300 dark:text-blue-500"></i> AnalystPro
+            <i class="fa-solid fa-chart-line"></i> AnalystPro
           </h1>
-          <div id="statusApiBrapi" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-700 dark:bg-slate-800 text-blue-200 dark:text-blue-400">
+          <div id="statusApiBrapi" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-700 text-blue-200">
             <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
             <span>Brapi: Verificando...</span>
           </div>
         </div>
-        <nav class="flex items-center gap-4 sm:gap-6 text-sm font-medium flex-wrap">
+
+        <nav class="flex items-center gap-6 text-sm font-medium">
           <a href="#carteira" onclick="navegar('carteira')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-wallet"></i> Carteira</a>
           <a href="#dividendos" onclick="navegar('dividendos')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-hand-holding-dollar"></i> Dividendos</a>
           <a href="#oportunidades" onclick="navegar('oportunidades')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-bullseye"></i> Oportunidades</a>
           <a href="#analise" onclick="navegar('analise')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-chart-pie"></i> Análise</a>
           <a href="#configuracoes" onclick="navegar('configuracoes')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-gear"></i> Configurações</a>
-          <button onclick="alternarTema()" title="Alternar Tema Claro/Escuro" class="bg-blue-700 dark:bg-slate-800 hover:bg-blue-800 dark:hover:bg-slate-700 px-3 py-1.5 rounded-lg text-white transition flex items-center justify-center">
-            <i id="iconeTema" class="fa-solid fa-moon"></i>
-          </button>
-          <button onclick="bloquearApp()" title="Sair / Bloquear" class="ml-1 text-blue-200 hover:text-white"><i class="fa-solid fa-right-from-bracket"></i></button>
+          <button onclick="bloquearApp()" title="Sair / Bloquear" class="ml-2 text-blue-200 hover:text-white"><i class="fa-solid fa-right-from-bracket"></i></button>
         </nav>
       </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-blue-500 border border-gray-100 dark:border-darkborder transition-colors">
-          <span class="text-sm text-gray-500 dark:text-gray-400">Valor Total da Carteira</span>
-          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 dark:text-white mt-1">R$ 0,00</h2>
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+          <span class="text-sm text-gray-500">Valor Total da Carteira</span>
+          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 mt-1">R$ 0,00</h2>
           <span id="statusAtualizacao" class="text-xs text-gray-400">Aguardando atualização...</span>
         </div>
-        <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-emerald-500 border border-gray-100 dark:border-darkborder transition-colors">
-          <span class="text-sm text-gray-500 dark:text-gray-400">Proventos Recebidos</span>
-          <h2 id="totalProventosHeader" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00</h2>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-emerald-500">
+          <span class="text-sm text-gray-500">Proventos Recebidos</span>
+          <h2 class="text-3xl font-bold text-emerald-600 mt-1">R$ 316,40</h2>
           <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
         </div>
-        <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-cyan-500 border border-gray-100 dark:border-darkborder transition-colors">
-          <span class="text-sm text-gray-500 dark:text-gray-400">Lucro / Prejuízo (Ações)</span>
-          <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00 <span class="text-sm font-normal">(+0.00%)</span></h2>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-cyan-500">
+          <span class="text-sm text-gray-500">Lucro / Prejuízo (Ações)</span>
+          <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 mt-1">R$ 0,00 <span class="text-sm font-normal">(+0.00%)</span></h2>
         </div>
       </div>
 
       <!-- SEÇÃO: CARTEIRA -->
-      <section id="sec-carteira" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder transition-colors">
+      <section id="sec-carteira" class="bg-white p-6 rounded-lg shadow-sm">
         <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
-          <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-            <i class="fa-solid fa-wallet text-blue-600 dark:text-blue-400"></i> Minha Carteira
+          <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+            <i class="fa-solid fa-wallet text-blue-600"></i> Minha Carteira
           </h3>
           <div class="flex gap-2 flex-wrap">
-            <button onclick="abrirModalOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 transition">
+            <button onclick="abrirModalOperacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-plus"></i> Nova Operação
             </button>
-            <button onclick="atualizarCotacoesBrapi(true)" class="bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-darkborder px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 transition">
+            <button onclick="atualizarCotacoesBrapi(true)" class="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-rotate"></i> Atualizar Preços (Brapi)
             </button>
-            <button onclick="exportarBackup()" class="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-darkborder px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 transition">
+            <button onclick="exportarBackup()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5">
               <i class="fa-solid fa-download"></i> Salvar Backup
             </button>
-            <label class="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-darkborder px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 cursor-pointer transition">
+            <label class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium text-sm flex items-center gap-1.5 cursor-pointer">
               <i class="fa-solid fa-upload"></i> Carregar Backup
               <input type="file" id="importInput" accept=".json" onchange="importarBackup(event)" class="hidden">
             </label>
           </div>
         </div>
+
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="border-b border-gray-200 dark:border-darkborder bg-gray-50 dark:bg-slate-900 text-gray-600 dark:text-gray-400 text-sm font-semibold">
+              <tr class="border-b border-gray-200 bg-gray-50 text-gray-600 text-sm font-semibold">
                 <th class="py-3 px-4">Ativo</th>
                 <th class="py-3 px-4">Qtd</th>
                 <th class="py-3 px-4">Preço Médio</th>
@@ -177,14 +167,14 @@
                 <th class="py-3 px-4 text-center">Ações</th>
               </tr>
             </thead>
-            <tbody id="tabelaAtivos" class="divide-y divide-gray-100 dark:divide-darkborder text-sm">
+            <tbody id="tabelaAtivos" class="divide-y divide-gray-100 text-sm">
               <tr data-ticker="PETR4">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">PETR4</td>
+                <td class="py-3 px-4 font-bold text-gray-800">PETR4</td>
                 <td class="py-3 px-4 qtd">10</td>
                 <td class="py-3 px-4 pm">R$ 32,21</td>
                 <td class="py-3 px-4 preco-atual font-semibold">R$ 32,21</td>
                 <td class="py-3 px-4 preco-justo-tabela">R$ 27,22</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
                 <td class="py-3 px-4 valor-investido">R$ 322,10</td>
                 <td class="py-3 px-4 valor-atual font-semibold">R$ 322,10</td>
                 <td class="py-3 px-4 text-center">
@@ -192,12 +182,12 @@
                 </td>
               </tr>
               <tr data-ticker="KLBN3">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">KLBN3</td>
+                <td class="py-3 px-4 font-bold text-gray-800">KLBN3</td>
                 <td class="py-3 px-4 qtd">225</td>
                 <td class="py-3 px-4 pm">R$ 6,28</td>
                 <td class="py-3 px-4 preco-atual font-semibold">R$ 6,28</td>
                 <td class="py-3 px-4 preco-justo-tabela">R$ 3,81</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
                 <td class="py-3 px-4 valor-investido">R$ 1.413,00</td>
                 <td class="py-3 px-4 valor-atual font-semibold">R$ 1.413,00</td>
                 <td class="py-3 px-4 text-center">
@@ -205,12 +195,12 @@
                 </td>
               </tr>
               <tr data-ticker="SAPR11">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">SAPR11</td>
+                <td class="py-3 px-4 font-bold text-gray-800">SAPR11</td>
                 <td class="py-3 px-4 qtd">40</td>
                 <td class="py-3 px-4 pm">R$ 21,86</td>
                 <td class="py-3 px-4 preco-atual font-semibold">R$ 21,86</td>
                 <td class="py-3 px-4 preco-justo-tabela">R$ 21,35</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
                 <td class="py-3 px-4 valor-investido">R$ 874,40</td>
                 <td class="py-3 px-4 valor-atual font-semibold">R$ 874,40</td>
                 <td class="py-3 px-4 text-center">
@@ -223,251 +213,118 @@
       </section>
 
       <!-- SEÇÃO: DIVIDENDOS -->
-      <section id="sec-dividendos" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-6 transition-colors">
+      <section id="sec-dividendos" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
+        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> Histórico de Proventos e Dividendos
+        </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-darkborder p-4 rounded-xl flex items-center justify-between shadow-sm">
-            <div>
-              <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Gerenciamento</span>
-              <h4 class="text-lg font-bold text-gray-800 dark:text-white mt-0.5">Registrar Provento</h4>
-            </div>
-            <button onclick="abrirModalDividendo()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition shadow-sm">
-              <i class="fa-solid fa-plus-circle"></i> Adicionar
-            </button>
+          <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg">
+            <span class="text-xs font-semibold text-emerald-800 uppercase">Total Acumulado de Proventos</span>
+            <h4 class="text-2xl font-bold text-emerald-700 mt-1">R$ 316,40</h4>
           </div>
-          <div class="bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-darkborder p-4 rounded-xl flex items-center justify-between shadow-sm">
-            <div>
-              <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Calendário</span>
-              <h4 class="text-lg font-bold text-gray-800 dark:text-white mt-0.5">Próximos Dividendos</h4>
-            </div>
-            <button onclick="abrirProximosDividendos()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition shadow-sm">
-              <i class="fa-solid fa-calendar-alt"></i> Ver Agenda
-            </button>
+          <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+            <span class="text-xs font-semibold text-blue-800 uppercase">Média Mensal Estimada</span>
+            <h4 class="text-2xl font-bold text-blue-700 mt-1">R$ 8,78 / mês</h4>
           </div>
-        </div>
-
-        <div class="flex justify-between items-center flex-wrap gap-4 pt-2">
-          <div>
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-              <i class="fa-solid fa-hand-holding-dollar text-emerald-600 dark:text-emerald-400"></i> Histórico de Proventos e Dividendos
-            </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Acompanhe todos os JCPs e Dividendos recebidos na sua carteira:</p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 p-4 rounded-lg">
-            <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase">Total Acumulado de Proventos</span>
-            <h4 id="valorTotalProventos" class="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mt-1">R$ 0,00</h4>
-          </div>
-          <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 p-4 rounded-lg">
-            <span class="text-xs font-semibold text-blue-800 dark:text-blue-400 uppercase">Média Mensal Estimada</span>
-            <h4 id="mediaMensalProventos" class="text-2xl font-bold text-blue-700 dark:text-blue-300 mt-1">R$ 0,00 / mês</h4>
-          </div>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-gray-200 dark:border-darkborder bg-gray-50 dark:bg-slate-900 text-gray-600 dark:text-gray-400 text-sm font-semibold">
-                <th class="py-3 px-4">Ativo</th>
-                <th class="py-3 px-4">Tipo</th>
-                <th class="py-3 px-4">Data Com</th>
-                <th class="py-3 px-4">Data Pagamento</th>
-                <th class="py-3 px-4">Valor Total (R$)</th>
-                <th class="py-3 px-4 text-center">Ações</th>
-              </tr>
-            </thead>
-            <tbody id="tabelaDividendos" class="divide-y divide-gray-100 dark:divide-darkborder text-sm">
-              <!-- Inserido via script -->
-            </tbody>
-          </table>
         </div>
       </section>
 
-      <!-- SEÇÃO: OPORTUNIDADES -->
-      <section id="sec-oportunidades" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-6 transition-colors">
+      <!-- SEÇÃO: OPORTUNIDADES (RADAR DINÂMICO) -->
+      <section id="sec-oportunidades" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
         <div class="flex justify-between items-center flex-wrap gap-4">
           <div>
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-              <i class="fa-solid fa-bullseye text-blue-600 dark:text-blue-400"></i> Radar de Oportunidades
+            <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <i class="fa-solid fa-bullseye text-blue-600"></i> Radar de Oportunidades
             </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Monitore e adicione ações para acompanhar oportunidades pelo Preço Justo:</p>
+            <p class="text-sm text-gray-600 mt-1">Monitore e adicione ações para acompanhar oportunidades pelo Preço Justo:</p>
           </div>
           <div class="flex gap-2">
-            <input type="text" id="novoTickerRadar" placeholder="Ex: CPLE6, CXSE3" class="px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none">
+            <input type="text" id="novoTickerRadar" placeholder="Ex: CPLE6, CXSE3" class="px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-blue-500 outline-none">
             <button onclick="adicionarAtivoRadar()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition">
               <i class="fa-solid fa-plus"></i> Adicionar ao Radar
             </button>
           </div>
         </div>
+
         <div id="gridRadar" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Cards do radar dinâmico -->
+          <!-- Os cards do radar serão injetados aqui automaticamente -->
         </div>
       </section>
 
       <!-- SEÇÃO: ANÁLISE -->
-      <section id="sec-analise" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-6 transition-colors">
-        <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-          <i class="fa-solid fa-chart-pie text-cyan-600 dark:text-cyan-400"></i> Análise de Alocação de Ativos
+      <section id="sec-analise" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-6">
+        <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie text-cyan-600"></i> Análise de Alocação de Ativos
         </h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Distribuição percentual da sua carteira por setor:</p>
+        <p class="text-sm text-gray-600">Distribuição percentual da sua carteira por setor:</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="p-4 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 space-y-3">
-            <h4 class="font-semibold text-gray-700 dark:text-gray-300">Alocação Setorial</h4>
+          <div class="p-4 border border-gray-100 rounded-lg bg-gray-50 space-y-3">
+            <h4 class="font-semibold text-gray-700">Alocação Setorial</h4>
             <div>
               <div class="flex justify-between text-xs font-medium mb-1"><span>Papel e Celulose (KLBN3)</span> <span>56%</span></div>
-              <div class="w-full bg-gray-200 dark:bg-slate-800 h-2.5 rounded-full"><div class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full" style="width: 56%"></div></div>
+              <div class="w-full bg-gray-200 h-2.5 rounded-full"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 56%"></div></div>
             </div>
             <div>
               <div class="flex justify-between text-xs font-medium mb-1"><span>Saneamento (SAPR11)</span> <span>34%</span></div>
-              <div class="w-full bg-gray-200 dark:bg-slate-800 h-2.5 rounded-full"><div class="bg-emerald-600 dark:bg-emerald-500 h-2.5 rounded-full" style="width: 34%"></div></div>
+              <div class="w-full bg-gray-200 h-2.5 rounded-full"><div class="bg-emerald-600 h-2.5 rounded-full" style="width: 34%"></div></div>
             </div>
           </div>
-          <div class="p-4 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 flex flex-col justify-center items-center text-center">
-            <i class="fa-solid fa-shield-halved text-4xl text-emerald-600 dark:text-emerald-400 mb-2"></i>
-            <h4 class="font-bold text-gray-800 dark:text-white">Saúde da Carteira: Boa</h4>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Sua carteira possui ótima diversificação entre setores defensivos e geradores de caixa.</p>
+          <div class="p-4 border border-gray-100 rounded-lg bg-gray-50 flex flex-col justify-center items-center text-center">
+            <i class="fa-solid fa-shield-halved text-4xl text-emerald-600 mb-2"></i>
+            <h4 class="font-bold text-gray-800">Saúde da Carteira: Boa</h4>
+            <p class="text-xs text-gray-500 mt-1">Sua carteira possui ótima diversificação entre setores defensivos e geradores de caixa.</p>
           </div>
         </div>
       </section>
 
       <!-- SEÇÃO: CONFIGURAÇÕES -->
-      <section id="sec-configuracoes" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-8 transition-colors">
+      <section id="sec-configuracoes" class="bg-white p-6 rounded-lg shadow-sm hidden space-y-8">
         <div>
-          <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-gear text-blue-600 dark:text-blue-400"></i> Configurações da API Brapi
+          <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-gear text-blue-600"></i> Configurações da API Brapi
           </h3>
           <div class="max-w-md">
-            <label for="brapiTokenInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Token de Acesso da Brapi (brapi.dev)</label>
-            <input type="text" id="brapiTokenInput" placeholder="Cole seu token da Brapi aqui" class="w-full p-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-md text-sm mb-4 focus:ring-2 focus:ring-blue-500 outline-none">
-            <button onclick="salvarConfiguracoes()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm transition">
+            <label for="brapiTokenInput" class="block text-sm font-medium text-gray-700 mb-2">Token de Acesso da Brapi (brapi.dev)</label>
+            <input type="text" id="brapiTokenInput" placeholder="Cole seu token da Brapi aqui" class="w-full p-2 border border-gray-300 rounded-md text-sm mb-4 focus:ring-2 focus:ring-blue-500 outline-none">
+            <button onclick="salvarConfiguracoes()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm">
               Salvar Token
             </button>
           </div>
         </div>
       </section>
+
     </main>
   </div>
 
-  <!-- MODAL PARA CADASTRAR PROVENTO -->
-  <div id="modalDividendo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-darkborder">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <i class="fa-solid fa-plus-circle text-emerald-600"></i> Registrar Novo Provento
-        </h3>
-        <button onclick="fecharModalDividendo()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Ticker do Ativo</label>
-          <input type="text" id="divTicker" placeholder="Ex: SAPR11" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm uppercase outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Tipo de Provento</label>
-          <select id="divTipo" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
-            <option value="JCP / Dividendo">JCP / Dividendo</option>
-            <option value="Dividendo Extra">Dividendo Extra</option>
-            <option value="Dividendo Trimestral">Dividendo Trimestral</option>
-          </select>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Data Com</label>
-            <input type="text" id="divDataCom" placeholder="Ex: 15/12/2025" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Data Pagamento</label>
-            <input type="text" id="divDataPag" placeholder="Ex: 28/12/2025" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Valor Total (R$)</label>
-          <input type="number" step="0.01" id="divValor" placeholder="Ex: 45.20" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button onclick="fecharModalDividendo()" class="w-1/2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 font-medium py-2 rounded-lg text-sm transition">
-            Cancelar
-          </button>
-          <button onclick="salvarNovoDividendo()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg text-sm transition">
-            Salvar Provento
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script>
-    const VERSAO_ATUAL = "1.0.7";
+    const VERSAO_ATUAL = "1.0.2";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
     }
 
+    // Lista padrão de ativos do radar salva no navegador
     let tickersRadar = JSON.parse(localStorage.getItem('radar_personalizado')) || ['SAPR11', 'PETR4', 'KLBN3', 'BBAS3', 'VALE3', 'TAEE11'];
-    let listaDividendos = JSON.parse(localStorage.getItem('dividendos_salvos')) || [
-      { ticker: 'SAPR11', tipo: 'JCP / Dividendo', dataCom: '15/12/2025', dataPag: '28/12/2025', valor: 45.20 },
-      { ticker: 'PETR4', tipo: 'Dividendo Extra', dataCom: '10/11/2025', dataPag: '25/11/2025', valor: 88.50 },
-      { ticker: 'KLBN3', tipo: 'Dividendo Trimestral', dataCom: '02/08/2025', dataPag: '18/08/2025', valor: 182.70 }
-    ];
 
     document.addEventListener('DOMContentLoaded', () => {
-      const temaSalvo = localStorage.getItem('app_tema') || 'dark';
-      if (temaSalvo === 'dark') {
-        document.documentElement.classList.add('dark');
-        document.getElementById('iconeTema').className = "fa-solid fa-sun";
-      } else {
-        document.documentElement.classList.remove('dark');
-        document.getElementById('iconeTema').className = "fa-solid fa-moon";
-      }
-
       document.getElementById('telaLogin').classList.remove('hidden');
       document.getElementById('appConteudo').classList.add('hidden');
-
-      const campoSenha = document.getElementById('senhaAcesso');
-      if (campoSenha) {
-        campoSenha.value = '';
-        setTimeout(() => { campoSenha.value = ''; }, 100);
-      }
-
       const tokenSalvo = localStorage.getItem('brapi_token');
       if (tokenSalvo) {
         document.getElementById('brapiTokenInput').value = tokenSalvo;
       }
-
       renderizarCardsRadar();
-      renderizarTabelaDividendos();
       recalcularTotais();
       verificarAtualizacaoApp();
     });
 
-    function alternarTema() {
-      const html = document.documentElement;
-      const icone = document.getElementById('iconeTema');
-      if (html.classList.contains('dark')) {
-        html.classList.remove('dark');
-        localStorage.setItem('app_tema', 'light');
-        icone.className = "fa-solid fa-moon";
-        mostrarNotificacao("Modo claro ativado.", "info");
-      } else {
-        html.classList.add('dark');
-        localStorage.setItem('app_tema', 'dark');
-        icone.className = "fa-solid fa-sun";
-        mostrarNotificacao("Modo escuro ativado.", "info");
-      }
-    }
-
     async function verificarAtualizacaoApp() {
       try {
-        const resposta = await fetch('./index.html?t=' + new Date().getTime());
+        const resposta = await fetch('./version.json?t=' + new Date().getTime());
         if (resposta.ok) {
-          const htmlTexto = await resposta.text();
-          const match = htmlTexto.match(/const VERSAO_ATUAL = "([^"]+)"/);
-          if (match && match[1]) {
-            const versaoOnline = match[1];
-            if (versaoOnline !== VERSAO_ATUAL) {
-              document.getElementById('bannerAtualizacao').classList.remove('hidden');
-            }
+          const dados = await resposta.json();
+          if (dados && dados.versao && dados.versao !== VERSAO_ATUAL) {
+            document.getElementById('bannerAtualizacao').classList.remove('hidden');
           }
         }
       } catch (e) {
@@ -482,26 +339,13 @@
     function mostrarNotificacao(mensagem, tipo = 'sucesso') {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
-      const cores = {
-        sucesso: 'bg-emerald-600 text-white',
-        erro: 'bg-red-600 text-white',
-        aviso: 'bg-amber-500 text-white',
-        info: 'bg-blue-600 text-white'
-      };
-      const icones = {
-        sucesso: 'fa-circle-check',
-        erro: 'fa-circle-xmark',
-        aviso: 'fa-triangle-exclamation',
-        info: 'fa-circle-info'
-      };
+      const cores = { sucesso: 'bg-emerald-600 text-white', erro: 'bg-red-600 text-white', aviso: 'bg-amber-500 text-white', info: 'bg-blue-600 text-white' };
+      const icones = { sucesso: 'fa-circle-check', erro: 'fa-circle-xmark', aviso: 'fa-triangle-exclamation', info: 'fa-circle-info' };
       toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-sm font-medium transform transition-all duration-300 translate-y-2 opacity-0 ${cores[tipo] || cores.info}`;
       toast.innerHTML = `<i class="fa-solid ${icones[tipo] || icones.info} text-lg"></i> <span>${mensagem}</span>`;
       container.appendChild(toast);
       setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
-      setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-      }, 3500);
+      setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => toast.remove(), 300); }, 3500);
     }
 
     function autenticar() {
@@ -514,9 +358,7 @@
         testarStatusBrapi();
         recalcularTotais();
         mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
-        setTimeout(() => {
-          atualizarCotacoesBrapi(false);
-        }, 800);
+        setTimeout(() => { atualizarCotacoesBrapi(false); }, 800);
       } else {
         mostrarNotificacao("Senha incorreta! Tente novamente.", "erro");
       }
@@ -525,8 +367,6 @@
     function bloquearApp() {
       document.getElementById('appConteudo').classList.add('hidden');
       document.getElementById('telaLogin').classList.remove('hidden');
-      const campoSenha = document.getElementById('senhaAcesso');
-      if (campoSenha) campoSenha.value = '';
       mostrarNotificacao("Sessão encerrada.", "info");
     }
 
@@ -534,21 +374,21 @@
       const statusContainer = document.getElementById('statusApiBrapi');
       const token = localStorage.getItem('brapi_token');
       if (!token) {
-        statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300";
+        statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800";
         statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-yellow-500"></span><span>Brapi: Sem Token</span>`;
         return;
       }
       try {
         const res = await fetch(`https://corsproxy.io/?https://brapi.dev/api/quote/PETR4?token=${token}`);
         if (res.ok) {
-          statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300";
+          statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800";
           statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Brapi: Online</span>`;
         } else {
-          statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
+          statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800";
           statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span>Brapi: Erro ${res.status}</span>`;
         }
       } catch (err) {
-        statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
+        statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800";
         statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span>Brapi: Offline</span>`;
       }
     }
@@ -574,83 +414,19 @@
       }
     }
 
-    function renderizarTabelaDividendos() {
-      const tbody = document.getElementById('tabelaDividendos');
-      tbody.innerHTML = '';
-      let total = 0;
-      listaDividendos.forEach((item, index) => {
-        total += item.valor;
-        tbody.innerHTML += `
-          <tr class="border-b border-gray-100 dark:border-darkborder">
-            <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${item.ticker}</td>
-            <td class="py-3 px-4 text-gray-600 dark:text-gray-400">${item.tipo}</td>
-            <td class="py-3 px-4">${item.dataCom}</td>
-            <td class="py-3 px-4">${item.dataPag}</td>
-            <td class="py-3 px-4 font-semibold text-emerald-600 dark:text-emerald-400">R$ ${item.valor.toFixed(2).replace('.', ',')}</td>
-            <td class="py-3 px-4 text-center">
-              <button onclick="removerDividendo(${index})" class="text-red-500 hover:text-red-700" title="Excluir Provento"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
-      });
-      document.getElementById('valorTotalProventos').innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      document.getElementById('totalProventosHeader').innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      document.getElementById('mediaMensalProventos').innerText = `R$ ${(total / 36).toFixed(2).replace('.', ',')} / mês`;
-    }
-
-    function abrirModalDividendo() {
-      document.getElementById('divTicker').value = '';
-      document.getElementById('divDataCom').value = '';
-      document.getElementById('divDataPag').value = '';
-      document.getElementById('divValor').value = '';
-      document.getElementById('modalDividendo').classList.remove('hidden');
-    }
-
-    function fecharModalDividendo() {
-      document.getElementById('modalDividendo').classList.add('hidden');
-    }
-
-    function salvarNovoDividendo() {
-      const ticker = document.getElementById('divTicker').value.toUpperCase().trim();
-      const tipo = document.getElementById('divTipo').value;
-      const dataCom = document.getElementById('divDataCom').value.trim();
-      const dataPag = document.getElementById('divDataPag').value.trim();
-      const valor = parseFloat(document.getElementById('divValor').value);
-
-      if (!ticker || !dataCom || !dataPag || isNaN(valor)) {
-        mostrarNotificacao("Preencha todos os campos corretamente.", "aviso");
-        return;
-      }
-
-      listaDividendos.push({ ticker, tipo, dataCom, dataPag, valor });
-      localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
-      renderizarTabelaDividendos();
-      fecharModalDividendo();
-      mostrarNotificacao("Provento registrado com sucesso!", "sucesso");
-    }
-
-    function removerDividendo(index) {
-      if (confirm("Deseja excluir este registro de provento?")) {
-        listaDividendos.splice(index, 1);
-        localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
-        renderizarTabelaDividendos();
-        mostrarNotificacao("Provento removido.", "info");
-      }
-    }
-
     function renderizarCardsRadar() {
       const grid = document.getElementById('gridRadar');
       grid.innerHTML = '';
       tickersRadar.forEach(ticker => {
         grid.innerHTML += `
-          <div class="border border-gray-200 dark:border-darkborder rounded-lg p-4 bg-gray-50 dark:bg-slate-900 relative" data-op-ticker="${ticker}">
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50 relative" data-op-ticker="${ticker}">
             <button onclick="removerAtivoRadar('${ticker}')" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-xs" title="Remover do Radar"><i class="fa-solid fa-xmark"></i></button>
-            <span id="badge-${ticker}" class="text-xs font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded">🔵 Carregando...</span>
-            <h4 class="text-lg font-bold text-gray-800 dark:text-white mt-2">${ticker}</h4>
-            <p id="nome-${ticker}" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Buscando dados...</p>
+            <span id="badge-${ticker}" class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">🔵 Carregando...</span>
+            <h4 class="text-lg font-bold text-gray-800 mt-2">${ticker}</h4>
+            <p id="nome-${ticker}" class="text-xs text-gray-500 mt-1">Buscando dados...</p>
             <div class="mt-4 space-y-1 text-sm">
-              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-${ticker}" class="font-semibold text-blue-600 dark:text-blue-400">R$ 0,00</span></div>
-              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-${ticker}" class="font-semibold text-gray-700 dark:text-gray-300">R$ 0,00</span></div>
+              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-${ticker}" class="font-semibold text-blue-600">R$ 0,00</span></div>
+              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-${ticker}" class="font-semibold text-gray-700">R$ 0,00</span></div>
             </div>
           </div>
         `;
@@ -681,7 +457,7 @@
         tickersRadar = tickersRadar.filter(t => t !== ticker);
         localStorage.setItem('radar_personalizado', JSON.stringify(tickersRadar));
         renderizarCardsRadar();
-        mostrarNotificacao(`Ativo ${ticker} removido.`, "info");
+        mostrarNotificacao(`Ativo ${ticker} removido do radar.`, "info");
       }
     }
 
@@ -691,7 +467,6 @@
         if (exibirNotificacoes) mostrarNotificacao("Insira o Token da Brapi nas Configurações.", "aviso");
         return;
       }
-
       const statusElement = document.getElementById('statusAtualizacao');
       if (statusElement) statusElement.innerText = "Atualizando preços...";
 
@@ -700,15 +475,18 @@
       const todosTickers = Array.from(new Set([...tickersTabela, ...tickersRadar]));
 
       let atualizados = 0;
+      let houveMudanca = false;
 
       for (const ticker of todosTickers) {
         try {
           let url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}?token=${token}&fundamental=true`;
           let res = await fetch(url);
+          
           if (!res.ok && res.status === 404) {
             url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}.SA?token=${token}&fundamental=true`;
             res = await fetch(url);
           }
+
           if (res.ok) {
             const data = await res.json();
             if (data.results && data.results.length > 0) {
@@ -719,12 +497,24 @@
 
               const nomeEl = document.getElementById(`nome-${ticker}`);
               if (nomeEl) nomeEl.innerText = nomeEmpresa;
+              
+              const linhaTabela = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
+              if (linhaTabela) {
+                const celulaPreco = linhaTabela.querySelector('.preco-atual');
+                if (celulaPreco) {
+                  const textoPrecoTela = celulaPreco.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+                  const precoTelaAtual = parseFloat(textoPrecoTela);
+                  if (!isNaN(precoTelaAtual) && precoTelaAtual.toFixed(2) !== precoAtualApi.toFixed(2)) {
+                    houveMudanca = true;
+                  }
+                }
+              }
 
               let precoJusto = null;
               if (ativo.eps && ativo.bookValue) {
                 precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
-              } else {
-                precoJusto = precoAtualApi * 0.95;
+              } else { 
+                precoJusto = precoAtualApi * 0.95; // Estimativa de segurança caso faltem dados fundamentalistas
               }
 
               atualizarLinhaTabela(ticker, precoAtualApi, variacao, precoJusto);
@@ -732,18 +522,17 @@
               atualizados++;
             }
           }
-        } catch (err) {
-          console.error("Erro ao buscar ativo:", err);
+        } catch (err) { 
+          console.error("Erro ao buscar ativo:", err); 
         }
       }
-
       recalcularTotais();
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Erro de conexão";
-
+      
       if (exibirNotificacoes) {
         if (atualizados > 0) {
-          mostrarNotificacao("Preços atualizados com sucesso!", "sucesso");
+          mostrarNotificacao("Preços e radar atualizados com sucesso!", "sucesso");
         } else {
           mostrarNotificacao("Erro ao conectar à Brapi. Verifique o token.", "erro");
         }
@@ -768,7 +557,7 @@
         if (celulaVariacao && variacao !== undefined) {
           const sinal = variacao >= 0 ? '+' : '';
           celulaVariacao.innerText = `${sinal}${variacao.toFixed(2)}%`;
-          celulaVariacao.className = variacao >= 0 ? "py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium" : "py-3 px-4 variacao text-red-500 font-medium";
+          celulaVariacao.className = variacao >= 0 ? "py-3 px-4 variacao text-emerald-600 font-medium" : "py-3 px-4 variacao text-red-500 font-medium";
         }
         if (celulaQtd && celulaValorAtual && precoAtual !== undefined) {
           const qtd = parseFloat(celulaQtd.innerText.replace(',', '.'));
@@ -780,6 +569,7 @@
     function atualizarRadarOportunidades(ticker, precoAtual, precoJusto) {
       const card = document.querySelector(`[data-op-ticker="${ticker}"]`);
       if (!card) return;
+
       const spanPreco = document.getElementById(`op-preco-${ticker}`);
       const spanJusto = document.getElementById(`op-justo-${ticker}`);
       const badge = document.getElementById(`badge-${ticker}`);
@@ -790,13 +580,13 @@
       if (badge) {
         if (precoAtual < precoJusto) {
           badge.innerHTML = "🟢 Bom para comprar / Oportunidade";
-          badge.className = "text-xs font-bold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded";
+          badge.className = "text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded";
         } else if (Math.abs(precoAtual - precoJusto) / precoJusto <= 0.05) {
           badge.innerHTML = "🔵 Aguardar / Neutro";
-          badge.className = "text-xs font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded";
+          badge.className = "text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded";
         } else {
           badge.innerHTML = "🟠 Evitar novas compras no momento";
-          badge.className = "text-xs font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded";
+          badge.className = "text-xs font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded";
         }
       }
     }
@@ -819,9 +609,9 @@
       const diferenca = totalAtual - totalInvestido;
       const percentual = totalInvestido > 0 ? (diferenca / totalInvestido) * 100 : 0;
       const sinal = diferenca >= 0 ? '+' : '';
-      
+
       lucroElem.innerHTML = `R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-sm font-normal">(${sinal}${percentual.toFixed(2)}%)</span>`;
-      lucroElem.className = diferenca >= 0 ? "text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-3xl font-bold text-red-500 mt-1";
+      lucroElem.className = diferenca >= 0 ? "text-3xl font-bold text-emerald-600 mt-1" : "text-3xl font-bold text-red-500 mt-1";
     }
 
     function removerAtivo(btn) {
@@ -859,6 +649,7 @@
       if (linhaExistente) {
         const qtdAntiga = parseFloat(linhaExistente.querySelector('.qtd').innerText.replace(',', '.'));
         const pmAntigo = parseFloat(linhaExistente.querySelector('.pm').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+
         const totalQtd = qtdAntiga + novaQtd;
         const totalInvestidoAntigo = qtdAntiga * pmAntigo;
         const totalInvestidoNovoAporte = novaQtd * novoPm;
@@ -877,15 +668,16 @@
       } else {
         const novaLinha = document.createElement('tr');
         novaLinha.setAttribute('data-ticker', ticker);
-        novaLinha.className = "border-b border-gray-100 dark:border-darkborder text-sm";
+        novaLinha.className = "border-b border-gray-100 text-sm";
         const valorInv = novaQtd * novoPm;
+
         novaLinha.innerHTML = `
-          <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${ticker}</td>
+          <td class="py-3 px-4 font-bold text-gray-800">${ticker}</td>
           <td class="py-3 px-4 qtd">${novaQtd}</td>
           <td class="py-3 px-4 pm">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
           <td class="py-3 px-4 preco-atual font-semibold">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
           <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
-          <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+          <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
           <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
           <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
           <td class="py-3 px-4 text-center">
@@ -913,7 +705,7 @@
           valorAtual: l.querySelector('.valor-atual')?.innerText || "R$ 0,00"
         });
       });
-      const blob = new Blob([JSON.stringify({ ativos, dividendos: listaDividendos }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ ativos }, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -936,14 +728,14 @@
             dados.ativos.forEach(a => {
               const tr = document.createElement('tr');
               tr.setAttribute('data-ticker', a.ticker);
-              tr.className = "border-b border-gray-100 dark:border-darkborder text-sm";
+              tr.className = "border-b border-gray-100 text-sm";
               tr.innerHTML = `
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${a.ticker}</td>
+                <td class="py-3 px-4 font-bold text-gray-800">${a.ticker}</td>
                 <td class="py-3 px-4 qtd">${a.qtd}</td>
                 <td class="py-3 px-4 pm">${a.pm}</td>
                 <td class="py-3 px-4 preco-atual font-semibold">${a.precoAtual}</td>
                 <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
+                <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
                 <td class="py-3 px-4 valor-investido">${a.valorInvestido}</td>
                 <td class="py-3 px-4 valor-atual font-semibold">${a.valorAtual}</td>
                 <td class="py-3 px-4 text-center">
@@ -953,61 +745,11 @@
               tbody.appendChild(tr);
             });
             recalcularTotais();
+            mostrarNotificacao("Backup restaurado!", "sucesso");
           }
-          if (dados && Array.isArray(dados.dividendos)) {
-            listaDividendos = dados.dividendos;
-            localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
-            renderizarTabelaDividendos();
-          }
-          mostrarNotificacao("Backup restaurado com sucesso!", "sucesso");
         } catch (err) { mostrarNotificacao("Erro ao ler backup.", "erro"); }
       };
       reader.readAsText(file);
-    }
-
-    function abrirProximosDividendos() {
-      const proximos = [
-        { ticker: 'SAPR11', tipo: 'JCP / Dividendo', dataCom: '15/03/2026', dataPag: '30/03/2026', valorEstimado: 'R$ 46,00' },
-        { ticker: 'PETR4', tipo: 'Dividendos', dataCom: '20/03/2026', dataPag: '15/04/2026', valorEstimado: 'R$ 90,00' },
-        { ticker: 'KLBN3', tipo: 'Dividendo Trimestral', dataCom: '02/04/2026', dataPag: '18/04/2026', valorEstimado: 'R$ 185,00' }
-      ];
-
-      let htmlItens = proximos.map(p => `
-        <div class="p-3 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
-          <div>
-            <span class="font-bold text-gray-800 dark:text-white">${p.ticker}</span>
-            <p class="text-xs text-gray-500 dark:text-gray-400">${p.tipo} • Data Com: ${p.dataCom}</p>
-            <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">Pagamento: ${p.dataPag}</p>
-          </div>
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">${p.valorEstimado}</span>
-        </div>
-      `).join('');
-
-      let modalAgenda = document.getElementById('modalAgendaProventos');
-      if (!modalAgenda) {
-        modalAgenda = document.createElement('div');
-        modalAgenda.id = 'modalAgendaProventos';
-        modalAgenda.className = 'fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4';
-        modalAgenda.innerHTML = `
-          <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 dark:border-darkborder space-y-4">
-            <div class="flex justify-between items-center">
-              <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <i class="fa-solid fa-calendar-alt text-blue-600"></i> Próximos Dividendos (Agenda)
-              </h3>
-              <button onclick="document.getElementById('modalAgendaProventos').remove()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                <i class="fa-solid fa-xmark text-lg"></i>
-              </button>
-            </div>
-            <div class="space-y-2 max-h-60 overflow-y-auto" id="listaAgendaProventos">
-              ${htmlItens}
-            </div>
-            <button onclick="document.getElementById('modalAgendaProventos').remove()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg text-sm transition">
-              Fechar Agenda
-            </button>
-          </div>
-        `;
-        document.body.appendChild(modalAgenda);
-      }
     }
   </script>
 </body>
