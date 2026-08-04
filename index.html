@@ -239,9 +239,9 @@
               <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Calendário</span>
               <h4 class="text-lg font-bold text-gray-800 dark:text-white mt-0.5">Próximos Dividendos</h4>
             </div>
-           <button onclick="abrirProximosDividendos()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition shadow-sm">
-            <i class="fa-solid fa-calendar-alt"></i> Ver Agenda
-          </button>
+            <button onclick="abrirProximosDividendos()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1.5 transition shadow-sm">
+              <i class="fa-solid fa-calendar-alt"></i> Ver Agenda
+            </button>
           </div>
         </div>
 
@@ -965,50 +965,50 @@
       reader.readAsText(file);
     }
 
-   972: function abrirProximosDividendos() {
-973:     const proximos = [
-974:         { ticker: 'SAPR11', tipo: 'JCP / Dividendo', dataCom: '15/03/2026', dataPag: '30/03/2026', valorEstimado: 'R$ 46,00' },
-975:         { ticker: 'PETR4', tipo: 'Dividendos', dataCom: '20/03/2026', dataPag: '15/04/2026', valorEstimado: 'R$ 90,00' },
-976:         { ticker: 'KLBN3', tipo: 'Dividendo Trimestral', dataCom: '02/04/2026', dataPag: '18/04/2026', valorEstimado: 'R$ 185,00' }
-977:     ];
-978: 
-979:     let htmlItens = proximos.map(p => `
-980:         <div class="p-3 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
-981:             <div>
-982:                 <span class="font-bold text-gray-800 dark:text-white">${p.ticker}</span>
-983:                 <p class="text-xs text-gray-500 dark:text-gray-400">${p.tipo} • Data Com: ${p.dataCom}</p>
-984:                 <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">Pagamento: ${p.dataPag}</p>
-985:             </div>
-986:             <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">${p.valorEstimado}</span>
-987:         </div>
-988:     `).join('');
-989: 
-990:     let modalAgenda = document.getElementById('modalAgendaProventos');
-991:     if (!modalAgenda) {
-992:         modalAgenda = document.createElement('div');
-993:         modalAgenda.id = 'modalAgendaProventos';
-994:         modalAgenda.className = 'fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4';
-995:         modalAgenda.innerHTML = `
-996:             <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 dark:border-darkborder space-y-4">
-997:                 <div class="flex justify-between items-center">
-998:                     <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-999:                         <i class="fa-solid fa-calendar-alt text-blue-600"></i> Próximos Dividendos (Agenda)
-1000:                     </h3>
-1001:                     <button onclick="document.getElementById('modalAgendaProventos').remove()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-1002:                         <i class="fa-solid fa-xmark text-lg"></i>
-1003:                     </button>
-1004:                 </div>
-1005:                 <div class="space-y-2 max-h-60 overflow-y-auto" id="listaAgendaProventos">
-1006:                     ${htmlItens}
-1007:                 </div>
-1008:                 <button onclick="document.getElementById('modalAgendaProventos').remove()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg text-sm transition">
-1009:                     Fechar Agenda
-1010:                 </button>
-1011:             </div>
-1012:         `;
-1013:         document.body.appendChild(modalAgenda);
-1014:     }
-1015: }
+    function abrirProximosDividendos() {
+      const proximos = [
+        { ticker: 'SAPR11', tipo: 'JCP / Dividendo', dataCom: '15/03/2026', dataPag: '30/03/2026', valorEstimado: 'R$ 46,00' },
+        { ticker: 'PETR4', tipo: 'Dividendos', dataCom: '20/03/2026', dataPag: '15/04/2026', valorEstimado: 'R$ 90,00' },
+        { ticker: 'KLBN3', tipo: 'Dividendo Trimestral', dataCom: '02/04/2026', dataPag: '18/04/2026', valorEstimado: 'R$ 185,00' }
+      ];
+
+      let htmlItens = proximos.map(p => `
+        <div class="p-3 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
+          <div>
+            <span class="font-bold text-gray-800 dark:text-white">${p.ticker}</span>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${p.tipo} • Data Com: ${p.dataCom}</p>
+            <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">Pagamento: ${p.dataPag}</p>
+          </div>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">${p.valorEstimado}</span>
+        </div>
+      `).join('');
+
+      let modalAgenda = document.getElementById('modalAgendaProventos');
+      if (!modalAgenda) {
+        modalAgenda = document.createElement('div');
+        modalAgenda.id = 'modalAgendaProventos';
+        modalAgenda.className = 'fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4';
+        modalAgenda.innerHTML = `
+          <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 dark:border-darkborder space-y-4">
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-calendar-alt text-blue-600"></i> Próximos Dividendos (Agenda)
+              </h3>
+              <button onclick="document.getElementById('modalAgendaProventos').remove()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                <i class="fa-solid fa-xmark text-lg"></i>
+              </button>
+            </div>
+            <div class="space-y-2 max-h-60 overflow-y-auto" id="listaAgendaProventos">
+              ${htmlItens}
+            </div>
+            <button onclick="document.getElementById('modalAgendaProventos').remove()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg text-sm transition">
+              Fechar Agenda
+            </button>
+          </div>
+        `;
+        document.body.appendChild(modalAgenda);
+      }
+    }
   </script>
 </body>
 </html>
