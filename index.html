@@ -73,7 +73,7 @@
     </div>
   </div>
 
-  <!-- TELA DE LOGIN / AUTENTICAÇÃO -->
+  <!-- TELA DE LOGIN / AUTENTICAÇÃO COM TECLADO NUMÉRICO -->
   <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100 dark:border-darkborder">
       <div class="text-center mb-6">
@@ -81,14 +81,14 @@
           <i class="fa-solid fa-lock text-2xl"></i>
         </div>
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white">AnalystPro</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Digite sua senha para acessar sua carteira</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Digite sua senha numérica para acessar</p>
       </div>
       <div id="formLogin" class="space-y-4">
         <div>
-          <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha de Acesso</label>
-          <input type="password" id="senhaAcesso" autocomplete="new-password" onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha de Acesso (Números)</label>
+          <input type="password" id="senhaAcesso" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="current-password" onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••" class="w-full px-4 py-3 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-xl tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
-        <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
+        <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-md">
           Entrar no Sistema
         </button>
         <div class="text-center pt-2">
@@ -104,13 +104,19 @@
   <div id="appConteudo" class="hidden">
     <header class="bg-blue-600 dark:bg-slate-900 text-white shadow-md border-b border-blue-700 dark:border-darkborder transition-colors duration-200">
       <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3 flex-wrap">
           <h1 class="text-2xl font-bold flex items-center gap-2">
             <i class="fa-solid fa-chart-line text-blue-300 dark:text-blue-500"></i> AnalystPro <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">Pro</span>
           </h1>
-          <div id="statusApiBrapi" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-700 dark:bg-slate-800 text-blue-200 dark:text-blue-400">
-            <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
-            <span>Brapi: Verificando...</span>
+          <!-- Indicador Brapi + Caixa de Versão V1.1 -->
+          <div class="flex items-center gap-2">
+            <div id="statusApiBrapi" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-700 dark:bg-slate-800 text-blue-200 dark:text-blue-400">
+              <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+              <span>Brapi: Verificando...</span>
+            </div>
+            <div class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm">
+              <span>Versão V1.1</span>
+            </div>
           </div>
         </div>
         <nav class="flex items-center gap-4 sm:gap-6 text-sm font-medium flex-wrap">
@@ -145,7 +151,7 @@
         </div>
       </div>
 
-      <!-- PAINEL PROFISSIONAL: SIMULADOR DE APOSENTADORIA / JUROS COMPOSTOS -->
+      <!-- PAINEL PROFISSIONAL: SIMULADOR COM SELETOR DE ANOS PERSONALIZADO -->
       <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white rounded-xl p-6 shadow-xl mb-8 border border-blue-800">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
           <div>
@@ -155,13 +161,8 @@
             <p class="text-xs text-blue-200">Projeção estimada considerando reinvestimento contínuo de dividendos (6% a.a. médio).</p>
           </div>
           <div class="flex items-center gap-2 bg-blue-950/60 px-3 py-1.5 rounded-lg border border-blue-700/50 text-xs">
-            <span>Horizonte:</span>
-            <select id="anosSimulacao" onchange="calcularSimuladorLongoPrazo()" class="bg-slate-900 text-white px-2 py-1 rounded border border-blue-600 outline-none">
-              <option value="5">5 Anos</option>
-              <option value="10" selected>10 Anos</option>
-              <option value="15">15 Anos</option>
-              <option value="20">20 Anos</option>
-            </select>
+            <label for="anosSimulacao" class="font-medium">Horizonte (Anos):</label>
+            <input type="number" id="anosSimulacao" value="10" min="1" max="50" oninput="calcularSimuladorLongoPrazo()" class="w-16 bg-slate-900 text-white text-center font-bold px-2 py-1 rounded border border-blue-600 outline-none">
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
@@ -357,7 +358,6 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Gráfico de Alocação Setorial (Visual em Barras Proporcional) -->
           <div class="p-5 border border-gray-200 dark:border-darkborder rounded-xl bg-gray-50 dark:bg-slate-900 space-y-4">
             <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
               <i class="fa-solid fa-chart-pie text-blue-500"></i> Alocação Setorial da Carteira
@@ -367,7 +367,6 @@
             </div>
           </div>
 
-          <!-- Indicadores de Risco / Saúde da Carteira -->
           <div class="p-5 border border-gray-200 dark:border-darkborder rounded-xl bg-gray-50 dark:bg-slate-900 flex flex-col justify-between space-y-4">
             <div>
               <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2 mb-2">
@@ -390,7 +389,6 @@
           </div>
         </div>
 
-        <!-- GLOSSÁRIO DO INVESTIDOR INICIANTE -->
         <div class="pt-4 border-t border-gray-200 dark:border-darkborder">
           <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2 mb-3">
             <i class="fa-solid fa-book-open text-blue-600"></i> Glossário Rápido para o Investidor Iniciante
@@ -479,7 +477,7 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.0.9";
+    const VERSAO_ATUAL = "1.1.0";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -923,7 +921,9 @@
 
     function calcularSimuladorLongoPrazo(patrimonioAtualOverride) {
       const patrimonioAtual = patrimonioAtualOverride !== undefined ? patrimonioAtualOverride : parseFloat(document.getElementById('totalCarteira').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
-      const anos = parseInt(document.getElementById('anosSimulacao').value) || 10;
+      const anosInput = parseInt(document.getElementById('anosSimulacao').value);
+      const anos = (!isNaN(anosInput) && anosInput > 0) ? anosInput : 10;
+      
       const taxaAnual = 0.08; // 8% crescimento patrimonial médio c/ juros compostos
       const yieldMedio = 0.06; // 6% a.a. em dividendos
 
