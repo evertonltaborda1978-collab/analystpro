@@ -108,14 +108,14 @@
           <h1 class="text-2xl font-bold flex items-center gap-2">
             <i class="fa-solid fa-chart-line text-blue-300 dark:text-blue-500"></i> AnalystPro <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">Pro</span>
           </h1>
-          <!-- Indicador Brapi + Caixa de Versão V1.1 -->
+          <!-- Indicador Brapi + Caixa de Versão V1.2 -->
           <div class="flex items-center gap-2">
             <div id="statusApiBrapi" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-700 dark:bg-slate-800 text-blue-200 dark:text-blue-400">
               <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
               <span>Brapi: Verificando...</span>
             </div>
             <div class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm">
-              <span>Versão V1.1</span>
+              <span>Versão V1.2</span>
             </div>
           </div>
         </div>
@@ -306,6 +306,7 @@
           </div>
         </div>
 
+        <!-- TABELA GERAL DE PROVENTOS -->
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -322,6 +323,16 @@
               <!-- Inserido via script -->
             </tbody>
           </table>
+        </div>
+
+        <!-- SEÇÃO: HISTÓRICO DETALHADO POR ATIVOS SEPARADOS -->
+        <div class="pt-6 border-t border-gray-200 dark:border-darkborder">
+          <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2 mb-4">
+            <i class="fa-solid fa-layer-group text-blue-600 dark:text-blue-400"></i> Histórico Detalhado por Ativos Separados
+          </h3>
+          <div id="containerDividendosPorAtivo" class="space-y-4">
+            <!-- Preenchido dinamicamente por ativo -->
+          </div>
         </div>
       </section>
 
@@ -428,16 +439,17 @@
     </main>
   </div>
 
-  <!-- MODAL PARA CADASTRAR PROVENTO -->
+  <!-- MODAL PARA CADASTRAR / EDITAR PROVENTO -->
   <div id="modalDividendo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-darkborder">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+        <h3 id="tituloModalDividendo" class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
           <i class="fa-solid fa-plus-circle text-emerald-600"></i> Registrar Novo Provento
         </h3>
         <button onclick="fecharModalDividendo()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <div class="space-y-4">
+        <input type="hidden" id="divIndexEdicao" value="-1">
         <div>
           <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Ticker do Ativo</label>
           <input type="text" id="divTicker" placeholder="Ex: SAPR11" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm uppercase outline-none focus:ring-2 focus:ring-emerald-500">
@@ -477,7 +489,7 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.1.0";
+    const VERSAO_ATUAL = "1.2.0";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -665,6 +677,7 @@
       const tbody = document.getElementById('tabelaDividendos');
       tbody.innerHTML = '';
       let total = 0;
+
       listaDividendos.forEach((item, index) => {
         total += item.valor;
         tbody.innerHTML += `
@@ -674,22 +687,91 @@
             <td class="py-3 px-4">${item.dataCom}</td>
             <td class="py-3 px-4">${item.dataPag}</td>
             <td class="py-3 px-4 font-semibold text-emerald-600 dark:text-emerald-400">R$ ${item.valor.toFixed(2).replace('.', ',')}</td>
-            <td class="py-3 px-4 text-center">
+            <td class="py-3 px-4 text-center space-x-2">
+              <button onclick="abrirEditarDividendo(${index})" class="text-blue-500 hover:text-blue-700" title="Editar Provento"><i class="fa-solid fa-pen-to-square"></i></button>
               <button onclick="removerDividendo(${index})" class="text-red-500 hover:text-red-700" title="Excluir Provento"><i class="fa-solid fa-trash"></i></button>
             </td>
           </tr>
         `;
       });
+
       document.getElementById('valorTotalProventos').innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       document.getElementById('totalProventosHeader').innerText = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       document.getElementById('mediaMensalProventos').innerText = `R$ ${(total / 36).toFixed(2).replace('.', ',')} / mês`;
+
+      renderizarHistoricoPorAtivo();
+    }
+
+    function renderizarHistoricoPorAtivo() {
+      const container = document.getElementById('containerDividendosPorAtivo');
+      if (!container) return;
+      container.innerHTML = '';
+
+      // Agrupar por Ticker
+      const agrupado = {};
+      listaDividendos.forEach(item => {
+        if (!agrupado[item.ticker]) {
+          agrupado[item.ticker] = [];
+        }
+        agrupado[item.ticker].push(item);
+      });
+
+      if (Object.keys(agrupado).length === 0) {
+        container.innerHTML = '<p class="text-xs text-gray-400">Nenhum provento cadastrado.</p>';
+        return;
+      }
+
+      for (const [ticker, itens] of Object.entries(agrupado)) {
+        let totalAtivo = itens.reduce((soma, i) => soma + i.valor, 0);
+        
+        let linhasHtml = itens.map(i => `
+          <div class="flex justify-between items-center text-xs py-2 border-b border-gray-100 dark:border-darkborder/50">
+            <div>
+              <span class="font-semibold text-gray-700 dark:text-gray-300">${i.tipo}</span>
+              <span class="text-gray-400 ml-2">(Data Com: ${i.dataCom} | Pgto: ${i.dataPag})</span>
+            </div>
+            <span class="font-bold text-emerald-600 dark:text-emerald-400">R$ ${i.valor.toFixed(2).replace('.', ',')}</span>
+          </div>
+        `).join('');
+
+        container.innerHTML += `
+          <div class="border border-gray-200 dark:border-darkborder rounded-xl p-4 bg-gray-50 dark:bg-slate-900 space-y-2">
+            <div class="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-darkborder">
+              <span class="font-bold text-base text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-coins text-emerald-500"></i> ${ticker}
+              </span>
+              <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-lg border border-emerald-200 dark:border-emerald-900">
+                Total Acumulado: R$ ${totalAtivo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+            </div>
+            <div class="space-y-1">
+              ${linhasHtml}
+            </div>
+          </div>
+        `;
+      }
     }
 
     function abrirModalDividendo() {
+      document.getElementById('tituloModalDividendo').innerHTML = '<i class="fa-solid fa-plus-circle text-emerald-600"></i> Registrar Novo Provento';
+      document.getElementById('divIndexEdicao').value = '-1';
       document.getElementById('divTicker').value = '';
       document.getElementById('divDataCom').value = '';
       document.getElementById('divDataPag').value = '';
       document.getElementById('divValor').value = '';
+      document.getElementById('modalDividendo').classList.remove('hidden');
+    }
+
+    function abrirEditarDividendo(index) {
+      const item = listaDividendos[index];
+      if (!item) return;
+      document.getElementById('tituloModalDividendo').innerHTML = '<i class="fa-solid fa-pen-to-square text-blue-600"></i> Editar Provento';
+      document.getElementById('divIndexEdicao').value = index;
+      document.getElementById('divTicker').value = item.ticker;
+      document.getElementById('divTipo').value = item.tipo;
+      document.getElementById('divDataCom').value = item.dataCom;
+      document.getElementById('divDataPag').value = item.dataPag;
+      document.getElementById('divValor').value = item.valor;
       document.getElementById('modalDividendo').classList.remove('hidden');
     }
 
@@ -698,6 +780,7 @@
     }
 
     function salvarNovoDividendo() {
+      const indexEdicao = parseInt(document.getElementById('divIndexEdicao').value);
       const ticker = document.getElementById('divTicker').value.toUpperCase().trim();
       const tipo = document.getElementById('divTipo').value;
       const dataCom = document.getElementById('divDataCom').value.trim();
@@ -709,15 +792,21 @@
         return;
       }
 
-      listaDividendos.push({ ticker, tipo, dataCom, dataPag, valor });
+      if (indexEdicao >= 0) {
+        listaDividendos[indexEdicao] = { ticker, tipo, dataCom, dataPag, valor };
+        mostrarNotificacao("Provento atualizado com sucesso!", "sucesso");
+      } else {
+        listaDividendos.push({ ticker, tipo, dataCom, dataPag, valor });
+        mostrarNotificacao("Provento registrado com sucesso!", "sucesso");
+      }
+
       localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
       renderizarTabelaDividendos();
       fecharModalDividendo();
-      mostrarNotificacao("Provento registrado com sucesso!", "sucesso");
     }
 
     function removerDividendo(index) {
-      if (confirm("Deseja excluir este registro de provento?")) {
+      if (confirm("Tem certeza que deseja excluir este registro de provento?")) {
         listaDividendos.splice(index, 1);
         localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
         renderizarTabelaDividendos();
