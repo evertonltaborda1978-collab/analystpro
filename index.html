@@ -76,10 +76,9 @@
   <!-- TELA DE LOGIN / AUTENTICAÇÃO COM TECLADO NUMÉRICO -->
   <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100 dark:border-darkborder relative">
-      <!-- Indicador de Versão na tela de Login -->
       <div class="absolute top-4 right-4">
         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.2
+          Versão V1.3
         </span>
       </div>
 
@@ -121,7 +120,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <div class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm">
-              <span>Versão V1.2</span>
+              <span>Versão V1.3</span>
             </div>
           </div>
         </div>
@@ -363,7 +362,7 @@
         </div>
       </section>
 
-      <!-- SEÇÃO: ANÁLISE & GRÁFICOS -->
+      <!-- SEÇÃO: ANÁLISE & GRÁFICOS (COM GRÁFICO HISTÓRICO POR ATIVO E FILTROS DE ANO/MÊS) -->
       <section id="sec-analise" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden space-y-6 transition-colors">
         <div class="flex justify-between items-center flex-wrap gap-4">
           <div>
@@ -371,6 +370,45 @@
               <i class="fa-solid fa-chart-pie text-cyan-600 dark:text-cyan-400"></i> Análise de Alocação e Gráficos de Desempenho
             </h3>
             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Visão profissional da distribuição e histórico de sua carteira:</p>
+          </div>
+        </div>
+
+        <!-- GRÁFICO PERSONALIZADO POR AÇÃO, ANO E MÊS -->
+        <div class="p-5 border border-gray-200 dark:border-darkborder rounded-xl bg-gray-50 dark:bg-slate-900 space-y-4">
+          <div class="flex justify-between items-center flex-wrap gap-3">
+            <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-filter text-blue-500"></i> Gráfico Histórico por Ativo e Período
+            </h4>
+            <div class="flex items-center gap-2 flex-wrap">
+              <select id="filtroAtivoGrafico" onchange="atualizarGraficoPeriodo()" class="px-3 py-1.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg text-xs outline-none">
+                <option value="TODOS">Todos os Ativos</option>
+              </select>
+              <select id="filtroAnoGrafico" onchange="atualizarGraficoPeriodo()" class="px-3 py-1.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg text-xs outline-none">
+                <option value="TODOS">Todos os Anos</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+              </select>
+              <select id="filtroMesGrafico" onchange="atualizarGraficoPeriodo()" class="px-3 py-1.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg text-xs outline-none">
+                <option value="TODOS">Todos os Meses</option>
+                <option value="01">Janeiro</option>
+                <option value="02">Fevereiro</option>
+                <option value="03">Março</option>
+                <option value="04">Abril</option>
+                <option value="05">Maio</option>
+                <option value="06">Junho</option>
+                <option value="07">Julho</option>
+                <option value="08">Agosto</option>
+                <option value="09">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </div>
+          </div>
+          <div id="containerGraficoPeriodo" class="space-y-2 pt-2">
+            <!-- Barras do gráfico por período -->
           </div>
         </div>
 
@@ -495,7 +533,7 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.2.0";
+    const VERSAO_ATUAL = "1.3.0";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -666,6 +704,10 @@
       });
       const ativa = document.getElementById(`sec-${aba}`);
       if (ativa) ativa.classList.remove('hidden');
+      if (aba === 'analise') {
+        popularFiltroAtivosGrafico();
+        atualizarGraficoPeriodo();
+      }
     }
 
     function salvarConfiguracoes() {
@@ -751,6 +793,69 @@
             </div>
             <div class="space-y-1">
               ${linhasHtml}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function popularFiltroAtivosGrafico() {
+      const selectAtivo = document.getElementById('filtroAtivoGrafico');
+      if (!selectAtivo) return;
+      const valorAtual = selectAtivo.value;
+      
+      const tickersUnicos = [...new Set(listaDividendos.map(i => i.ticker))];
+      selectAtivo.innerHTML = '<option value="TODOS">Todos os Ativos</option>';
+      tickersUnicos.forEach(t => {
+        selectAtivo.innerHTML += `<option value="${t}">${t}</option>`;
+      });
+      selectAtivo.value = valorAtual;
+    }
+
+    function atualizarGraficoPeriodo() {
+      const container = document.getElementById('containerGraficoPeriodo');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const selAtivo = document.getElementById('filtroAtivoGrafico').value;
+      const selAno = document.getElementById('filtroAnoGrafico').value;
+      const selMes = document.getElementById('filtroMesGrafico').value;
+
+      let filtrados = listaDividendos.filter(item => {
+        const partesData = item.dataPag.split('/');
+        const mesItem = partesData[1] || '';
+        const anoItem = partesData[2] || '';
+
+        const matchAtivo = (selAtivo === 'TODOS' || item.ticker === selAtivo);
+        const matchAno = (selAno === 'TODOS' || anoItem === selAno);
+        const matchMes = (selMes === 'TODOS' || mesItem === selMes);
+
+        return matchAtivo && matchAno && matchMes;
+      });
+
+      if (filtrados.length === 0) {
+        container.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">Nenhum provento encontrado para os filtros selecionados.</p>';
+        return;
+      }
+
+      // Agrupar por Ticker ou por Data para exibição em barras
+      let somaPorAtivo = {};
+      filtrados.forEach(i => {
+        somaPorAtivo[i.ticker] = (somaPorAtivo[i.ticker] || 0) + i.valor;
+      });
+
+      let maxValor = Math.max(...Object.values(somaPorAtivo), 1);
+
+      for (const [ticker, valor] of Object.entries(somaPorAtivo)) {
+        let percentual = (valor / maxValor) * 100;
+        container.innerHTML += `
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1 text-gray-700 dark:text-gray-300">
+              <span>${ticker}</span>
+              <span class="text-emerald-600 dark:text-emerald-400">R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: ${percentual}%"></div>
             </div>
           </div>
         `;
