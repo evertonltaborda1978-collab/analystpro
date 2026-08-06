@@ -37,49 +37,6 @@
   <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- MODAL POP-UP PARA NOTAS DE ATUALIZAÇÃO (CHANGELOG) -->
-  <div id="modalChangelog" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 dark:border-darkborder space-y-4">
-      <div class="flex justify-between items-center">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> Notas de Atualização (Changelog)
-        </h3>
-        <button onclick="fecharModalChangelog()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-      <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-        <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.3.0</span>
-          <p class="text-gray-400 text-xs">Agosto de 2026</p>
-          <ul class="list-disc list-inside space-y-1 pt-1">
-            <li><b>Adicionado:</b> Gráfico interativo por ativo com filtros de ano e mês na aba de Análise & Gráficos.</li>
-            <li><b>Adicionado:</b> Modal interno de notas de atualização (Changelog) acessível pelo cabeçalho.</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-blue-500 pl-3 space-y-1">
-          <span class="font-bold text-blue-600 dark:text-blue-400 text-base">Versão V1.2.0</span>
-          <p class="text-gray-400 text-xs">Agosto de 2026</p>
-          <ul class="list-disc list-inside space-y-1 pt-1">
-            <li><b>Adicionado:</b> Indicador visual da versão atual na tela de login e no menu superior.</li>
-            <li><b>Ajustes:</b> Otimização da responsividade para celulares e tablets.</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-slate-500 pl-3 space-y-1">
-          <span class="font-bold text-gray-700 dark:text-gray-200 text-base">Versão V1.1.0</span>
-          <p class="text-gray-400 text-xs">Agosto de 2026</p>
-          <ul class="list-disc list-inside space-y-1 pt-1">
-            <li><b>Adicionado:</b> Histórico detalhado de proventos separados por ativos.</li>
-            <li><b>Adicionado:</b> Simulador de renda passiva e juros compostos de longo prazo.</li>
-          </ul>
-        </div>
-      </div>
-      <button onclick="fecharModalChangelog()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg text-sm transition">
-        Entendido
-      </button>
-    </div>
-  </div>
-
   <!-- MODAL POP-UP PARA NOVA OPERAÇÃO -->
   <div id="modalOperacao" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-darkborder">
@@ -119,10 +76,7 @@
   <!-- TELA DE LOGIN / AUTENTICAÇÃO COM TECLADO NUMÉRICO -->
   <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100 dark:border-darkborder relative">
-      <div class="absolute top-4 right-4 flex items-center gap-2">
-        <button onclick="abrirModalChangelog()" class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 shadow-sm hover:bg-blue-100 transition">
-          <i class="fa-solid fa-list-check"></i> Novidades
-        </button>
+      <div class="absolute top-4 right-4">
         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
           Versão V1.3
         </span>
@@ -165,9 +119,9 @@
               <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
               <span>Brapi: Verificando...</span>
             </div>
-            <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
+            <div class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm">
               <span>Versão V1.3</span>
-            </button>
+            </div>
           </div>
         </div>
         <nav class="flex items-center gap-4 sm:gap-6 text-sm font-medium flex-wrap">
@@ -638,14 +592,6 @@
       }
     }
 
-    function abrirModalChangelog() {
-      document.getElementById('modalChangelog').classList.remove('hidden');
-    }
-
-    function fecharModalChangelog() {
-      document.getElementById('modalChangelog').classList.add('hidden');
-    }
-
     async function verificarAtualizacaoApp() {
       try {
         const resposta = await fetch('./index.html?t=' + new Date().getTime());
@@ -892,6 +838,7 @@
         return;
       }
 
+      // Agrupar por Ticker ou por Data para exibição em barras
       let somaPorAtivo = {};
       filtrados.forEach(i => {
         somaPorAtivo[i.ticker] = (somaPorAtivo[i.ticker] || 0) + i.valor;
