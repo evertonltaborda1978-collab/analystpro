@@ -55,8 +55,8 @@
           <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.5.5</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
-            <li><b>Correção Definitiva Gráfico:</b> Tratamento rigoroso de dimensões do container do TradingView para evitar tela em branco.</li>
-            <li><b>Controle de Versão:</b> Incremento rigoroso da versão após correções aplicadas.</li>
+            <li><b>Ordenação Cronológica de Dividendos:</b> Meses e anos organizados rigorosamente de forma crescente por data de pagamento.</li>
+            <li><b>Painel de Rentabilidade Real:</b> Novo card de análise global integrando valor investido, variação patrimonial e dividendos recebidos (com lucro/prejuízo real).</li>
           </ul>
         </div>
       </div>
@@ -171,20 +171,26 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- PAINEL DE RESUMO GERAL COM RENTABILIDADE REAL -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-blue-500 border border-gray-100 dark:border-darkborder transition-colors">
           <span class="text-sm text-gray-500 dark:text-gray-400">Valor Total da Carteira</span>
-          <h2 id="totalCarteira" class="text-3xl font-bold text-gray-900 dark:text-white mt-1">R$ 0,00</h2>
+          <h2 id="totalCarteira" class="text-2xl font-bold text-gray-900 dark:text-white mt-1">R$ 0,00</h2>
           <span id="statusAtualizacao" class="text-xs text-gray-400">Aguardando atualização...</span>
         </div>
         <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-emerald-500 border border-gray-100 dark:border-darkborder transition-colors">
           <span class="text-sm text-gray-500 dark:text-gray-400">Proventos Recebidos</span>
-          <h2 id="totalProventosHeader" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00</h2>
+          <h2 id="totalProventosHeader" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00</h2>
           <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
         </div>
         <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-cyan-500 border border-gray-100 dark:border-darkborder transition-colors">
           <span class="text-sm text-gray-500 dark:text-gray-400">Lucro / Prejuízo (Ações)</span>
-          <h2 id="lucroPrejuizo" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00 <span class="text-sm font-normal">(+0.00%)</span></h2>
+          <h2 id="lucroPrejuizo" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00 <span class="text-xs font-normal">(+0.00%)</span></h2>
+        </div>
+        <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-indigo-500 border border-gray-100 dark:border-darkborder transition-colors">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Resultado Líquido Real (+ Div.)</span>
+          <h2 id="resultadoRealLiquido" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00 <span class="text-xs font-normal">(+0.00%)</span></h2>
+          <span class="text-xs text-gray-400">Patrimônio + Proventos - Investido</span>
         </div>
       </div>
 
@@ -328,7 +334,7 @@
             <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
               <i class="fa-solid fa-hand-holding-dollar text-emerald-600 dark:text-emerald-400"></i> Histórico de Proventos e Dividendos
             </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Acompanhe todos os JCPs e Dividendos recebidos na sua carteira:</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Acompanhe todos os JCPs e Dividendos recebidos na sua carteira (em ordem cronológica de pagamento):</p>
           </div>
         </div>
 
@@ -559,9 +565,9 @@
 
     let tickersRadar = JSON.parse(localStorage.getItem('radar_personalizado')) || ['SAPR11', 'PETR4', 'KLBN3', 'BBAS3', 'VALE3', 'TAEE11'];
     let listaDividendos = JSON.parse(localStorage.getItem('dividendos_salvos')) || [
-      { ticker: 'SAPR11', tipo: 'JCP / Dividendo', dataCom: '15/12/2025', dataPag: '28/12/2025', valor: 45.20 },
-      { ticker: 'PETR4', tipo: 'Dividendo Extra', dataCom: '10/11/2025', dataPag: '25/11/2025', valor: 88.50 },
-      { ticker: 'KLBN3', tipo: 'Dividendo Trimestral', dataCom: '02/08/2025', dataPag: '18/08/2025', valor: 182.70 }
+      { ticker: 'SAPR11', tipo: 'JCP / Dividendo', dataCom: '15/01/2023', dataPag: '28/01/2023', valor: 20.91 },
+      { ticker: 'PETR4', tipo: 'Dividendo Extra', dataCom: '10/02/2023', dataPag: '25/02/2023', valor: 19.15 },
+      { ticker: 'KLBN3', tipo: 'Dividendo Trimestral', dataCom: '02/01/2024', dataPag: '15/01/2024', valor: 35.50 }
     ];
 
     let tvChart = null;
@@ -910,7 +916,20 @@
       tvChart.timeScale().fitContent();
     }
 
+    // Função auxiliar para converter "DD/MM/AAAA" em objeto Date para ordenação cronológica rigorosa
+    function converterDataParaObjeto(dataStr) {
+      if (!dataStr || !dataStr.includes('/')) return new Date(0);
+      const partes = dataStr.split('/');
+      if (partes.length !== 3) return new Date(0);
+      return new Date(`${partes[2]}-${partes[1]}-${partes[0]}`);
+    }
+
     function renderizarTabelaDividendos() {
+      // Ordena rigorosamente em ordem crescente por data de pagamento (anos, meses e dias)
+      listaDividendos.sort((a, b) => {
+        return converterDataParaObjeto(a.dataPag) - converterDataParaObjeto(b.dataPag);
+      });
+
       const tbody = document.getElementById('tabelaDividendos');
       tbody.innerHTML = '';
       let total = 0;
@@ -937,6 +956,7 @@
       document.getElementById('mediaMensalProventos').innerText = `R$ ${(total / 36).toFixed(2).replace('.', ',')} / mês`;
 
       renderizarHistoricoPorAtivo();
+      recalcularTotais();
     }
 
     function renderizarHistoricoPorAtivo() {
@@ -956,6 +976,9 @@
       }
 
       for (const [ticker, itens] of Object.entries(agrupado)) {
+        // Ordena também os itens por ativo em ordem cronológica de pagamento
+        itens.sort((a, b) => converterDataParaObjeto(a.dataPag) - converterDataParaObjeto(b.dataPag));
+
         let totalAtivo = itens.reduce((soma, i) => soma + i.valor, 0);
         let linhasHtml = itens.map(i => `
           <div class="flex justify-between items-center text-xs py-2 border-b border-gray-100 dark:border-darkborder/50">
@@ -1230,7 +1253,17 @@
       const sinal = diferenca >= 0 ? '+' : '';
       
       lucroElem.innerHTML = `R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-sm font-normal">(${sinal}${percentual.toFixed(2)}%)</span>`;
-      lucroElem.className = diferenca >= 0 ? "text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-3xl font-bold text-red-500 mt-1";
+      lucroElem.className = diferenca >= 0 ? "text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-2xl font-bold text-red-500 mt-1";
+
+      // Cálculo do Resultado Real com Dividendos
+      let totalProventos = listaDividendos.reduce((acc, item) => acc + item.valor, 0);
+      let resultadoReal = (totalAtual + totalProventos) - totalInvestido;
+      let percentualReal = totalInvestido > 0 ? (resultadoReal / totalInvestido) * 100 : 0;
+      const sinalReal = resultadoReal >= 0 ? '+' : '';
+
+      const resultadoRealElem = document.getElementById('resultadoRealLiquido');
+      resultadoRealElem.innerHTML = `R$ ${resultadoReal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-xs font-normal">(${sinalReal}${percentualReal.toFixed(2)}%)</span>`;
+      resultadoRealElem.className = resultadoReal >= 0 ? "text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-2xl font-bold text-red-500 mt-1";
 
       const badgeQtdAtivos = document.getElementById('qtdAtivosMonitorados');
       if (badgeQtdAtivos) badgeQtdAtivos.innerText = totalAtivosCount;
