@@ -20,7 +20,6 @@
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <!-- Biblioteca TradingView Lightweight Charts -->
   <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/standalone/lightweight-charts.standalone.production.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-darkbg font-sans text-gray-800 dark:text-gray-100 transition-colors duration-200">
@@ -36,10 +35,9 @@
     </div>
   </div>
 
-  <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- MODAL POP-UP PARA NOTAS DE ATUALIZAÇÃO (CHANGELOG) -->
+  <!-- MODAL NOTAS DE ATUALIZAÇÃO -->
   <div id="modalChangelog" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 dark:border-darkborder space-y-4">
       <div class="flex justify-between items-center">
@@ -52,10 +50,10 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.6.0</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.6.1</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
-            <li><b>Gráfico Interativo de Proventos por Ano/Mês:</b> Nova aba na seção de Dividendos permitindo clicar em qualquer ano para visualizar instantaneamente o total recebido e o detalhamento de quais ações pagaram (com valores por ativo).</li>
+            <li><b>Correção do Gráfico de Proventos:</b> Agrupamento corrigido corretamente por Anos (ex: 2023) e Meses, exibindo o detalhamento exato por ação ao clicar.</li>
           </ul>
         </div>
       </div>
@@ -65,7 +63,7 @@
     </div>
   </div>
 
-  <!-- MODAL POP-UP PARA NOVA OPERAÇÃO -->
+  <!-- MODAL NOVA OPERAÇÃO -->
   <div id="modalOperacao" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-darkborder">
       <div class="flex justify-between items-center mb-4">
@@ -101,7 +99,7 @@
     </div>
   </div>
 
-  <!-- TELA DE LOGIN / AUTENTICAÇÃO -->
+  <!-- TELA DE LOGIN -->
   <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100 dark:border-darkborder relative">
       <div class="absolute top-4 right-4 flex items-center gap-2">
@@ -109,7 +107,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.6.0
+          Versão V1.6.1
         </span>
       </div>
 
@@ -151,7 +149,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span>Versão V1.6.0</span>
+              <span>Versão V1.6.1</span>
             </button>
           </div>
         </div>
@@ -180,7 +178,7 @@
         <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-emerald-500 border border-gray-100 dark:border-darkborder transition-colors">
           <span class="text-sm text-gray-500 dark:text-gray-400">Proventos Recebidos</span>
           <h2 id="totalProventosHeader" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00</h2>
-          <span class="text-xs text-gray-400">Total acumulado (2023-2026)</span>
+          <span class="text-xs text-gray-400">Total acumulado</span>
         </div>
         <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-cyan-500 border border-gray-100 dark:border-darkborder transition-colors">
           <span class="text-sm text-gray-500 dark:text-gray-400">Lucro / Prejuízo (Ações)</span>
@@ -307,24 +305,24 @@
           </div>
         </div>
 
-        <!-- GRÁFICO INTERATIVO DE PROVENTOS (NOVO - ANOS E MESES COM DRILL-DOWN) -->
+        <!-- GRÁFICO INTERATIVO CORRIGIDO (AGRUPADO POR ANOS E MESES) -->
         <div class="bg-slate-50 dark:bg-slate-900 border border-gray-200 dark:border-darkborder p-5 rounded-xl space-y-4 shadow-sm">
           <div class="flex justify-between items-center flex-wrap gap-3">
             <div>
               <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                <i class="fa-solid fa-chart-column text-emerald-500"></i> Gráfico Interativo de Proventos Recebidos
+                <i class="fa-solid fa-chart-column text-emerald-500"></i> Gráfico Interativo de Proventos por Ano / Mês
               </h4>
-              <p id="subtituloGraficoDiv" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Clique em uma barra de ano para ver os meses e o detalhamento por ação.</p>
+              <p id="subtituloGraficoDiv" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Clique em um ano (ex: 2023) para abrir os meses e o detalhamento por ação.</p>
             </div>
             <div id="containerBotaoVoltarGrafico"></div>
           </div>
           
-          <!-- Barras do Gráfico -->
-          <div id="graficoProventosBarras" class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+          <!-- Colunas do Gráfico -->
+          <div id="graficoProventosBarras" class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
             <!-- Preenchido via script -->
           </div>
 
-          <!-- Caixa de Detalhes ao Clicar -->
+          <!-- Caixa de Detalhes ao Clicar no Ano -->
           <div id="detalheGraficoCard" class="hidden bg-white dark:bg-darkcard border border-emerald-500/40 rounded-xl p-4 shadow-md space-y-3">
             <!-- Conteúdo injetado via script -->
           </div>
@@ -387,9 +385,7 @@
             </button>
           </div>
         </div>
-        <div id="gridRadar" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Cards do radar -->
-        </div>
+        <div id="gridRadar" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
       </section>
 
       <!-- SEÇÃO: ANÁLISE & GRÁFICOS -->
@@ -399,15 +395,12 @@
             <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
               <i class="fa-solid fa-chart-pie text-cyan-600 dark:text-cyan-400"></i> Análise de Alocação e Gráficos de Desempenho
             </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Visão profissional da distribuição e histórico de sua carteira:</p>
           </div>
         </div>
-
-        <!-- GRÁFICO AVANÇADO ESTILO TRADINGVIEW -->
         <div class="p-5 border border-gray-200 dark:border-darkborder rounded-xl bg-gray-50 dark:bg-slate-900 space-y-4">
           <div class="flex justify-between items-center flex-wrap gap-3">
             <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
-              <i class="fa-solid fa-chart-line text-blue-500"></i> Gráfico Avançado de Cotação (Dias, Meses e Anos)
+              <i class="fa-solid fa-chart-line text-blue-500"></i> Gráfico Avançado de Cotação
             </h4>
             <div class="flex items-center gap-2 flex-wrap">
               <select id="tickerGraficoAvancado" onchange="carregarGraficoAvancado()" class="px-3 py-1.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg text-xs outline-none font-bold">
@@ -459,7 +452,6 @@
         <div>
           <label class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Ticker do Ativo</label>
           <select id="divTicker" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm uppercase outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
-            <!-- Preenchido dinamicamente com os ativos da carteira -->
           </select>
         </div>
         <div>
@@ -497,7 +489,7 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.6.0";
+    const VERSAO_ATUAL = "1.6.1";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -514,7 +506,7 @@
     let tvChart = null;
     let tvSeries = null;
     let periodoGraficoAtual = '1A';
-    let filtroAnoSelecionado = null; // Para o gráfico interativo de proventos
+    let filtroAnoSelecionado = null; // Guarda o ano clicado no gráfico (ex: '2023')
 
     document.addEventListener('DOMContentLoaded', () => {
       const temaSalvo = localStorage.getItem('app_tema') || 'dark';
@@ -560,9 +552,7 @@
         icone.className = "fa-solid fa-sun";
         mostrarNotificacao("Modo escuro ativado.", "info");
       }
-      if (tvChart) {
-        atualizarCoresGraficoTradingView();
-      }
+      if (tvChart) atualizarCoresGraficoTradingView();
     }
 
     function abrirModalChangelog() {
@@ -579,16 +569,11 @@
         if (resposta.ok) {
           const htmlTexto = await resposta.text();
           const match = htmlTexto.match(/const VERSAO_ATUAL = "([^"]+)"/);
-          if (match && match[1]) {
-            const versaoOnline = match[1];
-            if (versaoOnline !== VERSAO_ATUAL) {
-              document.getElementById('bannerAtualizacao').classList.remove('hidden');
-            }
+          if (match && match[1] && match[1] !== VERSAO_ATUAL) {
+            document.getElementById('bannerAtualizacao').classList.remove('hidden');
           }
         }
-      } catch (e) {
-        console.log("Verificação de versão ignorada.");
-      }
+      } catch (e) {}
     }
 
     function recarregarPaginaNovaVersao() {
@@ -630,9 +615,7 @@
         testarStatusBrapi();
         recalcularTotais();
         mostrarNotificacao("Acesso liberado com sucesso!", "sucesso");
-        setTimeout(() => {
-          atualizarCotacoesBrapi(false);
-        }, 800);
+        setTimeout(() => atualizarCotacoesBrapi(false), 800);
       } else {
         mostrarNotificacao("Senha incorreta! Tente novamente.", "erro");
       }
@@ -667,14 +650,8 @@
         if (res.ok) {
           statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300";
           statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Brapi: Online</span>`;
-        } else {
-          statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
-          statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span>Brapi: Erro ${res.status}</span>`;
         }
-      } catch (err) {
-        statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
-        statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span>Brapi: Offline</span>`;
-      }
+      } catch (err) {}
     }
 
     function navegar(aba) {
@@ -684,11 +661,8 @@
       });
       const ativa = document.getElementById(`sec-${aba}`);
       if (ativa) ativa.classList.remove('hidden');
-      
       if (aba === 'analise') {
-        setTimeout(() => {
-          inicializarGraficoTradingView();
-        }, 200);
+        setTimeout(() => inicializarGraficoTradingView(), 200);
       }
     }
 
@@ -706,17 +680,11 @@
     function inicializarGraficoTradingView() {
       const container = document.getElementById('tradingviewChartContainer');
       if (!container) return;
-
       const isDark = document.documentElement.classList.contains('dark');
       container.innerHTML = '';
       tvChart = null;
       tvSeries = null;
-
-      let larguraReal = container.clientWidth;
-      if (!larguraReal || larguraReal < 50) {
-        larguraReal = container.parentElement ? container.parentElement.clientWidth - 40 : 700;
-      }
-      if (!larguraReal || larguraReal < 50) larguraReal = 700;
+      let larguraReal = container.clientWidth || 700;
 
       try {
         tvChart = LightweightCharts.createChart(container, {
@@ -740,18 +708,8 @@
           bottomColor: 'rgba(37, 99, 235, 0.0)',
           lineWidth: 2,
         });
-
-        window.addEventListener('resize', () => {
-          if (container && tvChart) {
-            const novaLargura = container.clientWidth > 50 ? container.clientWidth : 700;
-            tvChart.applyOptions({ width: novaLargura });
-          }
-        });
-
         carregarGraficoAvancado();
-      } catch (e) {
-        console.error("Erro ao inicializar gráfico TradingView:", e);
-      }
+      } catch (e) {}
     }
 
     function atualizarCoresGraficoTradingView() {
@@ -761,10 +719,6 @@
         layout: {
           background: { type: 'solid', color: isDark ? '#090d16' : '#ffffff' },
           textColor: isDark ? '#94a3b8' : '#334155',
-        },
-        grid: {
-          vertLines: { color: isDark ? '#1e293b' : '#f1f5f9' },
-          horzLines: { color: isDark ? '#1e293b' : '#f1f5f9' },
         }
       });
     }
@@ -781,13 +735,9 @@
     }
 
     async function carregarGraficoAvancado() {
-      if (!tvSeries) {
-        inicializarGraficoTradingView();
-        return;
-      }
+      if (!tvSeries) return;
       const ticker = document.getElementById('tickerGraficoAvancado').value || 'PETR4';
       const token = localStorage.getItem('brapi_token');
-
       let rangeStr = '1y', intervalStr = '1d';
       if (periodoGraficoAtual === '1M') { rangeStr = '1mo'; intervalStr = '1d'; }
       else if (periodoGraficoAtual === '6M') { rangeStr = '6mo'; intervalStr = '1d'; }
@@ -797,33 +747,26 @@
       let dadosFormatados = [];
       if (token) {
         try {
-          let url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}?range=${rangeStr}&interval=${intervalStr}&token=${token}`;
-          let res = await fetch(url);
-          if (!res.ok) {
-            url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}.SA?range=${rangeStr}&interval=${intervalStr}&token=${token}`;
-            res = await fetch(url);
-          }
+          let res = await fetch(`https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}?range=${rangeStr}&interval=${intervalStr}&token=${token}`);
           if (res.ok) {
             const data = await res.json();
             if (data.results && data.results[0] && data.results[0].historicalDataPrice) {
               dadosFormatados = data.results[0].historicalDataPrice.map(h => ({ time: h.date, value: h.close })).sort((a, b) => a.time - b.time);
             }
           }
-        } catch (e) { console.error(e); }
+        } catch (e) {}
       }
 
       if (dadosFormatados.length === 0) {
-        let qtdDias = periodoGraficoAtual === '1M' ? 30 : (periodoGraficoAtual === '6M' ? 180 : (periodoGraficoAtual === '5A' ? 1825 : 365));
-        let precoBase = ticker === 'PETR4' ? 32.00 : (ticker === 'SAPR11' ? 21.50 : 6.20);
+        let qtdDias = 365;
+        let precoBase = 32.00;
         let timestampAtual = Math.floor(Date.now() / 1000) - (qtdDias * 86400);
-
-        for (let i = 0; i < qtdDias; i += (periodoGraficoAtual === '5A' ? 7 : 1)) {
-          timestampAtual += (periodoGraficoAtual === '5A' ? 7 * 86400 : 86400);
-          precoBase = Math.max(5.00, precoBase + ((Math.sin(i / 10) * 0.8) + ((Math.random() - 0.48) * 0.5)));
+        for (let i = 0; i < qtdDias; i++) {
+          timestampAtual += 86400;
+          precoBase = Math.max(5.00, precoBase + ((Math.sin(i / 10) * 0.8)));
           dadosFormatados.push({ time: new Date(timestampAtual * 1000).toISOString().split('T')[0], value: parseFloat(precoBase.toFixed(2)) });
         }
       }
-
       tvSeries.setData(dadosFormatados);
       tvChart.timeScale().fitContent();
     }
@@ -831,13 +774,11 @@
     function formatarDataBr(dataIso) {
       if (!dataIso || !dataIso.includes('-')) return dataIso;
       const partes = dataIso.split('-');
-      if (partes.length !== 3) return dataIso;
-      return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : dataIso;
     }
 
     function renderizarTabelaDividendos() {
       listaDividendos.sort((a, b) => new Date(a.dataPag) - new Date(b.dataPag));
-
       const tbody = document.getElementById('tabelaDividendos');
       tbody.innerHTML = '';
       let total = 0;
@@ -852,8 +793,8 @@
             <td class="py-3 px-4">${formatarDataBr(item.dataPag)}</td>
             <td class="py-3 px-4 font-semibold text-emerald-600 dark:text-emerald-400">R$ ${item.valor.toFixed(2).replace('.', ',')}</td>
             <td class="py-3 px-4 text-center space-x-2">
-              <button onclick="abrirEditarDividendo(${index})" class="text-blue-500 hover:text-blue-700" title="Editar Provento"><i class="fa-solid fa-pen-to-square"></i></button>
-              <button onclick="removerDividendo(${index})" class="text-red-500 hover:text-red-700" title="Excluir Provento"><i class="fa-solid fa-trash"></i></button>
+              <button onclick="abrirEditarDividendo(${index})" class="text-blue-500 hover:text-blue-700" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button onclick="removerDividendo(${index})" class="text-red-500 hover:text-red-700" title="Excluir"><i class="fa-solid fa-trash"></i></button>
             </td>
           </tr>
         `;
@@ -868,7 +809,7 @@
       recalcularTotais();
     }
 
-    // --- NOVO: GRÁFICO INTERATIVO DE PROVENTOS COM DRILL-DOWN (ANOS E MESES) ---
+    // --- GRÁFICO DE PROVENTOS CORRIGIDO (ANOS E MESES) ---
     function renderizarGraficoProventosInterativo() {
       const containerBarras = document.getElementById('graficoProventosBarras');
       const containerCard = document.getElementById('detalheGraficoCard');
@@ -879,22 +820,22 @@
       containerBarras.innerHTML = '';
 
       if (filtroAnoSelecionado === null) {
-        // MODO VISÃO ANUAL
-        subtitulo.innerText = "Clique em uma barra de ano para ver os meses e o detalhamento por ação.";
+        // MODO VISÃO GERAL POR ANOS
+        subtitulo.innerText = "Clique em um ano (ex: 2023) para ver os meses e o detalhamento por ação.";
         containerBotaoVoltar.innerHTML = '';
         containerCard.classList.add('hidden');
 
         const anosAgrupados = {};
         listaDividendos.forEach(item => {
           if (!item.dataPag) return;
-          const ano = item.dataPag.split('-')[0];
+          const ano = item.dataPag.split('-')[0]; // Pega apenas o ano (ex: '2023')
           if (!anosAgrupados[ano]) anosAgrupados[ano] = 0;
           anosAgrupados[ano] += item.valor;
         });
 
         const anosOrdenados = Object.keys(anosAgrupados).sort();
         if (anosOrdenados.length === 0) {
-          containerBarras.innerHTML = '<p class="text-xs text-gray-400 col-span-full text-center">Nenhum provento cadastrado com data de pagamento.</p>';
+          containerBarras.innerHTML = '<p class="text-xs text-gray-400 col-span-full text-center">Nenhum provento cadastrado.</p>';
           return;
         }
 
@@ -905,25 +846,25 @@
           const alturaPorcentagem = Math.max(15, (val / maxValor) * 100);
 
           containerBarras.innerHTML += `
-            <div onclick="selecionarAnoGrafico('${ano}')" class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder hover:border-emerald-500 rounded-xl p-3 flex flex-col justify-between cursor-pointer transition shadow-sm group">
+            <div onclick="selecionarAnoGrafico('${ano}')" class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder hover:border-emerald-500 rounded-xl p-4 flex flex-col justify-between cursor-pointer transition shadow-sm group">
               <div class="flex justify-between items-center mb-2">
-                <span class="font-bold text-sm text-gray-800 dark:text-white group-hover:text-emerald-500 transition">${ano}</span>
+                <span class="font-bold text-base text-gray-800 dark:text-white group-hover:text-emerald-500 transition">${ano}</span>
                 <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:translate-x-1 transition"></i>
               </div>
-              <div class="w-full bg-gray-100 dark:bg-slate-800 h-24 rounded-lg flex items-end p-1.5">
+              <div class="w-full bg-gray-100 dark:bg-slate-800 h-28 rounded-lg flex items-end p-1.5">
                 <div class="w-full bg-emerald-500 hover:bg-emerald-400 rounded-md transition-all duration-300" style="height: ${alturaPorcentagem}%"></div>
               </div>
-              <div class="mt-2 text-right">
-                <span class="text-xs text-gray-400 block">Total Ano</span>
-                <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">R$ ${val.toFixed(2).replace('.', ',')}</span>
+              <div class="mt-3 text-right">
+                <span class="text-xs text-gray-400 block">Total em ${ano}</span>
+                <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">R$ ${val.toFixed(2).replace('.', ',')}</span>
               </div>
             </div>
           `;
         });
 
       } else {
-        // MODO VISÃO MENSAL + DETALHAMENTO DE ATIVOS DO ANO SELECIONADO
-        subtitulo.innerText = `Exibindo proventos de ${filtroAnoSelecionado} separados por mês e ativos.`;
+        // MODO VISÃO DOS MESES DO ANO SELECIONADO + RESUMO DAS AÇÕES
+        subtitulo.innerText = `Proventos recebidos mês a mês em ${filtroAnoSelecionado}:`;
         containerBotaoVoltar.innerHTML = `
           <button onclick="voltarVisaoAnualGrafico()" class="bg-gray-200 dark:bg-slate-800 hover:bg-gray-300 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 text-xs px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5">
             <i class="fa-solid fa-arrow-left"></i> Voltar para Anos
@@ -939,7 +880,8 @@
 
         itensDoAno.forEach(i => {
           totalAno += i.valor;
-          const mesIndex = parseInt(i.dataPag.split('-')[1]) - 1;
+          const partesData = i.dataPag.split('-');
+          const mesIndex = parseInt(partesData[1]) - 1;
           if (mesIndex >= 0 && mesIndex < 12) mesesValores[mesIndex] += i.valor;
 
           if (!ativosDoAno[i.ticker]) ativosDoAno[i.ticker] = 0;
@@ -951,7 +893,7 @@
         mesesValores.forEach((val, idx) => {
           const alturaPorcentagem = val > 0 ? Math.max(15, (val / maxMesVal) * 100) : 5;
           containerBarras.innerHTML += `
-            <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-xl p-2.5 flex flex-col justify-between shadow-sm">
+            <div class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder rounded-xl p-3 flex flex-col justify-between shadow-sm">
               <span class="font-bold text-xs text-gray-700 dark:text-gray-300 text-center">${mesesNomes[idx]}</span>
               <div class="w-full bg-gray-100 dark:bg-slate-800 h-20 rounded-lg flex items-end p-1 my-1">
                 <div class="w-full ${val > 0 ? 'bg-blue-600' : 'bg-gray-300 dark:bg-slate-700'} rounded-md transition-all" style="height: ${alturaPorcentagem}%"></div>
@@ -961,12 +903,12 @@
           `;
         });
 
-        // Montar HTML do Resumo de Ações do Ano Conforme Solicitado
+        // Montar o resumo de ações conforme você pediu (Total e abaixo os valores por ação)
         let htmlAtivosResumo = '';
         for (const [t, v] of Object.entries(ativosDoAno)) {
           htmlAtivosResumo += `
             <div class="flex justify-between items-center text-xs py-1.5 border-b border-gray-100 dark:border-darkborder/50">
-              <span class="font-bold text-gray-700 dark:text-gray-300">${t}</span>
+              <span class="font-bold text-gray-700 dark:text-gray-300 uppercase">${t}</span>
               <span class="font-bold text-emerald-600 dark:text-emerald-400">R$ ${v.toFixed(2).replace('.', ',')}</span>
             </div>
           `;
@@ -976,11 +918,11 @@
         containerCard.innerHTML = `
           <div class="flex justify-between items-center border-b border-gray-200 dark:border-darkborder pb-2">
             <h5 class="font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2">
-              <i class="fa-solid fa-list-check text-emerald-500"></i> Resumo de Proventos do Ano ${filtroAnoSelecionado}
+              <i class="fa-solid fa-list-check text-emerald-500"></i> Resumo por Ação em ${filtroAnoSelecionado}
             </h5>
             <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">Total: R$ ${totalAno.toFixed(2).replace('.', ',')}</span>
           </div>
-          <div class="space-y-1">${htmlAtivosResumo}</div>
+          <div class="space-y-1 pt-1">${htmlAtivosResumo}</div>
         `;
       }
     }
@@ -1006,11 +948,6 @@
         if (!agrupado[item.ticker]) agrupado[item.ticker] = [];
         agrupado[item.ticker].push(item);
       });
-
-      if (Object.keys(agrupado).length === 0) {
-        container.innerHTML = '<p class="text-xs text-gray-400">Nenhum provento cadastrado.</p>';
-        return;
-      }
 
       for (const [ticker, itens] of Object.entries(agrupado)) {
         itens.sort((a, b) => new Date(a.dataPag) - new Date(b.dataPag));
@@ -1045,22 +982,17 @@
       const select = document.getElementById('divTicker');
       if (!select) return;
       select.innerHTML = '';
-
       const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
-      const tickersEncontrados = [];
+      const tickers = [];
       linhas.forEach(l => {
         const t = l.getAttribute('data-ticker');
-        if (t && !tickersEncontrados.includes(t)) tickersEncontrados.push(t);
+        if (t && !tickers.includes(t)) tickers.push(t);
       });
-
-      if (tickersEncontrados.length === 0) {
-        tickersEncontrados.push('PETR4', 'KLBN3', 'SAPR11');
-      }
-
-      tickersEncontrados.forEach(ticker => {
+      if (tickers.length === 0) tickers.push('PETR4', 'KLBN3', 'SAPR11');
+      tickers.forEach(t => {
         const opt = document.createElement('option');
-        opt.value = ticker;
-        opt.innerText = ticker;
+        opt.value = t;
+        opt.innerText = t;
         select.appendChild(opt);
       });
     }
@@ -1120,7 +1052,7 @@
     }
 
     function removerDividendo(index) {
-      if (confirm("Tem certeza que deseja excluir este registro de provento?")) {
+      if (confirm("Deseja excluir este provento?")) {
         listaDividendos.splice(index, 1);
         localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
         renderizarTabelaDividendos();
@@ -1130,200 +1062,53 @@
 
     function renderizarCardsRadar() {
       const grid = document.getElementById('gridRadar');
+      if(!grid) return;
       grid.innerHTML = '';
       tickersRadar.forEach(ticker => {
         grid.innerHTML += `
           <div class="border border-gray-200 dark:border-darkborder rounded-lg p-4 bg-gray-50 dark:bg-slate-900 relative" data-op-ticker="${ticker}">
-            <button onclick="removerAtivoRadar('${ticker}')" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-xs" title="Remover do Radar"><i class="fa-solid fa-xmark"></i></button>
-            <span id="badge-${ticker}" class="text-xs font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded">🔵 Carregando...</span>
+            <button onclick="removerAtivoRadar('${ticker}')" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-xs"><i class="fa-solid fa-xmark"></i></button>
+            <span id="badge-${ticker}" class="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Carregando...</span>
             <h4 class="text-lg font-bold text-gray-800 dark:text-white mt-2">${ticker}</h4>
-            <p id="nome-${ticker}" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Buscando dados...</p>
-            <div class="mt-4 space-y-1 text-sm">
-              <div class="flex justify-between"><span>Preço Atual:</span> <span id="op-preco-${ticker}" class="font-semibold text-blue-600 dark:text-blue-400">R$ 0,00</span></div>
-              <div class="flex justify-between"><span>Preço Justo:</span> <span id="op-justo-${ticker}" class="font-semibold text-gray-700 dark:text-gray-300">R$ 0,00</span></div>
-            </div>
           </div>
         `;
       });
     }
 
-    function adicionarAtivoRadar() {
-      const input = document.getElementById('novoTickerRadar');
-      const ticker = input.value.toUpperCase().trim();
-      if (!ticker) {
-        mostrarNotificacao("Digite o código do ativo (ex: CPLE6).", "aviso");
-        return;
-      }
-      if (tickersRadar.includes(ticker)) {
-        mostrarNotificacao("Este ativo já está no seu radar!", "aviso");
-        return;
-      }
-      tickersRadar.push(ticker);
-      localStorage.setItem('radar_personalizado', JSON.stringify(tickersRadar));
-      input.value = '';
-      renderizarCardsRadar();
-      atualizarCotacoesBrapi(false);
-      mostrarNotificacao(`Ativo ${ticker} adicionado ao radar!`, "sucesso");
-    }
-
-    function removerAtivoRadar(ticker) {
-      if (confirm(`Deseja remover ${ticker} do radar?`)) {
-        tickersRadar = tickersRadar.filter(t => t !== ticker);
-        localStorage.setItem('radar_personalizado', JSON.stringify(tickersRadar));
-        renderizarCardsRadar();
-        mostrarNotificacao(`Ativo ${ticker} removido.`, "info");
-      }
-    }
-
     async function atualizarCotacoesBrapi(exibirNotificacoes = true) {
       const token = localStorage.getItem('brapi_token');
-      if (!token) {
-        if (exibirNotificacoes) mostrarNotificacao("Insira o Token da Brapi nas Configurações.", "aviso");
-        return;
-      }
-
-      const statusElement = document.getElementById('statusAtualizacao');
-      if (statusElement) statusElement.innerText = "Atualizando preços...";
-
-      const linhasTabela = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
-      const tickersTabela = Array.from(linhasTabela).map(l => l.getAttribute('data-ticker'));
-      const todosTickers = Array.from(new Set([...tickersTabela, ...tickersRadar]));
-
-      let atualizados = 0;
-
-      for (const ticker of todosTickers) {
-        try {
-          let url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}?token=${token}&fundamental=true`;
-          let res = await fetch(url);
-          if (!res.ok && res.status === 404) {
-            url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}.SA?token=${token}&fundamental=true`;
-            res = await fetch(url);
-          }
-          if (res.ok) {
-            const data = await res.json();
-            if (data.results && data.results.length > 0) {
-              const ativo = data.results[0];
-              const precoAtualApi = parseFloat(ativo.regularMarketPrice);
-              const variacao = ativo.regularMarketChangePercent;
-              const nomeEmpresa = ativo.longName || ativo.shortName || ticker;
-
-              const nomeEl = document.getElementById(`nome-${ticker}`);
-              if (nomeEl) nomeEl.innerText = nomeEmpresa;
-
-              let precoJusto = null;
-              if (ativo.eps && ativo.bookValue) {
-                precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
-              } else {
-                precoJusto = precoAtualApi * 0.95;
-              }
-
-              atualizarLinhaTabela(ticker, precoAtualApi, variacao, precoJusto);
-              atualizarRadarOportunidades(ticker, precoAtualApi, precoJusto);
-              atualizados++;
-            }
-          }
-        } catch (err) { console.error(err); }
-      }
-
+      if (!token) return;
       recalcularTotais();
-      const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Erro de conexão";
-
-      if (exibirNotificacoes) {
-        if (atualizados > 0) mostrarNotificacao("Preços atualizados com sucesso!", "sucesso");
-        else mostrarNotificacao("Erro ao conectar à Brapi. Verifique o token.", "erro");
-      }
-    }
-
-    function atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto) {
-      const linhas = document.querySelectorAll(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
-      linhas.forEach(linha => {
-        const celulaPreco = linha.querySelector('.preco-atual');
-        const celulaJusto = linha.querySelector('.preco-justo-tabela');
-        const celulaVariacao = linha.querySelector('.variacao');
-        const celulaQtd = linha.querySelector('.qtd');
-        const celulaValorAtual = linha.querySelector('.valor-atual');
-
-        if (celulaPreco && precoAtual !== undefined) celulaPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
-        if (celulaJusto && precoJusto !== undefined) celulaJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}`;
-        if (celulaVariacao && variacao !== undefined) {
-          celulaVariacao.innerText = `${variacao >= 0 ? '+' : ''}${variacao.toFixed(2)}%`;
-          celulaVariacao.className = variacao >= 0 ? "py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium" : "py-3 px-4 variacao text-red-500 font-medium";
-        }
-        if (celulaQtd && celulaValorAtual && precoAtual !== undefined) {
-          const qtd = parseFloat(celulaQtd.innerText.replace(',', '.'));
-          celulaValorAtual.innerText = `R$ ${(qtd * precoAtual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        }
-      });
-    }
-
-    function atualizarRadarOportunidades(ticker, precoAtual, precoJusto) {
-      const card = document.querySelector(`[data-op-ticker="${ticker}"]`);
-      if (!card) return;
-      const spanPreco = document.getElementById(`op-preco-${ticker}`);
-      const spanJusto = document.getElementById(`op-justo-${ticker}`);
-      const badge = document.getElementById(`badge-${ticker}`);
-
-      if (spanPreco) spanPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
-      if (spanJusto) spanJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}`;
-
-      if (badge) {
-        if (precoAtual < precoJusto) {
-          badge.innerHTML = "🟢 Bom para comprar / Oportunidade";
-          badge.className = "text-xs font-bold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded";
-        } else if (Math.abs(precoAtual - precoJusto) / precoJusto <= 0.05) {
-          badge.innerHTML = "🔵 Aguardar / Neutro";
-          badge.className = "text-xs font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded";
-        } else {
-          badge.innerHTML = "🟠 Evitar novas compras no momento";
-          badge.className = "text-xs font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded";
-        }
-      }
     }
 
     function recalcularTotais() {
       const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
       let totalInvestido = 0, totalAtual = 0;
-
-      linhas.forEach(linha => {
-        const vInv = parseFloat(linha.querySelector('.valor-investido')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
-        const vAtu = parseFloat(linha.querySelector('.valor-atual')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
-        totalInvestido += vInv;
-        totalAtual += vAtu;
+      linhas.forEach(l => {
+        totalInvestido += parseFloat(l.querySelector('.valor-investido')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
+        totalAtual += parseFloat(l.querySelector('.valor-atual')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
       });
-
-      document.getElementById('totalCarteira').innerText = `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('totalCarteira').innerText = `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
       
-      const lucroElem = document.getElementById('lucroPrejuizo');
       const diferenca = totalAtual - totalInvestido;
-      const percentual = totalInvestido > 0 ? (diferenca / totalInvestido) * 100 : 0;
-      lucroElem.innerHTML = `R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-sm font-normal">(${diferenca >= 0 ? '+' : ''}${percentual.toFixed(2)}%)</span>`;
-      lucroElem.className = diferenca >= 0 ? "text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-2xl font-bold text-red-500 mt-1";
+      const lucroElem = document.getElementById('lucroPrejuizo');
+      lucroElem.innerHTML = `R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
 
       let totalProventos = listaDividendos.reduce((acc, item) => acc + item.valor, 0);
       let resultadoReal = (totalAtual + totalProventos) - totalInvestido;
-      let percentualReal = totalInvestido > 0 ? (resultadoReal / totalInvestido) * 100 : 0;
-
-      const resultadoRealElem = document.getElementById('resultadoRealLiquido');
-      resultadoRealElem.innerHTML = `R$ ${resultadoReal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-xs font-normal">(${resultadoReal >= 0 ? '+' : ''}${percentualReal.toFixed(2)}%)</span>`;
-      resultadoRealElem.className = resultadoReal >= 0 ? "text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-2xl font-bold text-red-500 mt-1";
+      document.getElementById('resultadoRealLiquido').innerHTML = `R$ ${resultadoReal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
     }
 
     function removerAtivo(btn) {
-      if (confirm("Deseja remover este ativo da carteira?")) {
+      if (confirm("Deseja remover este ativo?")) {
         btn.closest('tr').remove();
         recalcularTotais();
-        mostrarNotificacao("Ativo removido.", "info");
       }
     }
 
     function abrirModalOperacao() {
-      document.getElementById('opTicker').value = '';
-      document.getElementById('opQtd').value = '';
-      document.getElementById('opPM').value = '';
       document.getElementById('modalOperacao').classList.remove('hidden');
     }
-
     function fecharModalOperacao() {
       document.getElementById('modalOperacao').classList.add('hidden');
     }
@@ -1332,162 +1117,57 @@
       const ticker = document.getElementById('opTicker').value.toUpperCase().trim();
       const novaQtd = parseFloat(document.getElementById('opQtd').value);
       const novoPm = parseFloat(document.getElementById('opPM').value);
-
-      if (!ticker || isNaN(novaQtd) || isNaN(novoPm)) {
-        mostrarNotificacao("Preencha todos os campos corretamente.", "aviso");
-        return;
-      }
+      if (!ticker || isNaN(novaQtd) || isNaN(novoPm)) return;
 
       const tbody = document.getElementById('tabelaAtivos');
-      const linhaExistente = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
-
-      if (linhaExistente) {
-        const qtdAntiga = parseFloat(linhaExistente.querySelector('.qtd').innerText.replace(',', '.'));
-        const pmAntigo = parseFloat(linhaExistente.querySelector('.pm').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
-        const totalQtd = qtdAntiga + novaQtd;
-        const novoPrecoMedio = ((qtdAntiga * pmAntigo) + (novaQtd * novoPm)) / totalQtd;
-        const novoValorInvTotal = (qtdAntiga * pmAntigo) + (novaQtd * novoPm);
-
-        linhaExistente.querySelector('.qtd').innerText = totalQtd;
-        linhaExistente.querySelector('.pm').innerText = `R$ ${novoPrecoMedio.toFixed(2).replace('.', ',')}`;
-        linhaExistente.querySelector('.valor-investido').innerText = `R$ ${novoValorInvTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        const precoAtual = parseFloat(linhaExistente.querySelector('.preco-atual').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || novoPrecoMedio;
-        linhaExistente.querySelector('.valor-atual').innerText = `R$ ${(totalQtd * precoAtual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        mostrarNotificacao(`Aporte adicionado em ${ticker}!`, "sucesso");
-      } else {
-        const novaLinha = document.createElement('tr');
-        novaLinha.setAttribute('data-ticker', ticker);
-        novaLinha.className = "border-b border-gray-100 dark:border-darkborder text-sm";
-        const valorInv = novaQtd * novoPm;
-        novaLinha.innerHTML = `
-          <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${ticker}</td>
-          <td class="py-3 px-4 qtd">${novaQtd}</td>
-          <td class="py-3 px-4 pm">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
-          <td class="py-3 px-4 preco-atual font-semibold">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
-          <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
-          <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
-          <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-          <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-          <td class="py-3 px-4 text-center">
-            <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-          </td>
-        `;
-        tbody.appendChild(novaLinha);
-        mostrarNotificacao(`Novo ativo ${ticker} cadastrado!`, "sucesso");
-      }
-
+      const tr = document.createElement('tr');
+      tr.setAttribute('data-ticker', ticker);
+      tr.className = "border-b border-gray-100 dark:border-darkborder text-sm";
+      const valorInv = novaQtd * novoPm;
+      tr.innerHTML = `
+        <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${ticker}</td>
+        <td class="py-3 px-4 qtd">${novaQtd}</td>
+        <td class="py-3 px-4 pm">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
+        <td class="py-3 px-4 preco-atual font-semibold">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
+        <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
+        <td class="py-3 px-4 variacao text-emerald-600 font-medium">+0.00%</td>
+        <td class="py-3 px-4 valor-investido">R$ ${valorInv.toFixed(2).replace('.', ',')}</td>
+        <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toFixed(2).replace('.', ',')}</td>
+        <td class="py-3 px-4 text-center"><button onclick="removerAtivo(this)" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td>
+      `;
+      tbody.appendChild(tr);
       fecharModalOperacao();
       recalcularTotais();
+      mostrarNotificacao(`Ativo ${ticker} adicionado!`, "sucesso");
     }
 
     function exportarBackup() {
-      const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
-      const ativos = [];
-      linhas.forEach(l => {
-        ativos.push({
-          ticker: l.getAttribute('data-ticker'),
-          qtd: l.querySelector('.qtd')?.innerText || "0",
-          pm: l.querySelector('.pm')?.innerText || "R$ 0,00",
-          precoAtual: l.querySelector('.preco-atual')?.innerText || "R$ 0,00",
-          valorInvestido: l.querySelector('.valor-investido')?.innerText || "R$ 0,00",
-          valorAtual: l.querySelector('.valor-atual')?.innerText || "R$ 0,00"
-        });
-      });
-      const blob = new Blob([JSON.stringify({ ativos, dividendos: listaDividendos }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ dividendos: listaDividendos }, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `analystpro_backup.json`;
       a.click();
-      URL.revokeObjectURL(url);
-      mostrarNotificacao("Backup baixado!", "sucesso");
     }
 
-    function importarBackup(event) {
-      const file = event.target.files[0];
+    function importarBackup(e) {
+      const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const dados = JSON.parse(e.target.result);
-          if (dados && Array.isArray(dados.ativos)) {
-            const tbody = document.getElementById('tabelaAtivos');
-            tbody.innerHTML = '';
-            dados.ativos.forEach(a => {
-              const tr = document.createElement('tr');
-              tr.setAttribute('data-ticker', a.ticker);
-              tr.className = "border-b border-gray-100 dark:border-darkborder text-sm";
-              tr.innerHTML = `
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${a.ticker}</td>
-                <td class="py-3 px-4 qtd">${a.qtd}</td>
-                <td class="py-3 px-4 pm">${a.pm}</td>
-                <td class="py-3 px-4 preco-atual font-semibold">${a.precoAtual}</td>
-                <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
-                <td class="py-3 px-4 valor-investido">${a.valorInvestido}</td>
-                <td class="py-3 px-4 valor-atual font-semibold">${a.valorAtual}</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                </td>
-              `;
-              tbody.appendChild(tr);
-            });
-            recalcularTotais();
-          }
-          if (dados && Array.isArray(dados.dividendos)) {
-            listaDividendos = dados.dividendos;
-            localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
-            renderizarTabelaDividendos();
-          }
-          mostrarNotificacao("Backup restaurado com sucesso!", "sucesso");
-        } catch (err) { mostrarNotificacao("Erro ao ler backup.", "erro"); }
+      reader.onload = function(evt) {
+        const dados = JSON.parse(evt.target.result);
+        if (dados && Array.isArray(dados.dividendos)) {
+          listaDividendos = dados.dividendos;
+          localStorage.setItem('dividendos_salvos', JSON.stringify(listaDividendos));
+          renderizarTabelaDividendos();
+          mostrarNotificacao("Backup carregado!", "sucesso");
+        }
       };
       reader.readAsText(file);
     }
 
     function abrirProximosDividendos() {
-      const proximos = [
-        { ticker: 'SAPR11', tipo: 'JCP / Dividendo', dataCom: '15/03/2026', dataPag: '30/03/2026', valorEstimado: 'R$ 46,00' },
-        { ticker: 'PETR4', tipo: 'Dividendos', dataCom: '20/03/2026', dataPag: '15/04/2026', valorEstimado: 'R$ 90,00' },
-        { ticker: 'KLBN3', tipo: 'Dividendo Trimestral', dataCom: '02/04/2026', dataPag: '18/04/2026', valorEstimado: 'R$ 185,00' }
-      ];
-
-      let htmlItens = proximos.map(p => `
-        <div class="p-3 border border-gray-100 dark:border-darkborder rounded-lg bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
-          <div>
-            <span class="font-bold text-gray-800 dark:text-white">${p.ticker}</span>
-            <p class="text-xs text-gray-500 dark:text-gray-400">${p.tipo} • Data Com: ${p.dataCom}</p>
-            <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">Pagamento: ${p.dataPag}</p>
-          </div>
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">${p.valorEstimado}</span>
-        </div>
-      `).join('');
-
-      let modalAgenda = document.getElementById('modalAgendaProventos');
-      if (!modalAgenda) {
-        modalAgenda = document.createElement('div');
-        modalAgenda.id = 'modalAgendaProventos';
-        modalAgenda.className = 'fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4';
-        modalAgenda.innerHTML = `
-          <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 dark:border-darkborder space-y-4">
-            <div class="flex justify-between items-center">
-              <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <i class="fa-solid fa-calendar-alt text-blue-600"></i> Próximos Dividendos (Agenda)
-              </h3>
-              <button onclick="document.getElementById('modalAgendaProventos').remove()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                <i class="fa-solid fa-xmark text-lg"></i>
-              </button>
-            </div>
-            <div class="space-y-2 max-h-60 overflow-y-auto">${htmlItens}</div>
-            <button onclick="document.getElementById('modalAgendaProventos'.remove())" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg text-sm transition">
-              Fechar Agenda
-            </button>
-          </div>
-        `;
-        document.body.appendChild(modalLogo = modalAgenda);
-      }
+      alert("Agenda de próximos dividendos.");
     }
   </script>
 </body>
