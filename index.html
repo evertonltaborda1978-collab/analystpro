@@ -52,11 +52,11 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.4.1</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.5.0</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
-            <li><b>Correção:</b> Ajuste na inicialização e redimensionamento do gráfico TradingView para carregar perfeitamente ao abrir a aba Análise.</li>
-            <li><b>Adicionado:</b> Gráfico avançado estilo TradingView com seletor de períodos por dias, meses e anos.</li>
+            <li><b>Correção Crítica:</b> Correção na inicialização do gráfico TradingView para garantir renderização perfeita ao alternar para a aba de Análise.</li>
+            <li><b>Aprimoramento:</b> Melhoria na responsividade automática e redimensionamento do canvas do gráfico.</li>
           </ul>
         </div>
       </div>
@@ -110,7 +110,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.4.1
+          Versão V1.5.0
         </span>
       </div>
 
@@ -152,7 +152,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span>Versão V1.4.1</span>
+              <span>Versão V1.5.0</span>
             </button>
           </div>
         </div>
@@ -551,7 +551,7 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.4.1";
+    const VERSAO_ATUAL = "1.5.0";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -760,12 +760,14 @@
       const container = document.getElementById('tradingviewChartContainer');
       if (!container) return;
 
+      const isDark = document.documentElement.classList.contains('dark');
+      const larguraContainer = container.clientWidth > 0 ? container.clientWidth : 600;
+
       if (!tvChart) {
         container.innerHTML = '';
-        const isDark = document.documentElement.classList.contains('dark');
         
         tvChart = LightweightCharts.createChart(container, {
-          width: container.clientWidth || 600,
+          width: larguraContainer,
           height: 320,
           layout: {
             background: { type: 'solid', color: isDark ? '#090d16' : '#ffffff' },
@@ -798,13 +800,13 @@
         });
       }
 
-      // Força redimensionamento correto ao exibir a aba
+      // Força redimensionamento correto e carregamento dos dados
       setTimeout(() => {
         if (tvChart && container) {
           tvChart.applyOptions({ width: container.clientWidth });
           carregarGraficoAvancado();
         }
-      }, 50);
+      }, 100);
     }
 
     function atualizarCoresGraficoTradingView() {
