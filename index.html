@@ -52,11 +52,11 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.5.4</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.5.5</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Correção Definitiva Gráfico:</b> Tratamento rigoroso de dimensões do container do TradingView para evitar tela em branco.</li>
-            <li><b>Simulador:</b> Campo "Horizonte (Anos)" mantido iniciando com o valor 0.</li>
+            <li><b>Controle de Versão:</b> Incremento rigoroso da versão após correções aplicadas.</li>
           </ul>
         </div>
       </div>
@@ -110,7 +110,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.5.4
+          Versão V1.5.5
         </span>
       </div>
 
@@ -152,7 +152,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span>Versão V1.5.4</span>
+              <span>Versão V1.5.5</span>
             </button>
           </div>
         </div>
@@ -551,7 +551,7 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.5.4";
+    const VERSAO_ATUAL = "1.5.5";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -738,7 +738,6 @@
       if (ativa) ativa.classList.remove('hidden');
       
       if (aba === 'analise') {
-        // Inicializa o gráfico garantindo tempo para layout e renderização de tamanhos reais
         setTimeout(() => {
           inicializarGraficoTradingView();
         }, 150);
@@ -756,19 +755,17 @@
       }
     }
 
-    // GRÁFICO AVANÇADO TRADINGVIEW LIGHTWEIGHT CHARTS (CORRIGIDO PARA LARGURA/ALTURA SEGURA)
+    // GRÁFICO AVANÇADO TRADINGVIEW LIGHTWEIGHT CHARTS
     function inicializarGraficoTradingView() {
       const container = document.getElementById('tradingviewChartContainer');
       if (!container) return;
 
       const isDark = document.documentElement.classList.contains('dark');
       
-      // Limpa instâncias anteriores
       container.innerHTML = '';
       tvChart = null;
       tvSeries = null;
 
-      // Obtém largura real ou assume um padrão seguro caso o layout esteja colapsado
       let larguraReal = container.clientWidth;
       if (!larguraReal || larguraReal < 50) {
         larguraReal = container.parentElement ? container.parentElement.clientWidth - 40 : 700;
