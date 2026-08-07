@@ -52,11 +52,11 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.5.6</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.5.7</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Raio-X Didático da Carteira:</b> Novo painel visual explicativo detalhando os valores investidos, valor de mercado das ações e o impacto dos dividendos na rentabilidade real.</li>
             <li><b>Ordenação Cronológica de Dividendos:</b> Meses e anos organizados rigorosamente de forma crescente por data de pagamento.</li>
-            <li><b>Painel de Rentabilidade Real:</b> Novo card de análise global integrando valor investido, variação patrimonial e dividendos recebidos (com lucro/prejuízo real).</li>
           </ul>
         </div>
       </div>
@@ -110,7 +110,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.5.6
+          Versão V1.5.7
         </span>
       </div>
 
@@ -152,7 +152,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span>Versão V1.5.6</span>
+              <span>Versão V1.5.7</span>
             </button>
           </div>
         </div>
@@ -191,6 +191,66 @@
           <span class="text-sm text-gray-500 dark:text-gray-400">Resultado Líquido Real (+ Div.)</span>
           <h2 id="resultadoRealLiquido" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00 <span class="text-xs font-normal">(+0.00%)</span></h2>
           <span class="text-xs text-gray-400">Patrimônio + Proventos - Investido</span>
+        </div>
+      </div>
+
+      <!-- NOVO PAINEL: RAIO-X DIDÁTICO DETALHADO DA CARTEIRA -->
+      <div class="bg-white dark:bg-darkcard rounded-xl p-6 shadow-sm border border-gray-200 dark:border-darkborder mb-8 space-y-6">
+        <div class="border-b border-gray-100 dark:border-darkborder pb-4">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass-chart text-blue-600"></i> Raio-X Didático: Entenda seus Números
+          </h3>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Detalhamento visual de quanto você investiu, quanto as ações valem hoje e o impacto real dos dividendos.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Bloco 1: Variação das Ações -->
+          <div class="bg-slate-50 dark:bg-slate-900 p-5 rounded-xl border border-gray-200 dark:border-darkborder space-y-3">
+            <h4 class="font-bold text-sm text-gray-800 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-line text-blue-500"></i> 1. Desempenho Exclusivo das Ações (Preço)
+            </h4>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between py-1 border-b border-gray-200 dark:border-darkborder/50">
+                <span class="text-gray-600 dark:text-gray-400">Valor Total Investido (Compras):</span>
+                <span id="raioInvestido" class="font-bold text-gray-900 dark:text-white">R$ 0,00</span>
+              </div>
+              <div class="flex justify-between py-1 border-b border-gray-200 dark:border-darkborder/50">
+                <span class="text-gray-600 dark:text-gray-400">Valor Atual das Ações (Mercado):</span>
+                <span id="raioAtual" class="font-bold text-blue-600 dark:text-blue-400">R$ 0,00</span>
+              </div>
+              <div class="flex justify-between py-1 font-semibold">
+                <span class="text-gray-700 dark:text-gray-300">Prejuízo Virtual / Não Realizado:</span>
+                <span id="raioDiferenca" class="text-red-500">R$ 0,00 (0.00%)</span>
+              </div>
+            </div>
+            <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed pt-1">
+              <b>Explicação:</b> Atualmente, a soma do valor atual das ações no mercado está ligeiramente abaixo do total desembolsado nas compras. As cotações oscilaram para baixo temporariamente.
+            </p>
+          </div>
+
+          <!-- Bloco 2: Resultado Real com Dividendos -->
+          <div class="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-200 dark:border-emerald-900/50 space-y-3">
+            <h4 class="font-bold text-sm text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
+              <i class="fa-solid fa-hand-holding-dollar text-emerald-500"></i> 2. Resultado Líquido Real (+ Proventos)
+            </h4>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between py-1 border-b border-emerald-200 dark:border-emerald-900/40">
+                <span class="text-gray-600 dark:text-gray-400">Patrimônio das Ações + Proventos:</span>
+                <span id="raioPatrimonioMaisDiv" class="font-bold text-gray-900 dark:text-white">R$ 0,00</span>
+              </div>
+              <div class="flex justify-between py-1 border-b border-emerald-200 dark:border-emerald-900/40">
+                <span class="text-gray-600 dark:text-gray-400">Menos o Valor Total Investido:</span>
+                <span id="raioMenosInvestido" class="font-bold text-red-500">- R$ 0,00</span>
+              </div>
+              <div class="flex justify-between py-1 font-semibold text-sm">
+                <span class="text-emerald-700 dark:text-emerald-400">Lucro Líquido Real Final:</span>
+                <span id="raioResultadoFinal" class="text-emerald-600 dark:text-emerald-400">R$ 0,00 (0.00%)</span>
+              </div>
+            </div>
+            <p class="text-[11px] text-emerald-700/80 dark:text-emerald-400/80 leading-relaxed pt-1">
+              <b>Explicação:</b> Mesmo com a leve oscilação negativa das cotações, o dinheiro vivo recebido em proventos cobre essa diferença e deixa o seu saldo final no positivo!
+            </p>
+          </div>
         </div>
       </div>
 
@@ -557,7 +617,7 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.5.6";
+    const VERSAO_ATUAL = "1.5.7";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -1264,6 +1324,24 @@
       const resultadoRealElem = document.getElementById('resultadoRealLiquido');
       resultadoRealElem.innerHTML = `R$ ${resultadoReal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-xs font-normal">(${sinalReal}${percentualReal.toFixed(2)}%)</span>`;
       resultadoRealElem.className = resultadoReal >= 0 ? "text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-2xl font-bold text-red-500 mt-1";
+
+      // ATUALIZAR OS CAMPOS DO NOVO RAIO-X DIDÁTICO
+      document.getElementById('raioInvestido').innerText = `R$ ${totalInvestido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('raioAtual').innerText = `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      
+      const raioDifElem = document.getElementById('raioDiferenca');
+      const sinalDif = diferenca >= 0 ? '+' : '';
+      raioDifElem.innerText = `R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${sinalDif}${percentual.toFixed(2)}%)`;
+      raioDifElem.className = diferenca >= 0 ? "font-bold text-emerald-600 dark:text-emerald-400" : "font-bold text-red-500";
+
+      let patrimonioMaisDiv = totalAtual + totalProventos;
+      document.getElementById('raioPatrimonioMaisDiv').innerText = `R$ ${patrimonioMaisDiv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById('raioMenosInvestido').innerText = `- R$ ${totalInvestido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      
+      const raioResFinalElem = document.getElementById('raioResultadoFinal');
+      const sinalResFinal = resultadoReal >= 0 ? '+' : '';
+      raioResFinalElem.innerText = `R$ ${resultadoReal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${sinalResFinal}${percentualReal.toFixed(2)}%)`;
+      raioResFinalElem.className = resultadoReal >= 0 ? "font-bold text-emerald-600 dark:text-emerald-400" : "font-bold text-red-500";
 
       const badgeQtdAtivos = document.getElementById('qtdAtivosMonitorados');
       if (badgeQtdAtivos) badgeQtdAtivos.innerText = totalAtivosCount;
