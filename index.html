@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnalystPro v1.1.0 - Gestão de Investimentos</title>
+    <title>AnalystPro V1.5.9 - Gestão de Investimentos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,32 +24,33 @@
 </head>
 <body class="bg-gray-100 dark:bg-darkbg font-sans text-gray-800 dark:text-gray-100 transition-colors duration-200">
 
-    <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA -->
+    <!-- CONTÊINER DE NOTIFICAÇÕES TOAST -->
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- MODAL POP-UP PARA NOTAS DE ATUALIZAÇÃO (CHANGELOG v1.1.0) -->
+    <!-- MODAL DE CHANGELOG (Versão V1.5.9) -->
     <div id="modalChangelog" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white dark:bg-darkcard dark:border dark:border-darkborder rounded-xl shadow-2xl max-w-xl w-full p-6 space-y-4">
             <div class="flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> Notas de Atualização (Changelog v1.1.0)
+                    <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> Notas de Atualização - Versão V1.5.9
                 </h3>
                 <button onclick="fecharModalChangelog()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             <div class="space-y-3 text-sm text-gray-600 dark:text-gray-300">
-                <p><strong>v1.1.0:</strong> Remoção definitiva do banner global fixo no topo que se repetia indesejadamente em todas as abas, garantindo uma interface limpa e focada exclusivamente em cada seção.</p>
-                <p>Correção de formatação e fechamento de tags com quebra de linha padrão ao final do arquivo.</p>
+                <p><strong>Versão V1.5.9:</strong> Banner global de nova versão removido permanentemente das abas internas para eliminar a poluição visual. Navegação limpa e organizada por seções.</p>
             </div>
         </div>
     </div>
 
-    <!-- ESTRUTURA PRINCIPAL DO SISTEMA -->
-    <div class="p-6 max-w-7xl mx-auto space-y-6">
+    <!-- CORPO PRINCIPAL -->
+    <main class="p-6 max-w-7xl mx-auto space-y-6">
+        
+        <!-- CABEÇALHO -->
         <header class="flex justify-between items-center bg-white dark:bg-darkcard p-4 rounded-xl border border-gray-200 dark:border-darkborder shadow-sm">
             <div>
-                <h1 class="text-2xl font-bold">AnalystPro <span class="text-xs text-blue-500 font-normal">v1.1.0</span></h1>
+                <h1 class="text-2xl font-bold">AnalystPro <span class="text-xs text-blue-500 font-normal">V1.5.9</span></h1>
                 <p class="text-xs text-gray-500 dark:text-gray-400">Gestão de Investimentos e Proventos</p>
             </div>
             <button onclick="abrirModalChangelog()" class="text-xs bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-darkborder hover:bg-blue-100 transition">
@@ -57,11 +58,13 @@
             </button>
         </header>
 
+        <!-- CONTEÚDO DAS ABAS -->
         <section class="bg-white dark:bg-darkcard p-6 rounded-xl border border-gray-200 dark:border-darkborder shadow-sm">
-            <h2 class="text-lg font-bold mb-2">Ambiente Operacional Limpo</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Abas de navegação otimizadas sem interferência de banners globais repetitivos.</p>
+            <h2 class="text-lg font-bold mb-2">Abas Limpas e Organizadas</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Nenhum banner repetitivo obstruindo o fluxo operacional de trabalho.</p>
         </section>
-    </div>
+
+    </main>
 
     <script>
         function abrirModalChangelog() {
