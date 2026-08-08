@@ -2,8 +2,13 @@
 
 ## [Versão V1.5.8] - 2026-08-08
 
-* **Adicionado:** Inclusão das diretrizes permanentes de desenvolvimento e alinhamento operacional no escopo do projeto (proteção de dados reais, arquivos sempre completos, sincronia de changelog e controle de versão).
-* **Ajustes:** Inclusão de notas explicativas no painel de avisos e modal de changelog.
+* **Adicionado:** Diretrizes operacionais permanentes embutidas para assegurar integridade de dados reais, arquivos sempre completos de ponta a ponta e sincronia de changelog.
+* **Ajustes:** Atualização do modal de novidades e painel de avisos da Versão V1.5.8.
+
+## [Versão V1.5.7] - 2026-08-08
+
+* **Adicionado:** Raio-X Didático Detalhado da Carteira, discriminando o desempenho de preço das ações versus o retorno líquido real com dividendos.
+* **Ajustes:** Ordenação cronológica rigorosa e crescente por data de pagamento no histórico e tabelas de proventos.
 
 ## [Versão V1.3.0] - 2026-08-06
 
