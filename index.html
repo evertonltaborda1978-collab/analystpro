@@ -51,6 +51,14 @@
         </button>
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+        <div class="border-l-2 border-blue-500 pl-3 space-y-1">
+          <span class="font-bold text-blue-600 dark:text-blue-400 text-base">Versão V1.5.8</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Diretrizes Operacionais Fixas:</b> Inclusão permanente de salvaguardas contra perda de dados reais, obrigatoriedade de arquivos completos e sincronia de changelog.</li>
+            <li><b>Controle de Versão Aprimorado:</b> Padronização dos commits limpos por transição de versão.</li>
+          </ul>
+        </div>
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
           <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.5.7</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
@@ -110,7 +118,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.5.7
+          Versão V1.5.8
         </span>
       </div>
 
@@ -152,7 +160,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span>Versão V1.5.7</span>
+              <span>Versão V1.5.8</span>
             </button>
           </div>
         </div>
@@ -194,7 +202,7 @@
         </div>
       </div>
 
-      <!-- NOVO PAINEL: RAIO-X DIDÁTICO DETALHADO DA CARTEIRA -->
+      <!-- PAINEL: RAIO-X DIDÁTICO DETALHADO DA CARTEIRA -->
       <div class="bg-white dark:bg-darkcard rounded-xl p-6 shadow-sm border border-gray-200 dark:border-darkborder mb-8 space-y-6">
         <div class="border-b border-gray-100 dark:border-darkborder pb-4">
           <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -617,7 +625,7 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.5.7";
+    const VERSAO_ATUAL = "1.5.8";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -821,13 +829,11 @@
       }
     }
 
-    // GRÁFICO AVANÇADO TRADINGVIEW LIGHTWEIGHT CHARTS
     function inicializarGraficoTradingView() {
       const container = document.getElementById('tradingviewChartContainer');
       if (!container) return;
 
       const isDark = document.documentElement.classList.contains('dark');
-      
       container.innerHTML = '';
       tvChart = null;
       tvSeries = null;
@@ -976,7 +982,6 @@
       tvChart.timeScale().fitContent();
     }
 
-    // Função auxiliar para converter "DD/MM/AAAA" em objeto Date para ordenação cronológica rigorosa
     function converterDataParaObjeto(dataStr) {
       if (!dataStr || !dataStr.includes('/')) return new Date(0);
       const partes = dataStr.split('/');
@@ -985,7 +990,6 @@
     }
 
     function renderizarTabelaDividendos() {
-      // Ordena rigorosamente em ordem crescente por data de pagamento (anos, meses e dias)
       listaDividendos.sort((a, b) => {
         return converterDataParaObjeto(a.dataPag) - converterDataParaObjeto(b.dataPag);
       });
@@ -1036,7 +1040,6 @@
       }
 
       for (const [ticker, itens] of Object.entries(agrupado)) {
-        // Ordena também os itens por ativo em ordem cronológica de pagamento
         itens.sort((a, b) => converterDataParaObjeto(a.dataPag) - converterDataParaObjeto(b.dataPag));
 
         let totalAtivo = itens.reduce((soma, i) => soma + i.valor, 0);
@@ -1315,7 +1318,6 @@
       lucroElem.innerHTML = `R$ ${diferenca.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-sm font-normal">(${sinal}${percentual.toFixed(2)}%)</span>`;
       lucroElem.className = diferenca >= 0 ? "text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-2xl font-bold text-red-500 mt-1";
 
-      // Cálculo do Resultado Real com Dividendos
       let totalProventos = listaDividendos.reduce((acc, item) => acc + item.valor, 0);
       let resultadoReal = (totalAtual + totalProventos) - totalInvestido;
       let percentualReal = totalInvestido > 0 ? (resultadoReal / totalInvestido) * 100 : 0;
@@ -1325,7 +1327,6 @@
       resultadoRealElem.innerHTML = `R$ ${resultadoReal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-xs font-normal">(${sinalReal}${percentualReal.toFixed(2)}%)</span>`;
       resultadoRealElem.className = resultadoReal >= 0 ? "text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1" : "text-2xl font-bold text-red-500 mt-1";
 
-      // ATUALIZAR OS CAMPOS DO NOVO RAIO-X DIDÁTICO
       document.getElementById('raioInvestido').innerText = `R$ ${totalInvestido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       document.getElementById('raioAtual').innerText = `R$ ${totalAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       
