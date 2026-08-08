@@ -30,7 +30,7 @@
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         <span id="statusBrapi">Brapi: Online</span>
       </div>
-      <span id="versaoApp" class="text-xs text-slate-400 bg-slate-700 px-2 py-1 rounded">Versão V1.6.3</span>
+      <span id="versaoApp" class="text-xs text-slate-400 bg-slate-700 px-2 py-1 rounded">Versão V1.6.4</span>
     </div>
     
     <nav class="flex items-center space-x-2">
@@ -165,7 +165,6 @@
       const secCarteira = document.getElementById('secaoCarteira');
       const secConfig = document.getElementById('secaoConfiguracoes');
       
-      // Reseta visibilidades principais
       if (secCarteira) secCarteira.classList.add('hidden');
       if (secConfig) secConfig.classList.add('hidden');
 
@@ -318,13 +317,11 @@
       mostrarNotificacao("Backup carregado com sucesso!", "sucesso");
     }
 
-    // Inicialização automática ao carregar a página (Abertura / Pós-login)
+    // Inicialização automática ao carregar a página (Abertura / Login)
     window.onload = async function() {
       recalcularTotais();
-      // Executa a atualização automática silenciosa ou com aviso breve ao abrir
-      await atualizarCotacoesBrapi(false);
-      // Dispara a mensagem de confirmação de sucesso solicitada
       if (localStorage.getItem('brapi_token')) {
+        await atualizarCotacoesBrapi(false);
         mostrarNotificacao("Atualização realizada com sucesso!", "sucesso");
       }
     };
