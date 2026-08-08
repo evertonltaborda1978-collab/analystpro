@@ -50,10 +50,10 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.6.1</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.6.2</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
-            <li><b>Correção do Gráfico de Proventos:</b> Agrupamento corrigido corretamente por Anos (ex: 2023) e Meses, exibindo o detalhamento exato por ação ao clicar.</li>
+            <li><b>Drill-down em Colunas Interativas:</b> Gráfico exibe Anos e, ao clicar em qualquer ano, transforma-se instantaneamente nos meses do respectivo período.</li>
           </ul>
         </div>
       </div>
@@ -107,7 +107,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.6.1
+          Versão V1.6.2
         </span>
       </div>
 
@@ -149,7 +149,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span>Versão V1.6.1</span>
+              <span>Versão V1.6.2</span>
             </button>
           </div>
         </div>
@@ -305,14 +305,14 @@
           </div>
         </div>
 
-        <!-- GRÁFICO INTERATIVO CORRIGIDO (AGRUPADO POR ANOS E MESES) -->
+        <!-- GRÁFICO DE COLUNAS COM DRILL-DOWN (ANOS -> MESES -> AÇÕES) -->
         <div class="bg-slate-50 dark:bg-slate-900 border border-gray-200 dark:border-darkborder p-5 rounded-xl space-y-4 shadow-sm">
           <div class="flex justify-between items-center flex-wrap gap-3">
             <div>
               <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                <i class="fa-solid fa-chart-column text-emerald-500"></i> Gráfico Interativo de Proventos por Ano / Mês
+                <i class="fa-solid fa-chart-column text-emerald-500"></i> Gráfico Interativo de Colunas (Anos & Meses)
               </h4>
-              <p id="subtituloGraficoDiv" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Clique em um ano (ex: 2023) para abrir os meses e o detalhamento por ação.</p>
+              <p id="subtituloGraficoDiv" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Clique em qualquer ano (ex: 2023) para abrir os meses daquele período.</p>
             </div>
             <div id="containerBotaoVoltarGrafico"></div>
           </div>
@@ -322,7 +322,7 @@
             <!-- Preenchido via script -->
           </div>
 
-          <!-- Caixa de Detalhes ao Clicar no Ano -->
+          <!-- Caixa de Detalhamento por Ação ao Clicar no Ano -->
           <div id="detalheGraficoCard" class="hidden bg-white dark:bg-darkcard border border-emerald-500/40 rounded-xl p-4 shadow-md space-y-3">
             <!-- Conteúdo injetado via script -->
           </div>
@@ -489,7 +489,7 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.6.1";
+    const VERSAO_ATUAL = "1.6.2";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -506,7 +506,7 @@
     let tvChart = null;
     let tvSeries = null;
     let periodoGraficoAtual = '1A';
-    let filtroAnoSelecionado = null; // Guarda o ano clicado no gráfico (ex: '2023')
+    let filtroAnoSelecionado = null; // Controla o ano ativo no gráfico de colunas
 
     document.addEventListener('DOMContentLoaded', () => {
       const temaSalvo = localStorage.getItem('app_tema') || 'dark';
@@ -809,7 +809,7 @@
       recalcularTotais();
     }
 
-    // --- GRÁFICO DE PROVENTOS CORRIGIDO (ANOS E MESES) ---
+    // --- GRÁFICO DE COLUNAS COM DRILL-DOWN (ANOS -> MESES) ---
     function renderizarGraficoProventosInterativo() {
       const containerBarras = document.getElementById('graficoProventosBarras');
       const containerCard = document.getElementById('detalheGraficoCard');
@@ -820,15 +820,15 @@
       containerBarras.innerHTML = '';
 
       if (filtroAnoSelecionado === null) {
-        // MODO VISÃO GERAL POR ANOS
-        subtitulo.innerText = "Clique em um ano (ex: 2023) para ver os meses e o detalhamento por ação.";
+        // --- VISÃO 1: COLUNAS DE ANOS ---
+        subtitulo.innerText = "Clique em uma coluna de ano (ex: 2023) para abrir os meses detalhados.";
         containerBotaoVoltar.innerHTML = '';
         containerCard.classList.add('hidden');
 
         const anosAgrupados = {};
         listaDividendos.forEach(item => {
           if (!item.dataPag) return;
-          const ano = item.dataPag.split('-')[0]; // Pega apenas o ano (ex: '2023')
+          const ano = item.dataPag.split('-')[0];
           if (!anosAgrupados[ano]) anosAgrupados[ano] = 0;
           anosAgrupados[ano] += item.valor;
         });
@@ -849,13 +849,13 @@
             <div onclick="selecionarAnoGrafico('${ano}')" class="bg-white dark:bg-darkcard border border-gray-200 dark:border-darkborder hover:border-emerald-500 rounded-xl p-4 flex flex-col justify-between cursor-pointer transition shadow-sm group">
               <div class="flex justify-between items-center mb-2">
                 <span class="font-bold text-base text-gray-800 dark:text-white group-hover:text-emerald-500 transition">${ano}</span>
-                <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:translate-x-1 transition"></i>
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400 group-hover:text-emerald-500 transition"></i>
               </div>
               <div class="w-full bg-gray-100 dark:bg-slate-800 h-28 rounded-lg flex items-end p-1.5">
                 <div class="w-full bg-emerald-500 hover:bg-emerald-400 rounded-md transition-all duration-300" style="height: ${alturaPorcentagem}%"></div>
               </div>
               <div class="mt-3 text-right">
-                <span class="text-xs text-gray-400 block">Total em ${ano}</span>
+                <span class="text-xs text-gray-400 block">Total Ano</span>
                 <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">R$ ${val.toFixed(2).replace('.', ',')}</span>
               </div>
             </div>
@@ -863,8 +863,8 @@
         });
 
       } else {
-        // MODO VISÃO DOS MESES DO ANO SELECIONADO + RESUMO DAS AÇÕES
-        subtitulo.innerText = `Proventos recebidos mês a mês em ${filtroAnoSelecionado}:`;
+        // --- VISÃO 2: COLUNAS DE MESES DO ANO CLICADO + RESUMO DAS AÇÕES ---
+        subtitulo.innerText = `Visualizando os meses e ações do ano ${filtroAnoSelecionado}:`;
         containerBotaoVoltar.innerHTML = `
           <button onclick="voltarVisaoAnualGrafico()" class="bg-gray-200 dark:bg-slate-800 hover:bg-gray-300 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 text-xs px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5">
             <i class="fa-solid fa-arrow-left"></i> Voltar para Anos
@@ -903,7 +903,7 @@
           `;
         });
 
-        // Montar o resumo de ações conforme você pediu (Total e abaixo os valores por ação)
+        // Montar o resumo por ação do ano selecionado
         let htmlAtivosResumo = '';
         for (const [t, v] of Object.entries(ativosDoAno)) {
           htmlAtivosResumo += `
