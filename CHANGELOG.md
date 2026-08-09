@@ -1,5 +1,8 @@
 # Histórico de Alterações - AnalystPro
 
+## [Versão V1.7.2] - 2026-08-09
+- *Corrigido:* Campos de senha deixaram de usar `type="password"` nativo (agora mascaram só visualmente via CSS `-webkit-text-security`), o que impede o Chrome/Windows de sobrepor sugestões de login salvo e de bloquear o clique no botão de mostrar/esconder senha.
+
 ## [Versão V1.7.1] - 2026-08-09
 - *Adicionado:* Botão de mostrar/esconder senha (ícone de olho) em todos os campos de senha: login, trocar senha em Configurações e recuperação por e-mail.
 
