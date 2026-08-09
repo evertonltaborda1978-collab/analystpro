@@ -42,7 +42,7 @@
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- MODAL POP-UP PARA NOTAS DE ATUALIZAÇÃO (CHANGELOG) -->
-  <div id="modalChangelog" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+  <div id="modalChangelog" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4 hidden">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-lg w-full p-6 border border-gray-100 dark:border-darkborder space-y-4">
       <div class="flex justify-between items-center">
         <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -54,7 +54,14 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.7.2</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.7.3</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Correção crítica:</b> os modais de "Esqueci a Senha" e "Novidades" não abriam de fato na tela de login — ficavam escondidos atrás dela por causa de um empate de camada (z-index) visual.</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.7.2</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Campos de senha sem interferência do navegador:</b> os campos de senha pararam de usar type="password" nativo (agora mascaram só visualmente via CSS), o que impede o Chrome/Windows de sobrepor sugestões de login salvo e de bloquear o clique no botão de mostrar/esconder senha.</li>
@@ -142,7 +149,7 @@
   </div>
 
   <!-- MODAL: RECUPERAÇÃO DE SENHA POR E-MAIL (substitui a caixa nativa do navegador) -->
-  <div id="modalRecuperarSenha" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+  <div id="modalRecuperarSenha" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4 hidden">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-darkborder">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -199,7 +206,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span id="badgeVersaoLogin" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.7.2
+          Versão V1.7.3
         </span>
       </div>
 
@@ -246,7 +253,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span id="badgeVersaoHeader">Versão V1.7.2</span>
+              <span id="badgeVersaoHeader">Versão V1.7.3</span>
             </button>
           </div>
         </div>
@@ -781,7 +788,7 @@
   <script>
     // A versão exibida no app agora vem do version.json (fonte única da verdade).
     // Isso resolve a falha antiga de version.json e a versão nas telas ficarem dessincronizados.
-    let VERSAO_ATUAL = "1.7.2"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
+    let VERSAO_ATUAL = "1.7.3"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
 
     async function carregarVersaoApp() {
       try {
