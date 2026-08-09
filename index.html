@@ -24,6 +24,8 @@
   <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/standalone/lightweight-charts.standalone.production.js"></script>
   <!-- Chart.js para o gráfico de dividendos (Ano -> Mês -> Ativos) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <!-- EmailJS: envio de e-mail direto do navegador, sem backend, usado na recuperação de senha -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-darkbg font-sans text-gray-800 dark:text-gray-100 transition-colors duration-200">
 
@@ -43,7 +45,16 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.6.0</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.7.0</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Recuperação de senha por e-mail:</b> novo fluxo com código de 6 dígitos enviado por e-mail (via EmailJS), substituindo a caixa genérica do navegador.</li>
+            <li><b>Trocar senha em Configurações:</b> nova aba de Segurança para trocar a senha (com validação da senha atual), configurar e-mail de recuperação e credenciais do EmailJS.</li>
+            <li><b>Campo de senha mais limpo:</b> ajustes para reduzir sugestões de autopreenchimento/gerenciador de senhas do navegador sobrepondo o campo.</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.6.0</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Correção crítica de persistência:</b> a carteira de ativos agora é salva no dispositivo (antes só existia na tela e se perdia ao recarregar a página).</li>
@@ -54,6 +65,7 @@
             <li><b>Gráfico de Proventos:</b> novo gráfico interativo em Dividendos — clique no ano para ver os meses, e no mês para ver quais ativos pagaram.</li>
           </ul>
         </div>
+
         <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
           <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.5.9</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
@@ -106,7 +118,52 @@
     </div>
   </div>
 
-  <!-- TELA DE LOGIN / AUTENTICAÇÃO -->
+  <!-- MODAL: RECUPERAÇÃO DE SENHA POR E-MAIL (substitui a caixa nativa do navegador) -->
+  <div id="modalRecuperarSenha" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-darkborder">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <i class="fa-solid fa-key text-blue-600"></i> Recuperar Senha de Acesso
+        </h3>
+        <button onclick="fecharModalRecuperarSenha()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <!-- ETAPA 1: pedir envio do código -->
+      <div id="etapaEnviarCodigo" class="space-y-4">
+        <p id="textoEtapaEnvio" class="text-sm text-gray-600 dark:text-gray-300"></p>
+        <button id="btnEnviarCodigoRecuperacao" onclick="enviarCodigoRecuperacao()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-md flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i> Enviar código por e-mail
+        </button>
+        <div class="pt-3 border-t border-gray-200 dark:border-darkborder">
+          <p class="text-xs text-gray-400 mb-2">Não tem e-mail de recuperação configurado ou não consegue recebê-lo agora?</p>
+          <button onclick="resetarSenhaParaPadrao()" class="w-full bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 font-medium py-2 rounded-lg text-xs transition">
+            Redefinir para a senha padrão (123456)
+          </button>
+        </div>
+      </div>
+
+      <!-- ETAPA 2: digitar código + nova senha -->
+      <div id="etapaConfirmarCodigo" class="space-y-4 hidden">
+        <p class="text-sm text-gray-600 dark:text-gray-300">Digite o código de 6 dígitos que enviamos para o seu e-mail de recuperação, e a nova senha de acesso.</p>
+        <div>
+          <label for="codigoRecuperacaoInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Código recebido por e-mail</label>
+          <input type="text" id="codigoRecuperacaoInput" inputmode="numeric" maxlength="6" placeholder="000000" class="w-full px-4 py-2.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-lg tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <div>
+          <label for="novaSenhaRecuperacaoInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Nova senha (só números)</label>
+          <input type="password" id="novaSenhaRecuperacaoInput" name="nova_senha_recuperacao" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-4 py-2.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-lg tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        <button onclick="confirmarRecuperacaoSenha()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-md">
+          Confirmar e trocar senha
+        </button>
+        <button onclick="voltarEtapaEnvioCodigo()" class="w-full text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
+          <i class="fa-solid fa-arrow-left"></i> Reenviar código / voltar
+        </button>
+      </div>
+    </div>
+  </div>
+
+
   <div id="telaLogin" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-darkcard rounded-xl shadow-2xl max-w-md w-full p-8 border border-gray-100 dark:border-darkborder relative">
       <div class="absolute top-4 right-4 flex items-center gap-2">
@@ -114,7 +171,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span id="badgeVersaoLogin" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.6.0
+          Versão V1.7.0
         </span>
       </div>
 
@@ -128,7 +185,7 @@
       <div id="formLogin" class="space-y-4">
         <div>
           <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha de Acesso (Números)</label>
-          <input type="password" id="senhaAcesso" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••" class="w-full px-4 py-3 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-xl tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
+          <input type="password" id="senhaAcesso" name="pin_acesso_analystpro" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore data-bwignore onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••" class="w-full px-4 py-3 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-xl tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
         <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-md">
           Entrar no Sistema
@@ -156,7 +213,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span id="badgeVersaoHeader">Versão V1.6.0</span>
+              <span id="badgeVersaoHeader">Versão V1.7.0</span>
             </button>
           </div>
         </div>
@@ -556,6 +613,70 @@
             </button>
           </div>
         </div>
+
+        <div class="border-t border-gray-200 dark:border-darkborder pt-8">
+          <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-blue-600 dark:text-blue-400"></i> Segurança e Senha
+          </h3>
+
+          <div class="max-w-md space-y-6">
+            <!-- TROCAR SENHA -->
+            <div class="p-4 border border-gray-200 dark:border-darkborder rounded-lg space-y-3">
+              <h4 class="font-semibold text-sm text-gray-800 dark:text-white">Trocar senha de acesso</h4>
+              <div>
+                <label for="senhaAtualInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha atual</label>
+                <input type="password" id="senhaAtualInput" name="senha_atual_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label for="novaSenhaInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Nova senha</label>
+                  <input type="password" id="novaSenhaInput" name="nova_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                  <label for="confirmarSenhaInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Confirmar nova senha</label>
+                  <input type="password" id="confirmarSenhaInput" name="confirmar_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+              </div>
+              <button onclick="trocarSenha()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm transition">
+                Salvar nova senha
+              </button>
+              <button onclick="abrirModalRecuperarSenha()" class="w-full text-xs text-blue-500 hover:text-blue-600 dark:text-blue-400 transition">
+                Esqueci a senha atual
+              </button>
+            </div>
+
+            <!-- E-MAIL DE RECUPERAÇÃO -->
+            <div class="p-4 border border-gray-200 dark:border-darkborder rounded-lg space-y-3">
+              <h4 class="font-semibold text-sm text-gray-800 dark:text-white">E-mail de recuperação</h4>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Para onde enviaremos o código de 6 dígitos caso você esqueça a senha.</p>
+              <input type="email" id="emailRecuperacaoInput" placeholder="seuemail@exemplo.com" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              <button onclick="salvarEmailRecuperacao()" class="w-full bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md font-medium text-sm transition">
+                Salvar e-mail
+              </button>
+            </div>
+
+            <!-- CONFIGURAÇÃO DO EMAILJS -->
+            <div class="p-4 border border-gray-200 dark:border-darkborder rounded-lg space-y-3">
+              <h4 class="font-semibold text-sm text-gray-800 dark:text-white">Envio de e-mail (EmailJS)</h4>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Cole aqui os 3 dados da sua conta gratuita em <a href="https://www.emailjs.com" target="_blank" rel="noopener" class="text-blue-500 underline">emailjs.com</a> (Service ID, Template ID e Public Key).</p>
+              <div>
+                <label for="emailjsServiceIdInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Service ID</label>
+                <input type="text" id="emailjsServiceIdInput" placeholder="Ex: service_xxxxxxx" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label for="emailjsTemplateIdInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Template ID</label>
+                <input type="text" id="emailjsTemplateIdInput" placeholder="Ex: template_xxxxxxx" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label for="emailjsPublicKeyInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Public Key</label>
+                <input type="text" id="emailjsPublicKeyInput" placeholder="Ex: AbCdEfGhIjKlMnOp" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <button onclick="salvarConfigEmailJS()" class="w-full bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md font-medium text-sm transition">
+                Salvar configuração do EmailJS
+              </button>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   </div>
@@ -612,7 +733,7 @@
   <script>
     // A versão exibida no app agora vem do version.json (fonte única da verdade).
     // Isso resolve a falha antiga de version.json e a versão nas telas ficarem dessincronizados.
-    let VERSAO_ATUAL = "1.6.0"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
+    let VERSAO_ATUAL = "1.7.0"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
 
     async function carregarVersaoApp() {
       try {
@@ -634,6 +755,21 @@
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
+    }
+
+    // CONFIGURAÇÃO DO EMAILJS (recuperação de senha por e-mail, sem backend)
+    // Preencha em Configurações > Segurança, ou direto aqui. Veja o passo a passo que te enviei
+    // com as instruções de como criar a conta e obter esses 3 valores em emailjs.com.
+    let emailjsConfig = JSON.parse(localStorage.getItem('emailjs_config')) || {
+      serviceId: '',
+      templateId: '',
+      publicKey: ''
+    };
+
+    function inicializarEmailJS() {
+      if (emailjsConfig.publicKey && typeof emailjs !== 'undefined') {
+        emailjs.init({ publicKey: emailjsConfig.publicKey });
+      }
     }
 
     // MODELO DE DADOS DA CARTEIRA (antes só existia no DOM e se perdia ao recarregar a página)
@@ -667,6 +803,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       carregarVersaoApp();
+      inicializarEmailJS();
       const temaSalvo = localStorage.getItem('app_tema') || 'dark';
       if (temaSalvo === 'dark') {
         document.documentElement.classList.add('dark');
@@ -689,6 +826,14 @@
       if (tokenSalvo) {
         document.getElementById('brapiTokenInput').value = tokenSalvo;
       }
+
+      const emailRecSalvo = localStorage.getItem('app_email_recuperacao');
+      if (emailRecSalvo) {
+        document.getElementById('emailRecuperacaoInput').value = emailRecSalvo;
+      }
+      document.getElementById('emailjsServiceIdInput').value = emailjsConfig.serviceId || '';
+      document.getElementById('emailjsTemplateIdInput').value = emailjsConfig.templateId || '';
+      document.getElementById('emailjsPublicKeyInput').value = emailjsConfig.publicKey || '';
 
       renderizarTabelaCarteira();
       renderizarCardsRadar();
@@ -785,12 +930,105 @@
       }
     }
 
+    // Código de recuperação: guardado com validade de 15 minutos
+    let codigoRecuperacaoAtual = null;
+    let codigoRecuperacaoExpira = 0;
+
     function esqueciSenha() {
-      if (confirm("Deseja redefinir a senha de acesso para o padrão (123456)?")) {
-        localStorage.setItem('app_senha', '123456');
-        mostrarNotificacao("Senha redefinida para: 123456", "sucesso");
-        document.getElementById('senhaAcesso').value = '';
+      abrirModalRecuperarSenha();
+    }
+
+    function abrirModalRecuperarSenha() {
+      const emailSalvo = localStorage.getItem('app_email_recuperacao') || '';
+      const textoEtapa = document.getElementById('textoEtapaEnvio');
+      const btnEnviar = document.getElementById('btnEnviarCodigoRecuperacao');
+
+      if (!emailSalvo) {
+        textoEtapa.innerHTML = 'Você ainda não configurou um <b>e-mail de recuperação</b> em Configurações. Sem ele, não é possível enviar o código — use a opção de redefinir para o padrão abaixo, e depois configure seu e-mail para as próximas vezes.';
+        btnEnviar.classList.add('hidden');
+      } else if (!emailjsConfig.serviceId || !emailjsConfig.templateId || !emailjsConfig.publicKey) {
+        textoEtapa.innerHTML = 'O envio de e-mail ainda não foi configurado (faltam os dados do EmailJS em Configurações). Use a opção de redefinir para o padrão abaixo, ou configure o EmailJS para habilitar o envio por código.';
+        btnEnviar.classList.add('hidden');
+      } else {
+        const emailOculto = emailSalvo.replace(/(.{2}).+(@.+)/, '$1***$2');
+        textoEtapa.innerHTML = `Enviaremos um código de 6 dígitos para <b>${emailOculto}</b>.`;
+        btnEnviar.classList.remove('hidden');
       }
+
+      document.getElementById('etapaEnviarCodigo').classList.remove('hidden');
+      document.getElementById('etapaConfirmarCodigo').classList.add('hidden');
+      document.getElementById('modalRecuperarSenha').classList.remove('hidden');
+    }
+
+    function fecharModalRecuperarSenha() {
+      document.getElementById('modalRecuperarSenha').classList.add('hidden');
+      document.getElementById('codigoRecuperacaoInput').value = '';
+      document.getElementById('novaSenhaRecuperacaoInput').value = '';
+    }
+
+    function voltarEtapaEnvioCodigo() {
+      document.getElementById('etapaConfirmarCodigo').classList.add('hidden');
+      document.getElementById('etapaEnviarCodigo').classList.remove('hidden');
+    }
+
+    async function enviarCodigoRecuperacao() {
+      const emailSalvo = localStorage.getItem('app_email_recuperacao');
+      if (!emailSalvo) return;
+
+      const btn = document.getElementById('btnEnviarCodigoRecuperacao');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+
+      codigoRecuperacaoAtual = String(Math.floor(100000 + Math.random() * 900000));
+      codigoRecuperacaoExpira = Date.now() + 15 * 60 * 1000; // 15 minutos
+
+      try {
+        await emailjs.send(emailjsConfig.serviceId, emailjsConfig.templateId, {
+          to_email: emailSalvo,
+          codigo: codigoRecuperacaoAtual,
+          app_nome: 'AnalystPro'
+        });
+        mostrarNotificacao('Código enviado! Confira seu e-mail.', 'sucesso');
+        document.getElementById('etapaEnviarCodigo').classList.add('hidden');
+        document.getElementById('etapaConfirmarCodigo').classList.remove('hidden');
+      } catch (erro) {
+        console.error('Erro ao enviar e-mail via EmailJS:', erro);
+        mostrarNotificacao('Não foi possível enviar o e-mail. Confira a configuração do EmailJS.', 'erro');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar código por e-mail';
+      }
+    }
+
+    function confirmarRecuperacaoSenha() {
+      const codigoDigitado = document.getElementById('codigoRecuperacaoInput').value.trim();
+      const novaSenha = document.getElementById('novaSenhaRecuperacaoInput').value.trim();
+
+      if (Date.now() > codigoRecuperacaoExpira || !codigoRecuperacaoAtual) {
+        mostrarNotificacao('Código expirado. Solicite um novo.', 'erro');
+        voltarEtapaEnvioCodigo();
+        return;
+      }
+      if (codigoDigitado !== codigoRecuperacaoAtual) {
+        mostrarNotificacao('Código incorreto.', 'erro');
+        return;
+      }
+      if (!/^[0-9]{4,6}$/.test(novaSenha)) {
+        mostrarNotificacao('A nova senha deve ter de 4 a 6 números.', 'aviso');
+        return;
+      }
+
+      localStorage.setItem('app_senha', novaSenha);
+      codigoRecuperacaoAtual = null;
+      mostrarNotificacao('Senha alterada com sucesso!', 'sucesso');
+      fecharModalRecuperarSenha();
+    }
+
+    function resetarSenhaParaPadrao() {
+      localStorage.setItem('app_senha', '123456');
+      mostrarNotificacao("Senha redefinida para: 123456", "sucesso");
+      document.getElementById('senhaAcesso').value = '';
+      fecharModalRecuperarSenha();
     }
 
     function bloquearApp() {
@@ -858,6 +1096,58 @@
       } else {
         mostrarNotificacao("Por favor, insira um token válido.", "aviso");
       }
+    }
+
+    function trocarSenha() {
+      const senhaAtual = document.getElementById('senhaAtualInput').value.trim();
+      const novaSenha = document.getElementById('novaSenhaInput').value.trim();
+      const confirmarSenha = document.getElementById('confirmarSenhaInput').value.trim();
+      const senhaSalva = localStorage.getItem('app_senha') || '123456';
+
+      if (senhaAtual !== senhaSalva) {
+        mostrarNotificacao("Senha atual incorreta.", "erro");
+        return;
+      }
+      if (!/^[0-9]{4,6}$/.test(novaSenha)) {
+        mostrarNotificacao("A nova senha deve ter de 4 a 6 números.", "aviso");
+        return;
+      }
+      if (novaSenha !== confirmarSenha) {
+        mostrarNotificacao("As senhas não coincidem.", "aviso");
+        return;
+      }
+
+      localStorage.setItem('app_senha', novaSenha);
+      mostrarNotificacao("Senha alterada com sucesso!", "sucesso");
+      document.getElementById('senhaAtualInput').value = '';
+      document.getElementById('novaSenhaInput').value = '';
+      document.getElementById('confirmarSenhaInput').value = '';
+    }
+
+    function salvarEmailRecuperacao() {
+      const email = document.getElementById('emailRecuperacaoInput').value.trim();
+      if (!email || !email.includes('@')) {
+        mostrarNotificacao("Insira um e-mail válido.", "aviso");
+        return;
+      }
+      localStorage.setItem('app_email_recuperacao', email);
+      mostrarNotificacao("E-mail de recuperação salvo!", "sucesso");
+    }
+
+    function salvarConfigEmailJS() {
+      const serviceId = document.getElementById('emailjsServiceIdInput').value.trim();
+      const templateId = document.getElementById('emailjsTemplateIdInput').value.trim();
+      const publicKey = document.getElementById('emailjsPublicKeyInput').value.trim();
+
+      if (!serviceId || !templateId || !publicKey) {
+        mostrarNotificacao("Preencha os 3 campos do EmailJS.", "aviso");
+        return;
+      }
+
+      emailjsConfig = { serviceId, templateId, publicKey };
+      localStorage.setItem('emailjs_config', JSON.stringify(emailjsConfig));
+      inicializarEmailJS();
+      mostrarNotificacao("Configuração do EmailJS salva!", "sucesso");
     }
 
     // GRÁFICO AVANÇADO TRADINGVIEW LIGHTWEIGHT CHARTS
