@@ -26,6 +26,15 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <!-- EmailJS: envio de e-mail direto do navegador, sem backend, usado na recuperação de senha -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    /* Mascara a senha visualmente (bolinhas) via CSS, sem usar type="password".
+       Assim o Chrome/Edge/Safari não reconhecem o campo como senha e param de
+       oferecer login salvo / gerenciador de senhas por cima do campo. */
+    .campo-senha-mascarada {
+      -webkit-text-security: disc;
+      text-security: disc;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 dark:bg-darkbg font-sans text-gray-800 dark:text-gray-100 transition-colors duration-200">
 
@@ -45,7 +54,14 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.7.1</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.7.2</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Campos de senha sem interferência do navegador:</b> os campos de senha pararam de usar type="password" nativo (agora mascaram só visualmente via CSS), o que impede o Chrome/Windows de sobrepor sugestões de login salvo e de bloquear o clique no botão de mostrar/esconder senha.</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.7.1</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Botão de mostrar/esconder senha:</b> adicionado ícone de "olho" em todos os campos de senha (login, trocar senha e recuperação), para você conferir o que digitou.</li>
@@ -159,7 +175,7 @@
         <div>
           <label for="novaSenhaRecuperacaoInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Nova senha (só números)</label>
           <div class="relative">
-            <input type="password" id="novaSenhaRecuperacaoInput" name="nova_senha_recuperacao" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-4 py-2.5 pr-11 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-lg tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
+            <input type="text" id="novaSenhaRecuperacaoInput" name="nova_senha_recuperacao" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" data-lpignore="true" data-1p-ignore placeholder="••••••" class="campo-senha-mascarada w-full px-4 py-2.5 pr-11 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-lg tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
             <button type="button" onclick="alternarVisibilidadeSenha('novaSenhaRecuperacaoInput', this)" tabindex="-1" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
               <i class="fa-solid fa-eye"></i>
             </button>
@@ -183,7 +199,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span id="badgeVersaoLogin" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.7.1
+          Versão V1.7.2
         </span>
       </div>
 
@@ -198,7 +214,7 @@
         <div>
           <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha de Acesso (Números)</label>
           <div class="relative">
-            <input type="password" id="senhaAcesso" name="pin_acesso_analystpro" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore data-bwignore onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••" class="w-full px-4 py-3 pr-11 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-xl tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
+            <input type="text" id="senhaAcesso" name="pin_acesso_analystpro" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" data-lpignore="true" data-1p-ignore data-bwignore onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••" class="campo-senha-mascarada w-full px-4 py-3 pr-11 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-xl tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
             <button type="button" onclick="alternarVisibilidadeSenha('senhaAcesso', this)" tabindex="-1" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
               <i class="fa-solid fa-eye"></i>
             </button>
@@ -230,7 +246,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span id="badgeVersaoHeader">Versão V1.7.1</span>
+              <span id="badgeVersaoHeader">Versão V1.7.2</span>
             </button>
           </div>
         </div>
@@ -643,7 +659,7 @@
               <div>
                 <label for="senhaAtualInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha atual</label>
                 <div class="relative">
-                  <input type="password" id="senhaAtualInput" name="senha_atual_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                  <input type="text" id="senhaAtualInput" name="senha_atual_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" data-lpignore="true" data-1p-ignore placeholder="••••••" class="campo-senha-mascarada w-full px-3 py-2 pr-10 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                   <button type="button" onclick="alternarVisibilidadeSenha('senhaAtualInput', this)" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                     <i class="fa-solid fa-eye"></i>
                   </button>
@@ -653,7 +669,7 @@
                 <div>
                   <label for="novaSenhaInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Nova senha</label>
                   <div class="relative">
-                    <input type="password" id="novaSenhaInput" name="nova_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    <input type="text" id="novaSenhaInput" name="nova_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" data-lpignore="true" data-1p-ignore placeholder="••••••" class="campo-senha-mascarada w-full px-3 py-2 pr-10 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                     <button type="button" onclick="alternarVisibilidadeSenha('novaSenhaInput', this)" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                       <i class="fa-solid fa-eye"></i>
                     </button>
@@ -662,7 +678,7 @@
                 <div>
                   <label for="confirmarSenhaInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Confirmar nova senha</label>
                   <div class="relative">
-                    <input type="password" id="confirmarSenhaInput" name="confirmar_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    <input type="text" id="confirmarSenhaInput" name="confirmar_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" data-lpignore="true" data-1p-ignore placeholder="••••••" class="campo-senha-mascarada w-full px-3 py-2 pr-10 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                     <button type="button" onclick="alternarVisibilidadeSenha('confirmarSenhaInput', this)" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                       <i class="fa-solid fa-eye"></i>
                     </button>
@@ -765,7 +781,7 @@
   <script>
     // A versão exibida no app agora vem do version.json (fonte única da verdade).
     // Isso resolve a falha antiga de version.json e a versão nas telas ficarem dessincronizados.
-    let VERSAO_ATUAL = "1.7.1"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
+    let VERSAO_ATUAL = "1.7.2"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
 
     async function carregarVersaoApp() {
       try {
@@ -969,11 +985,11 @@
     function alternarVisibilidadeSenha(inputId, btn) {
       const input = document.getElementById(inputId);
       const icone = btn.querySelector('i');
-      if (input.type === 'password') {
-        input.type = 'text';
+      if (input.classList.contains('campo-senha-mascarada')) {
+        input.classList.remove('campo-senha-mascarada');
         icone.className = 'fa-solid fa-eye-slash';
       } else {
-        input.type = 'password';
+        input.classList.add('campo-senha-mascarada');
         icone.className = 'fa-solid fa-eye';
       }
     }
