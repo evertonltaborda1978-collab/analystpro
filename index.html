@@ -22,6 +22,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <!-- Biblioteca TradingView Lightweight Charts -->
   <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/standalone/lightweight-charts.standalone.production.js"></script>
+  <!-- Chart.js para o gráfico de dividendos (Ano -> Mês -> Ativos) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-darkbg font-sans text-gray-800 dark:text-gray-100 transition-colors duration-200">
 
@@ -41,7 +43,19 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.5.9</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.6.0</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Correção crítica de persistência:</b> a carteira de ativos agora é salva no dispositivo (antes só existia na tela e se perdia ao recarregar a página).</li>
+            <li><b>Nova aba Dashboard:</b> resumo geral, Raio-X e Simulador saíram das demais abas (não aparecem mais "grudados" em Carteira, Dividendos, etc.) e ganharam uma aba própria.</li>
+            <li><b>Proxy de cotações corrigido:</b> ajustado o formato de chamada à Brapi via corsproxy.io, que estava quebrando as requisições do gráfico avançado.</li>
+            <li><b>Aviso de dados simulados:</b> o gráfico avançado agora avisa claramente quando está exibindo dados fictícios (sem token ou API fora do ar).</li>
+            <li><b>Preço Justo mais confiável:</b> corrigido cálculo que podia gerar "NaN" e sinalizado com "*" quando o valor é apenas uma estimativa.</li>
+            <li><b>Gráfico de Proventos:</b> novo gráfico interativo em Dividendos — clique no ano para ver os meses, e no mês para ver quais ativos pagaram.</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.5.9</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Remoção de Banners Globais:</b> Retirada definitiva do banner fixo superior de notificação de versão que se repetia indesejadamente nas abas internas, eliminando a poluição visual.</li>
@@ -100,7 +114,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.5.9
+          Versão V1.6.0
         </span>
       </div>
 
@@ -142,11 +156,12 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span>Versão V1.5.9</span>
+              <span>Versão V1.6.0</span>
             </button>
           </div>
         </div>
         <nav class="flex items-center gap-4 sm:gap-6 text-sm font-medium flex-wrap">
+          <a href="#dashboard" onclick="navegar('dashboard')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
           <a href="#carteira" onclick="navegar('carteira')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-wallet"></i> Carteira</a>
           <a href="#dividendos" onclick="navegar('dividendos')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-hand-holding-dollar"></i> Dividendos</a>
           <a href="#oportunidades" onclick="navegar('oportunidades')" class="hover:text-blue-200 flex items-center gap-1"><i class="fa-solid fa-bullseye"></i> Oportunidades</a>
@@ -161,6 +176,8 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-8">
+      <!-- SEÇÃO: DASHBOARD (Resumo Geral, Raio-X e Simulador) -->
+      <section id="sec-dashboard" class="space-y-8">
       <!-- PAINEL DE RESUMO GERAL COM RENTABILIDADE REAL -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border-l-4 border-blue-500 border border-gray-100 dark:border-darkborder transition-colors">
@@ -273,9 +290,10 @@
           </div>
         </div>
       </div>
+      </section>
 
       <!-- SEÇÃO: CARTEIRA -->
-      <section id="sec-carteira" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder transition-colors">
+      <section id="sec-carteira" class="bg-white dark:bg-darkcard p-6 rounded-lg shadow-sm border border-gray-100 dark:border-darkborder hidden transition-colors">
         <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
           <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
             <i class="fa-solid fa-wallet text-blue-600 dark:text-blue-400"></i> Minha Carteira
@@ -312,45 +330,7 @@
               </tr>
             </thead>
             <tbody id="tabelaAtivos" class="divide-y divide-gray-100 dark:divide-darkborder text-sm">
-              <tr data-ticker="PETR4">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">PETR4</td>
-                <td class="py-3 px-4 qtd">10</td>
-                <td class="py-3 px-4 pm">R$ 32,21</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 32,21</td>
-                <td class="py-3 px-4 preco-justo-tabela">R$ 27,22</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
-                <td class="py-3 px-4 valor-investido">R$ 322,10</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 322,10</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                </td>
-              </tr>
-              <tr data-ticker="KLBN3">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">KLBN3</td>
-                <td class="py-3 px-4 qtd">225</td>
-                <td class="py-3 px-4 pm">R$ 6,28</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 6,28</td>
-                <td class="py-3 px-4 preco-justo-tabela">R$ 3,81</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
-                <td class="py-3 px-4 valor-investido">R$ 1.413,00</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 1.413,00</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                </td>
-              </tr>
-              <tr data-ticker="SAPR11">
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">SAPR11</td>
-                <td class="py-3 px-4 qtd">40</td>
-                <td class="py-3 px-4 pm">R$ 21,86</td>
-                <td class="py-3 px-4 preco-atual font-semibold">R$ 21,86</td>
-                <td class="py-3 px-4 preco-justo-tabela">R$ 21,35</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
-                <td class="py-3 px-4 valor-investido">R$ 874,40</td>
-                <td class="py-3 px-4 valor-atual font-semibold">R$ 874,40</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                </td>
-              </tr>
+              <!-- Preenchido dinamicamente por renderizarTabelaCarteira(), a partir de carteiraAtivos (localStorage) -->
             </tbody>
           </table>
         </div>
@@ -397,6 +377,25 @@
             <span class="text-xs font-semibold text-blue-800 dark:text-blue-400 uppercase">Média Mensal Estimada</span>
             <h4 id="mediaMensalProventos" class="text-2xl font-bold text-blue-700 dark:text-blue-300 mt-1">R$ 0,00 / mês</h4>
           </div>
+        </div>
+
+        <!-- GRÁFICO DE PROVENTOS: ANO -> MÊS -> ATIVOS QUE PAGARAM -->
+        <div class="p-5 border border-gray-200 dark:border-darkborder rounded-xl bg-gray-50 dark:bg-slate-900 space-y-3">
+          <div class="flex justify-between items-center flex-wrap gap-3">
+            <div>
+              <h4 id="tituloGraficoProventos" class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-column text-emerald-500"></i> Proventos por Ano
+              </h4>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Clique em uma barra de ano para ver os meses, e em um mês para ver quais ativos pagaram.</p>
+            </div>
+            <button id="btnVoltarGraficoProventos" onclick="voltarGraficoProventos()" class="hidden bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-300 dark:border-darkborder text-gray-700 dark:text-gray-200 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-arrow-left"></i> Voltar para Anos
+            </button>
+          </div>
+          <div class="h-72">
+            <canvas id="graficoProventosCanvas"></canvas>
+          </div>
+          <div id="listaAtivosMesProventos" class="hidden space-y-2 pt-2 border-t border-gray-200 dark:border-darkborder"></div>
         </div>
 
         <!-- TABELA GERAL DE PROVENTOS -->
@@ -480,6 +479,10 @@
                 <button onclick="mudarPeriodoGrafico('5A')" id="btn-5A" class="px-3 py-1.5 hover:bg-blue-600 hover:text-white transition">5A</button>
               </div>
             </div>
+          </div>
+          <div id="avisoGraficoSimulado" class="hidden flex items-center gap-2 text-xs font-semibold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 border border-amber-300 dark:border-amber-800 rounded-lg px-3 py-2">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Sem token válido ou API indisponível: exibindo dados <b>simulados</b> apenas para visualização. Configure o token da Brapi em Configurações para ver o histórico real.</span>
           </div>
           <!-- Container interativo do TradingView Lightweight Charts com tamanho garantido -->
           <div id="tradingviewChartContainer" class="w-full h-80 rounded-lg overflow-hidden border border-gray-200 dark:border-darkborder bg-white dark:bg-slate-950 relative min-h-[320px]"></div>
@@ -607,10 +610,22 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.5.9";
+    const VERSAO_ATUAL = "1.6.0";
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
+    }
+
+    // MODELO DE DADOS DA CARTEIRA (antes só existia no DOM e se perdia ao recarregar a página)
+    const CARTEIRA_PADRAO = [
+      { ticker: 'PETR4', qtd: 10, pm: 32.21, precoAtual: 32.21, precoJusto: 27.22, precoJustoEstimado: false, variacao: 0 },
+      { ticker: 'KLBN3', qtd: 225, pm: 6.28, precoAtual: 6.28, precoJusto: 3.81, precoJustoEstimado: false, variacao: 0 },
+      { ticker: 'SAPR11', qtd: 40, pm: 21.86, precoAtual: 21.86, precoJusto: 21.35, precoJustoEstimado: false, variacao: 0 }
+    ];
+    let carteiraAtivos = JSON.parse(localStorage.getItem('carteira_ativos')) || CARTEIRA_PADRAO;
+
+    function salvarCarteira() {
+      localStorage.setItem('carteira_ativos', JSON.stringify(carteiraAtivos));
     }
 
     let tickersRadar = JSON.parse(localStorage.getItem('radar_personalizado')) || ['SAPR11', 'PETR4', 'KLBN3', 'BBAS3', 'VALE3', 'TAEE11'];
@@ -623,6 +638,12 @@
     let tvChart = null;
     let tvSeries = null;
     let periodoGraficoAtual = '1A';
+
+    // Monta a URL do proxy CORS no formato atual e correto do corsproxy.io
+    // (o formato antigo "?https://..." concatenava querystrings sem codificar e quebrava a requisição)
+    function corsProxyUrl(urlAlvo) {
+      return 'https://corsproxy.io/?url=' + encodeURIComponent(urlAlvo);
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       const temaSalvo = localStorage.getItem('app_tema') || 'dark';
@@ -648,6 +669,7 @@
         document.getElementById('brapiTokenInput').value = tokenSalvo;
       }
 
+      renderizarTabelaCarteira();
       renderizarCardsRadar();
       renderizarTabelaDividendos();
       recalcularTotais();
@@ -771,7 +793,7 @@
         return;
       }
       try {
-        const res = await fetch(`https://corsproxy.io/?https://brapi.dev/api/quote/PETR4?token=${token}`);
+        const res = await fetch(corsProxyUrl(`https://brapi.dev/api/quote/PETR4?token=${token}`));
         if (res.ok) {
           statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300";
           statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Brapi: Online</span>`;
@@ -786,7 +808,7 @@
     }
 
     function navegar(aba) {
-      ['carteira', 'dividendos', 'oportunidades', 'analise', 'configuracoes'].forEach(s => {
+      ['dashboard', 'carteira', 'dividendos', 'oportunidades', 'analise', 'configuracoes'].forEach(s => {
         const el = document.getElementById(`sec-${s}`);
         if (el) el.classList.add('hidden');
       });
@@ -796,6 +818,16 @@
       if (aba === 'analise') {
         setTimeout(() => {
           inicializarGraficoTradingView();
+        }, 150);
+      }
+
+      if (aba === 'dividendos') {
+        setTimeout(() => {
+          if (graficoProventosChart) {
+            graficoProventosChart.resize();
+          } else {
+            renderizarGraficoProventos();
+          }
         }, 150);
       }
     }
@@ -913,14 +945,15 @@
       else if (periodoGraficoAtual === '5A') { rangeStr = '5y'; intervalStr = '1wk'; }
 
       let dadosFormatados = [];
+      let usandoDadosSimulados = false;
 
       if (token) {
         try {
-          let url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}?range=${rangeStr}&interval=${intervalStr}&token=${token}`;
-          let res = await fetch(url);
+          let urlAlvo = `https://brapi.dev/api/quote/${ticker}?range=${rangeStr}&interval=${intervalStr}&token=${token}`;
+          let res = await fetch(corsProxyUrl(urlAlvo));
           if (!res.ok) {
-            url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}.SA?range=${rangeStr}&interval=${intervalStr}&token=${token}`;
-            res = await fetch(url);
+            urlAlvo = `https://brapi.dev/api/quote/${ticker}.SA?range=${rangeStr}&interval=${intervalStr}&token=${token}`;
+            res = await fetch(corsProxyUrl(urlAlvo));
           }
           if (res.ok) {
             const data = await res.json();
@@ -938,6 +971,7 @@
       }
 
       if (dadosFormatados.length === 0) {
+        usandoDadosSimulados = true;
         const hoje = new Date();
         let qtdDias = 365;
         if (periodoGraficoAtual === '1M') qtdDias = 30;
@@ -964,6 +998,11 @@
 
       tvSeries.setData(dadosFormatados);
       tvChart.timeScale().fitContent();
+
+      const avisoSimulado = document.getElementById('avisoGraficoSimulado');
+      if (avisoSimulado) {
+        avisoSimulado.classList.toggle('hidden', !usandoDadosSimulados);
+      }
     }
 
     function converterDataParaObjeto(dataStr) {
@@ -1004,6 +1043,7 @@
       document.getElementById('mediaMensalProventos').innerText = `R$ ${(total / 36).toFixed(2).replace('.', ',')} / mês`;
 
       renderizarHistoricoPorAtivo();
+      renderizarGraficoProventos();
       recalcularTotais();
     }
 
@@ -1051,6 +1091,161 @@
           </div>
         `;
       }
+    }
+
+    // GRÁFICO DE PROVENTOS: ANO -> MÊS -> ATIVOS QUE PAGARAM
+    let graficoProventosChart = null;
+    let nivelGraficoProventos = 'ano'; // 'ano' | 'mes'
+    let anoSelecionadoGrafico = null;
+    const NOMES_MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+    function agruparProventosPorAno() {
+      const totais = {};
+      listaDividendos.forEach(item => {
+        const data = converterDataParaObjeto(item.dataPag);
+        const ano = data.getFullYear();
+        totais[ano] = (totais[ano] || 0) + item.valor;
+      });
+      return Object.keys(totais).sort().reduce((acc, ano) => {
+        acc[ano] = totais[ano];
+        return acc;
+      }, {});
+    }
+
+    function agruparProventosPorMes(ano) {
+      const totaisPorMes = new Array(12).fill(0);
+      listaDividendos.forEach(item => {
+        const data = converterDataParaObjeto(item.dataPag);
+        if (data.getFullYear() === ano) {
+          totaisPorMes[data.getMonth()] += item.valor;
+        }
+      });
+      return totaisPorMes;
+    }
+
+    function ativosQuePagaramNoMes(ano, mesIndex) {
+      return listaDividendos.filter(item => {
+        const data = converterDataParaObjeto(item.dataPag);
+        return data.getFullYear() === ano && data.getMonth() === mesIndex;
+      });
+    }
+
+    function renderizarGraficoProventos() {
+      const canvas = document.getElementById('graficoProventosCanvas');
+      if (!canvas || typeof Chart === 'undefined') return;
+
+      const btnVoltar = document.getElementById('btnVoltarGraficoProventos');
+      const titulo = document.getElementById('tituloGraficoProventos');
+      const listaMes = document.getElementById('listaAtivosMesProventos');
+      listaMes.classList.add('hidden');
+      listaMes.innerHTML = '';
+
+      let labels = [];
+      let valores = [];
+      let cores = [];
+
+      if (nivelGraficoProventos === 'ano') {
+        const totaisPorAno = agruparProventosPorAno();
+        labels = Object.keys(totaisPorAno);
+        valores = Object.values(totaisPorAno);
+        cores = labels.map(() => 'rgba(37, 99, 235, 0.75)'); // azul
+        titulo.innerHTML = '<i class="fa-solid fa-chart-column text-emerald-500"></i> Proventos por Ano';
+        btnVoltar.classList.add('hidden');
+      } else {
+        const totaisPorMes = agruparProventosPorMes(anoSelecionadoGrafico);
+        labels = NOMES_MESES;
+        valores = totaisPorMes;
+        // Barra verde nos meses com dividendo recebido, cinza nos meses sem nada
+        cores = totaisPorMes.map(v => v > 0 ? 'rgba(16, 185, 129, 0.8)' : 'rgba(148, 163, 184, 0.35)');
+        titulo.innerHTML = `<i class="fa-solid fa-chart-column text-emerald-500"></i> Proventos em ${anoSelecionadoGrafico} por Mês`;
+        btnVoltar.classList.remove('hidden');
+      }
+
+      if (graficoProventosChart) {
+        graficoProventosChart.data.labels = labels;
+        graficoProventosChart.data.datasets[0].data = valores;
+        graficoProventosChart.data.datasets[0].backgroundColor = cores;
+        graficoProventosChart.update();
+        return;
+      }
+
+      graficoProventosChart = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Proventos (R$)',
+            data: valores,
+            backgroundColor: cores,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `R$ ${ctx.parsed.y.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { callback: (v) => `R$ ${v}` }
+            }
+          },
+          onClick: (evt, elements) => {
+            if (!elements.length) return;
+            const idx = elements[0].index;
+            if (nivelGraficoProventos === 'ano') {
+              const totaisPorAno = agruparProventosPorAno();
+              anoSelecionadoGrafico = parseInt(Object.keys(totaisPorAno)[idx]);
+              nivelGraficoProventos = 'mes';
+              renderizarGraficoProventos();
+            } else {
+              exibirAtivosDoMes(idx);
+            }
+          }
+        }
+      });
+    }
+
+    function voltarGraficoProventos() {
+      nivelGraficoProventos = 'ano';
+      anoSelecionadoGrafico = null;
+      renderizarGraficoProventos();
+    }
+
+    function exibirAtivosDoMes(mesIndex) {
+      const itens = ativosQuePagaramNoMes(anoSelecionadoGrafico, mesIndex);
+      const container = document.getElementById('listaAtivosMesProventos');
+
+      if (itens.length === 0) {
+        container.innerHTML = `<p class="text-xs text-gray-400">Nenhum provento recebido em ${NOMES_MESES[mesIndex]}/${anoSelecionadoGrafico}.</p>`;
+        container.classList.remove('hidden');
+        return;
+      }
+
+      const totalMes = itens.reduce((acc, i) => acc + i.valor, 0);
+      container.innerHTML = `
+        <h5 class="text-sm font-bold text-gray-800 dark:text-white flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-blue-500"></i> Ativos que pagaram em ${NOMES_MESES[mesIndex]}/${anoSelecionadoGrafico}
+          <span class="text-xs font-normal text-gray-500">(Total: R$ ${totalMes.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>
+        </h5>
+        ${itens.map(i => `
+          <div class="flex justify-between items-center text-xs p-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-darkborder rounded-lg">
+            <div>
+              <span class="font-bold text-gray-800 dark:text-white">${i.ticker}</span>
+              <span class="text-gray-500 dark:text-gray-400"> • ${i.tipo} • Pago em ${i.dataPag}</span>
+            </div>
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400">R$ ${i.valor.toFixed(2).replace('.', ',')}</span>
+          </div>
+        `).join('')}
+      `;
+      container.classList.remove('hidden');
     }
 
     function abrirModalDividendo() {
@@ -1113,6 +1308,40 @@
         renderizarTabelaDividendos();
         mostrarNotificacao("Provento removido.", "info");
       }
+    }
+
+    function renderizarTabelaCarteira() {
+      const tbody = document.getElementById('tabelaAtivos');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      carteiraAtivos.forEach(ativo => {
+        const valorInvestido = ativo.qtd * ativo.pm;
+        const valorAtual = ativo.qtd * ativo.precoAtual;
+        const variacao = ativo.variacao || 0;
+        const corVariacao = variacao >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500';
+        const sinalVariacao = variacao >= 0 ? '+' : '';
+        const precoJustoTxt = (ativo.precoJusto !== null && ativo.precoJusto !== undefined && !isNaN(ativo.precoJusto))
+          ? `R$ ${ativo.precoJusto.toFixed(2).replace('.', ',')}` + (ativo.precoJustoEstimado ? ' *' : '')
+          : 'R$ -';
+
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-ticker', ativo.ticker);
+        tr.className = "border-b border-gray-100 dark:border-darkborder text-sm";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${ativo.ticker}</td>
+          <td class="py-3 px-4 qtd">${ativo.qtd}</td>
+          <td class="py-3 px-4 pm">R$ ${ativo.pm.toFixed(2).replace('.', ',')}</td>
+          <td class="py-3 px-4 preco-atual font-semibold">R$ ${ativo.precoAtual.toFixed(2).replace('.', ',')}</td>
+          <td class="py-3 px-4 preco-justo-tabela" title="${ativo.precoJustoEstimado ? 'Estimativa (sem lucro/patrimônio por ação disponíveis)' : 'Calculado pela fórmula de Graham'}">${precoJustoTxt}</td>
+          <td class="py-3 px-4 variacao ${corVariacao} font-medium">${sinalVariacao}${variacao.toFixed(2)}%</td>
+          <td class="py-3 px-4 valor-investido">R$ ${valorInvestido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
     function renderizarCardsRadar() {
@@ -1180,11 +1409,11 @@
 
       for (const ticker of todosTickers) {
         try {
-          let url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}?token=${token}&fundamental=true`;
-          let res = await fetch(url);
+          let urlAlvo = `https://brapi.dev/api/quote/${ticker}?token=${token}&fundamental=true`;
+          let res = await fetch(corsProxyUrl(urlAlvo));
           if (!res.ok && res.status === 404) {
-            url = `https://corsproxy.io/?https://brapi.dev/api/quote/${ticker}.SA?token=${token}&fundamental=true`;
-            res = await fetch(url);
+            urlAlvo = `https://brapi.dev/api/quote/${ticker}.SA?token=${token}&fundamental=true`;
+            res = await fetch(corsProxyUrl(urlAlvo));
           }
           if (res.ok) {
             const data = await res.json();
@@ -1197,15 +1426,27 @@
               const nomeEl = document.getElementById(`nome-${ticker}`);
               if (nomeEl) nomeEl.innerText = nomeEmpresa;
 
+              // Fórmula de Graham só é válida com EPS (lucro/ação) e VPA positivos.
+              // Fora isso, não é possível calcular preço justo por fundamentos.
               let precoJusto = null;
-              if (ativo.eps && ativo.bookValue) {
+              let precoJustoEstimado = false;
+              if (ativo.eps && ativo.bookValue && ativo.eps > 0 && ativo.bookValue > 0) {
                 precoJusto = Math.sqrt(22.5 * ativo.eps * ativo.bookValue);
               } else {
                 precoJusto = precoAtualApi * 0.95;
+                precoJustoEstimado = true;
               }
 
-              atualizarLinhaTabela(ticker, precoAtualApi, variacao, precoJusto);
-              atualizarRadarOportunidades(ticker, precoAtualApi, precoJusto);
+              const ativoCarteira = carteiraAtivos.find(a => a.ticker === ticker);
+              if (ativoCarteira) {
+                ativoCarteira.precoAtual = precoAtualApi;
+                ativoCarteira.precoJusto = precoJusto;
+                ativoCarteira.precoJustoEstimado = precoJustoEstimado;
+                ativoCarteira.variacao = variacao;
+              }
+
+              atualizarLinhaTabela(ticker, precoAtualApi, variacao, precoJusto, precoJustoEstimado);
+              atualizarRadarOportunidades(ticker, precoAtualApi, precoJusto, precoJustoEstimado);
               atualizados++;
             }
           }
@@ -1214,6 +1455,7 @@
         }
       }
 
+      salvarCarteira();
       recalcularTotais();
       const agora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       if (statusElement) statusElement.innerText = atualizados > 0 ? `Atualizado às ${agora}` : "Erro de conexão";
@@ -1227,7 +1469,7 @@
       }
     }
 
-    function atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto) {
+    function atualizarLinhaTabela(ticker, precoAtual, variacao, precoJusto, precoJustoEstimado = false) {
       const linhas = document.querySelectorAll(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
       linhas.forEach(linha => {
         const celulaPreco = linha.querySelector('.preco-atual');
@@ -1239,8 +1481,9 @@
         if (celulaPreco && precoAtual !== undefined) {
           celulaPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
         }
-        if (celulaJusto && precoJusto !== undefined) {
-          celulaJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}`;
+        if (celulaJusto && precoJusto !== undefined && !isNaN(precoJusto)) {
+          celulaJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}` + (precoJustoEstimado ? ' *' : '');
+          celulaJusto.title = precoJustoEstimado ? 'Estimativa (sem lucro/patrimônio por ação disponíveis para o cálculo de Graham)' : 'Calculado pela fórmula de Graham';
         }
         if (celulaVariacao && variacao !== undefined) {
           const sinal = variacao >= 0 ? '+' : '';
@@ -1254,7 +1497,7 @@
       });
     }
 
-    function atualizarRadarOportunidades(ticker, precoAtual, precoJusto) {
+    function atualizarRadarOportunidades(ticker, precoAtual, precoJusto, precoJustoEstimado = false) {
       const card = document.querySelector(`[data-op-ticker="${ticker}"]`);
       if (!card) return;
       const spanPreco = document.getElementById(`op-preco-${ticker}`);
@@ -1262,7 +1505,7 @@
       const badge = document.getElementById(`badge-${ticker}`);
 
       if (spanPreco) spanPreco.innerText = `R$ ${precoAtual.toFixed(2).replace('.', ',')}`;
-      if (spanJusto) spanJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}`;
+      if (spanJusto) spanJusto.innerText = `R$ ${precoJusto.toFixed(2).replace('.', ',')}` + (precoJustoEstimado ? ' *' : '');
 
       if (badge) {
         if (precoAtual < precoJusto) {
@@ -1284,11 +1527,9 @@
       let totalAtual = 0;
       let totalAtivosCount = 0;
 
-      linhas.forEach(linha => {
-        const vInv = parseFloat(linha.querySelector('.valor-investido')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
-        const vAtu = parseFloat(linha.querySelector('.valor-atual')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
-        totalInvestido += vInv;
-        totalAtual += vAtu;
+      carteiraAtivos.forEach(ativo => {
+        totalInvestido += ativo.qtd * ativo.pm;
+        totalAtual += ativo.qtd * ativo.precoAtual;
         totalAtivosCount++;
       });
 
@@ -1332,7 +1573,7 @@
       if (badgeQtdAtivos) badgeQtdAtivos.innerText = totalAtivosCount;
 
       calcularSimuladorLongoPrazo(totalAtual);
-      atualizarGraficoAlocacao(linhas);
+      atualizarGraficoAlocacao();
     }
 
     function calcularSimuladorLongoPrazo(patrimonioAtualOverride) {
@@ -1349,7 +1590,7 @@
       document.getElementById('simTotalDividendos').innerText = `R$ ${dividendosAcumulados.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
-    function atualizarGraficoAlocacao(linhas) {
+    function atualizarGraficoAlocacao() {
       const container = document.getElementById('containerBarrasAlocacao');
       if (!container) return;
       container.innerHTML = '';
@@ -1357,11 +1598,10 @@
       let totalVal = 0;
       let dadosAtivos = [];
 
-      linhas.forEach(l => {
-        const ticker = l.getAttribute('data-ticker');
-        const vAtu = parseFloat(l.querySelector('.valor-atual')?.innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim() || 0);
+      carteiraAtivos.forEach(ativo => {
+        const vAtu = ativo.qtd * ativo.precoAtual;
         totalVal += vAtu;
-        dadosAtivos.push({ ticker, valor: vAtu });
+        dadosAtivos.push({ ticker: ativo.ticker, valor: vAtu });
       });
 
       if (totalVal === 0) {
@@ -1390,7 +1630,11 @@
 
     function removerAtivo(btn) {
       if (confirm("Deseja remover este ativo da carteira?")) {
-        btn.closest('tr').remove();
+        const linha = btn.closest('tr');
+        const ticker = linha.getAttribute('data-ticker');
+        carteiraAtivos = carteiraAtivos.filter(a => a.ticker !== ticker);
+        salvarCarteira();
+        linha.remove();
         recalcularTotais();
         mostrarNotificacao("Ativo removido.", "info");
       }
@@ -1417,67 +1661,38 @@
         return;
       }
 
-      const tbody = document.getElementById('tabelaAtivos');
-      const linhaExistente = document.querySelector(`#tabelaAtivos tr[data-ticker="${ticker}"]`);
+      const ativoExistente = carteiraAtivos.find(a => a.ticker === ticker);
 
-      if (linhaExistente) {
-        const qtdAntiga = parseFloat(linhaExistente.querySelector('.qtd').innerText.replace(',', '.'));
-        const pmAntigo = parseFloat(linhaExistente.querySelector('.pm').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
-        const totalQtd = qtdAntiga + novaQtd;
-        const totalInvestidoAntigo = qtdAntiga * pmAntigo;
+      if (ativoExistente) {
+        const totalQtd = ativoExistente.qtd + novaQtd;
+        const totalInvestidoAntigo = ativoExistente.qtd * ativoExistente.pm;
         const totalInvestidoNovoAporte = novaQtd * novoPm;
         const novoPrecoMedio = (totalInvestidoAntigo + totalInvestidoNovoAporte) / totalQtd;
-        const novoValorInvTotal = totalInvestidoAntigo + totalInvestidoNovoAporte;
 
-        linhaExistente.querySelector('.qtd').innerText = totalQtd;
-        linhaExistente.querySelector('.pm').innerText = `R$ ${novoPrecoMedio.toFixed(2).replace('.', ',')}`;
-        linhaExistente.querySelector('.valor-investido').innerText = `R$ ${novoValorInvTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        const precoAtualStr = linhaExistente.querySelector('.preco-atual').innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
-        const precoAtual = parseFloat(precoAtualStr) || novoPrecoMedio;
-        linhaExistente.querySelector('.valor-atual').innerText = `R$ ${(totalQtd * precoAtual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
+        ativoExistente.qtd = totalQtd;
+        ativoExistente.pm = novoPrecoMedio;
         mostrarNotificacao(`Aporte adicionado em ${ticker}!`, "sucesso");
       } else {
-        const novaLinha = document.createElement('tr');
-        novaLinha.setAttribute('data-ticker', ticker);
-        novaLinha.className = "border-b border-gray-100 dark:border-darkborder text-sm";
-        const valorInv = novaQtd * novoPm;
-        novaLinha.innerHTML = `
-          <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${ticker}</td>
-          <td class="py-3 px-4 qtd">${novaQtd}</td>
-          <td class="py-3 px-4 pm">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
-          <td class="py-3 px-4 preco-atual font-semibold">R$ ${novoPm.toFixed(2).replace('.', ',')}</td>
-          <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
-          <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
-          <td class="py-3 px-4 valor-investido">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-          <td class="py-3 px-4 valor-atual font-semibold">R$ ${valorInv.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-          <td class="py-3 px-4 text-center">
-            <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-          </td>
-        `;
-        tbody.appendChild(novaLinha);
+        carteiraAtivos.push({
+          ticker,
+          qtd: novaQtd,
+          pm: novoPm,
+          precoAtual: novoPm,
+          precoJusto: null,
+          precoJustoEstimado: false,
+          variacao: 0
+        });
         mostrarNotificacao(`Novo ativo ${ticker} cadastrado!`, "sucesso");
       }
 
+      salvarCarteira();
+      renderizarTabelaCarteira();
       fecharModalOperacao();
       recalcularTotais();
     }
 
     function exportarBackup() {
-      const linhas = document.querySelectorAll('#tabelaAtivos tr[data-ticker]');
-      const ativos = [];
-      linhas.forEach(l => {
-        ativos.push({
-          ticker: l.getAttribute('data-ticker'),
-          qtd: l.querySelector('.qtd')?.innerText || "0",
-          pm: l.querySelector('.pm')?.innerText || "R$ 0,00",
-          precoAtual: l.querySelector('.preco-atual')?.innerText || "R$ 0,00",
-          valorInvestido: l.querySelector('.valor-investido')?.innerText || "R$ 0,00",
-          valorAtual: l.querySelector('.valor-atual')?.innerText || "R$ 0,00"
-        });
-      });
-      const blob = new Blob([JSON.stringify({ ativos, dividendos: listaDividendos }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ ativos: carteiraAtivos, dividendos: listaDividendos }, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -1495,27 +1710,23 @@
         try {
           const dados = JSON.parse(e.target.result);
           if (dados && Array.isArray(dados.ativos)) {
-            const tbody = document.getElementById('tabelaAtivos');
-            tbody.innerHTML = '';
-            dados.ativos.forEach(a => {
-              const tr = document.createElement('tr');
-              tr.setAttribute('data-ticker', a.ticker);
-              tr.className = "border-b border-gray-100 dark:border-darkborder text-sm";
-              tr.innerHTML = `
-                <td class="py-3 px-4 font-bold text-gray-800 dark:text-white">${a.ticker}</td>
-                <td class="py-3 px-4 qtd">${a.qtd}</td>
-                <td class="py-3 px-4 pm">${a.pm}</td>
-                <td class="py-3 px-4 preco-atual font-semibold">${a.precoAtual}</td>
-                <td class="py-3 px-4 preco-justo-tabela">R$ -</td>
-                <td class="py-3 px-4 variacao text-emerald-600 dark:text-emerald-400 font-medium">+0.00%</td>
-                <td class="py-3 px-4 valor-investido">${a.valorInvestido}</td>
-                <td class="py-3 px-4 valor-atual font-semibold">${a.valorAtual}</td>
-                <td class="py-3 px-4 text-center">
-                  <button onclick="removerAtivo(this)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                </td>
-              `;
-              tbody.appendChild(tr);
-            });
+            // Converte texto "R$ 1.234,56" em número, se o backup for de uma versão antiga.
+            const paraNumero = (v) => {
+              if (typeof v === 'number') return v;
+              if (typeof v === 'string') return parseFloat(v.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
+              return 0;
+            };
+            carteiraAtivos = dados.ativos.map(a => ({
+              ticker: a.ticker,
+              qtd: paraNumero(a.qtd),
+              pm: paraNumero(a.pm),
+              precoAtual: paraNumero(a.precoAtual),
+              precoJusto: a.precoJusto !== undefined ? paraNumero(a.precoJusto) : null,
+              precoJustoEstimado: !!a.precoJustoEstimado,
+              variacao: paraNumero(a.variacao)
+            }));
+            salvarCarteira();
+            renderizarTabelaCarteira();
             recalcularTotais();
           }
           if (dados && Array.isArray(dados.dividendos)) {
