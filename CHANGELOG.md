@@ -1,5 +1,13 @@
 # Histórico de Alterações - AnalystPro
 
+## [Versão V1.6.0] - 2026-08-08
+- *Corrigido:* Bug crítico de persistência — a carteira de ativos agora é salva no dispositivo (localStorage); antes existia apenas na tela e se perdia ao recarregar a página.
+- *Adicionado:* Nova aba Dashboard reunindo o Resumo Geral, o Raio-X Didático e o Simulador de Renda Passiva, que antes ficavam fixos em cima de todas as outras abas.
+- *Corrigido:* Formato da URL usada no proxy CORS (corsproxy.io) para consulta à API Brapi, que estava quebrando as requisições do Gráfico Avançado de Cotação.
+- *Adicionado:* Aviso visual explícito quando o Gráfico Avançado de Cotação está exibindo dados simulados (ausência de token válido ou API indisponível).
+- *Corrigido:* Cálculo do Preço Justo (fórmula de Graham), que podia gerar "NaN" com EPS/VPA negativos; valores estimados agora são sinalizados com "*".
+- *Adicionado:* Gráfico interativo de Proventos na aba Dividendos, com navegação Ano → Mês → Ativos que pagaram no período.
+
 ## [Versão V1.5.9] - 2026-08-08
 - *Adicionado:* Remoção definitiva do banner global fixo de notificação de versão que se repetia de forma indesejada em todas as abas internas.
 - *Ajustes:* Abas de navegação otimizadas e limpas para garantir foco total nas funcionalidades de cada seção sem ruídos visuais.
