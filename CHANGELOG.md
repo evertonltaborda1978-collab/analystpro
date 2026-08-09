@@ -1,5 +1,10 @@
 # Histórico de Alterações - AnalystPro
 
+## [Versão V1.7.0] - 2026-08-09
+- *Adicionado:* Recuperação de senha por e-mail com código de 6 dígitos, via EmailJS (sem backend), substituindo a caixa de confirmação genérica do navegador.
+- *Adicionado:* Painel de Segurança em Configurações — trocar senha (com validação da senha atual), configurar e-mail de recuperação e credenciais do EmailJS.
+- *Corrigido:* Atributos do campo de senha ajustados para reduzir a interferência de sugestões de autopreenchimento/gerenciador de senhas do navegador.
+
 ## [Versão V1.6.0] - 2026-08-08
 - *Corrigido:* Bug crítico de persistência — a carteira de ativos agora é salva no dispositivo (localStorage); antes existia apenas na tela e se perdia ao recarregar a página.
 - *Adicionado:* Nova aba Dashboard reunindo o Resumo Geral, o Raio-X Didático e o Simulador de Renda Passiva, que antes ficavam fixos em cima de todas as outras abas.
