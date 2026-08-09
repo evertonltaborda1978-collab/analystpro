@@ -1,5 +1,8 @@
 # Histórico de Alterações - AnalystPro
 
+## [Versão V1.7.3] - 2026-08-09
+- *Corrigido:* Os modais de "Esqueci a Senha" e "Novidades" não abriam de fato na tela de login — ficavam escondidos atrás dela por causa de um empate de z-index (ambos com o mesmo valor, e a tela de login vinha depois no código, ficando por cima).
+
 ## [Versão V1.7.2] - 2026-08-09
 - *Corrigido:* Campos de senha deixaram de usar `type="password"` nativo (agora mascaram só visualmente via CSS `-webkit-text-security`), o que impede o Chrome/Windows de sobrepor sugestões de login salvo e de bloquear o clique no botão de mostrar/esconder senha.
 
