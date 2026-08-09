@@ -1,5 +1,8 @@
 # Histórico de Alterações - AnalystPro
 
+## [Versão V1.7.1] - 2026-08-09
+- *Adicionado:* Botão de mostrar/esconder senha (ícone de olho) em todos os campos de senha: login, trocar senha em Configurações e recuperação por e-mail.
+
 ## [Versão V1.7.0] - 2026-08-09
 - *Adicionado:* Recuperação de senha por e-mail com código de 6 dígitos, via EmailJS (sem backend), substituindo a caixa de confirmação genérica do navegador.
 - *Adicionado:* Painel de Segurança em Configurações — trocar senha (com validação da senha atual), configurar e-mail de recuperação e credenciais do EmailJS.
