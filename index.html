@@ -151,7 +151,12 @@
         </div>
         <div>
           <label for="novaSenhaRecuperacaoInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Nova senha (só números)</label>
-          <input type="password" id="novaSenhaRecuperacaoInput" name="nova_senha_recuperacao" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-4 py-2.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-lg tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
+          <div class="relative">
+            <input type="password" id="novaSenhaRecuperacaoInput" name="nova_senha_recuperacao" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-4 py-2.5 pr-11 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-lg tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
+            <button type="button" onclick="alternarVisibilidadeSenha('novaSenhaRecuperacaoInput', this)" tabindex="-1" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
         </div>
         <button onclick="confirmarRecuperacaoSenha()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-md">
           Confirmar e trocar senha
@@ -185,7 +190,12 @@
       <div id="formLogin" class="space-y-4">
         <div>
           <label for="senhaAcesso" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha de Acesso (Números)</label>
-          <input type="password" id="senhaAcesso" name="pin_acesso_analystpro" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore data-bwignore onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••" class="w-full px-4 py-3 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-xl tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
+          <div class="relative">
+            <input type="password" id="senhaAcesso" name="pin_acesso_analystpro" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore data-bwignore onkeypress="if(event.key === 'Enter') autenticar()" placeholder="••••••" class="w-full px-4 py-3 pr-11 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-center text-xl tracking-widest focus:ring-2 focus:ring-blue-500 outline-none">
+            <button type="button" onclick="alternarVisibilidadeSenha('senhaAcesso', this)" tabindex="-1" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
         </div>
         <button onclick="autenticar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-md">
           Entrar no Sistema
@@ -625,16 +635,31 @@
               <h4 class="font-semibold text-sm text-gray-800 dark:text-white">Trocar senha de acesso</h4>
               <div>
                 <label for="senhaAtualInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Senha atual</label>
-                <input type="password" id="senhaAtualInput" name="senha_atual_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                <div class="relative">
+                  <input type="password" id="senhaAtualInput" name="senha_atual_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                  <button type="button" onclick="alternarVisibilidadeSenha('senhaAtualInput', this)" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
               </div>
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label for="novaSenhaInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Nova senha</label>
-                  <input type="password" id="novaSenhaInput" name="nova_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                  <div class="relative">
+                    <input type="password" id="novaSenhaInput" name="nova_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    <button type="button" onclick="alternarVisibilidadeSenha('novaSenhaInput', this)" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label for="confirmarSenhaInput" class="block text-xs font-semibold uppercase text-gray-600 dark:text-gray-400 mb-1">Confirmar nova senha</label>
-                  <input type="password" id="confirmarSenhaInput" name="confirmar_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                  <div class="relative">
+                    <input type="password" id="confirmarSenhaInput" name="confirmar_senha_cfg" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" data-lpignore="true" data-1p-ignore placeholder="••••••" class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    <button type="button" onclick="alternarVisibilidadeSenha('confirmarSenhaInput', this)" tabindex="-1" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
               <button onclick="trocarSenha()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium text-sm transition">
@@ -933,6 +958,18 @@
     // Código de recuperação: guardado com validade de 15 minutos
     let codigoRecuperacaoAtual = null;
     let codigoRecuperacaoExpira = 0;
+
+    function alternarVisibilidadeSenha(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icone = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icone.className = 'fa-solid fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icone.className = 'fa-solid fa-eye';
+      }
+    }
 
     function esqueciSenha() {
       abrirModalRecuperarSenha();
