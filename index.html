@@ -113,7 +113,7 @@
         <button onclick="abrirModalChangelog()" class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 shadow-sm hover:bg-blue-100 transition">
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
-        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
+        <span id="badgeVersaoLogin" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
           Versão V1.6.0
         </span>
       </div>
@@ -156,7 +156,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span>Versão V1.6.0</span>
+              <span id="badgeVersaoHeader">Versão V1.6.0</span>
             </button>
           </div>
         </div>
@@ -610,7 +610,27 @@
   </div>
 
   <script>
-    const VERSAO_ATUAL = "1.6.0";
+    // A versão exibida no app agora vem do version.json (fonte única da verdade).
+    // Isso resolve a falha antiga de version.json e a versão nas telas ficarem dessincronizados.
+    let VERSAO_ATUAL = "1.6.0"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
+
+    async function carregarVersaoApp() {
+      try {
+        const resposta = await fetch('./version.json?t=' + new Date().getTime());
+        if (resposta.ok) {
+          const dados = await resposta.json();
+          if (dados && dados.version) {
+            VERSAO_ATUAL = dados.version;
+          }
+        }
+      } catch (e) {
+        console.log("Não foi possível ler version.json, usando versão de fallback embutida.");
+      }
+      const textoVersao = `Versão V${VERSAO_ATUAL}`;
+      document.querySelectorAll('#badgeVersaoLogin, #badgeVersaoHeader').forEach(el => {
+        if (el) el.innerText = textoVersao;
+      });
+    }
 
     if (!localStorage.getItem('app_senha')) {
       localStorage.setItem('app_senha', '123456');
@@ -646,6 +666,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      carregarVersaoApp();
       const temaSalvo = localStorage.getItem('app_tema') || 'dark';
       if (temaSalvo === 'dark') {
         document.documentElement.classList.add('dark');
@@ -705,15 +726,11 @@
 
     async function verificarAtualizacaoApp() {
       try {
-        const resposta = await fetch('./index.html?t=' + new Date().getTime());
+        const resposta = await fetch('./version.json?t=' + new Date().getTime());
         if (resposta.ok) {
-          const htmlTexto = await resposta.text();
-          const match = htmlTexto.match(/const VERSAO_ATUAL = "([^"]+)"/);
-          if (match && match[1]) {
-            const versaoOnline = match[1];
-            if (versaoOnline !== VERSAO_ATUAL) {
-              // Banner fixo superior omitido permanentemente
-            }
+          const dados = await resposta.json();
+          if (dados && dados.version && dados.version !== VERSAO_ATUAL) {
+            // Banner fixo superior omitido permanentemente (ver Changelog V1.5.9)
           }
         }
       } catch (e) {
