@@ -54,7 +54,14 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.8.1</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.8.2</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Diagnóstico do Gráfico Avançado:</b> quando cai para dados simulados, o aviso agora mostra o motivo real (erro HTTP, mensagem da Brapi, falta de token, etc.) em vez de sempre dizer genericamente "sem token válido".</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.8.1</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Correção crítica:</b> o Gráfico Avançado nunca carregava porque a URL da biblioteca (CDN) tinha um caminho de pasta errado (/standalone/ extra), resultando em erro 404 — não era bloqueio de rede como se suspeitava antes.</li>
@@ -230,7 +237,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span id="badgeVersaoLogin" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.8.1
+          Versão V1.8.2
         </span>
       </div>
 
@@ -277,7 +284,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span id="badgeVersaoHeader">Versão V1.8.1</span>
+              <span id="badgeVersaoHeader">Versão V1.8.2</span>
             </button>
           </div>
         </div>
@@ -827,7 +834,7 @@
   <script>
     // A versão exibida no app agora vem do version.json (fonte única da verdade).
     // Isso resolve a falha antiga de version.json e a versão nas telas ficarem dessincronizados.
-    let VERSAO_ATUAL = "1.8.1"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
+    let VERSAO_ATUAL = "1.8.2"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
 
     async function carregarVersaoApp() {
       try {
@@ -1424,6 +1431,8 @@
       dadosOHLCVAtual = [];
       let usandoDadosSimulados = false;
 
+      let motivoFalhaGrafico = null;
+
       if (token) {
         try {
           let urlAlvo = `https://brapi.dev/api/quote/${ticker}?range=${rangeStr}&interval=${intervalStr}&token=${token}`;
@@ -1448,11 +1457,23 @@
                   time: h.date, open: h.open, high: h.high, low: h.low, close: h.close, volume: h.volume || 0
                 });
               });
+              if (dadosFormatados.length === 0) {
+                motivoFalhaGrafico = 'A Brapi respondeu, mas não trouxe histórico de preços para esse período/ativo.';
+              }
+            } else {
+              motivoFalhaGrafico = (data && data.message) ? `Brapi: ${data.message}` : 'A Brapi respondeu sem dados de histórico de preços.';
             }
+          } else {
+            let corpoErro = '';
+            try { const j = await res.json(); corpoErro = j.message || j.error || ''; } catch (e2) { /* corpo não era JSON */ }
+            motivoFalhaGrafico = `Falha na requisição (HTTP ${res.status})${corpoErro ? ': ' + corpoErro : ''}.`;
           }
         } catch (e) {
           console.error("Erro ao buscar histórico da Brapi:", e);
+          motivoFalhaGrafico = 'Erro de rede/conexão ao tentar buscar os dados (proxy CORS ou Brapi indisponível no momento).';
         }
+      } else {
+        motivoFalhaGrafico = 'Nenhum token da Brapi configurado em Configurações.';
       }
 
       if (dadosFormatados.length === 0) {
@@ -1499,6 +1520,14 @@
 
       const avisoSimulado = document.getElementById('avisoGraficoSimulado');
       if (avisoSimulado) {
+        if (usandoDadosSimulados) {
+          const spanMotivo = avisoSimulado.querySelector('span');
+          if (spanMotivo) {
+            spanMotivo.innerHTML = motivoFalhaGrafico
+              ? `Exibindo dados <b>simulados</b> apenas para visualização. Motivo: ${motivoFalhaGrafico}`
+              : 'Sem token válido ou API indisponível: exibindo dados <b>simulados</b> apenas para visualização. Configure o token da Brapi em Configurações para ver o histórico real.';
+          }
+        }
         avisoSimulado.classList.toggle('hidden', !usandoDadosSimulados);
       }
 
