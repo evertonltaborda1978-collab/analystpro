@@ -1,5 +1,14 @@
 # Histórico de Alterações - AnalystPro
 
+## [Versão V1.8.0] - 2026-08-09
+- *Adicionado:* Tooltip no Gráfico Avançado ao passar o mouse, mostrando Abertura, Máxima, Mínima, Fechamento e Volume do dia.
+- *Adicionado:* Barras de volume negociado abaixo do gráfico de preço, coloridas por dia de alta/baixa.
+- *Adicionado:* Tabela de Retorno por Período (1 dia, 1 semana, 1 mês, 3 meses, 6 meses, 1 ano) no Gráfico Avançado, calculada a partir do histórico real da Brapi.
+- *Adicionado:* Preço-Justo (Graham) exibido junto ao cabeçalho do Gráfico Avançado, reaproveitando o cálculo já feito na Carteira.
+
+## [Versão V1.7.4] - 2026-08-09
+- *Corrigido:* Gráfico Avançado de Cotação ficava em branco, sem nenhum aviso, quando o CDN da biblioteca (unpkg.com) era bloqueado pela rede. Trocado para jsdelivr (mesmo CDN já usado pelo Chart.js e EmailJS) e adicionada mensagem de erro visível caso volte a falhar.
+
 ## [Versão V1.7.3] - 2026-08-09
 - *Corrigido:* Os modais de "Esqueci a Senha" e "Novidades" não abriam de fato na tela de login — ficavam escondidos atrás dela por causa de um empate de z-index (ambos com o mesmo valor, e a tela de login vinha depois no código, ficando por cima).
 
