@@ -21,7 +21,7 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <!-- Biblioteca TradingView Lightweight Charts -->
-  <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/standalone/lightweight-charts.standalone.production.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.1/dist/standalone/lightweight-charts.standalone.production.js"></script>
   <!-- Chart.js para o gráfico de dividendos (Ano -> Mês -> Ativos) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <!-- EmailJS: envio de e-mail direto do navegador, sem backend, usado na recuperação de senha -->
@@ -54,7 +54,24 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.7.3</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.8.0</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Tooltip no Gráfico Avançado:</b> passe o mouse sobre o gráfico para ver Abertura, Máxima, Mínima, Fechamento e Volume do dia.</li>
+            <li><b>Barras de volume:</b> adicionado histograma de volume negociado abaixo do gráfico de preço, colorido por dia de alta/baixa.</li>
+            <li><b>Tabela de Retorno por Período:</b> 1 dia, 1 semana, 1 mês, 3 meses, 6 meses e 1 ano, calculados a partir do histórico real.</li>
+            <li><b>Preço-Justo no gráfico:</b> exibido junto ao cabeçalho do Gráfico Avançado, reaproveitando o cálculo de Graham já feito na Carteira.</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.7.4</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Gráfico Avançado de Cotação:</b> biblioteca do gráfico trocada de CDN (unpkg → jsdelivr), que estava sendo bloqueada em algumas redes e deixava o gráfico em branco sem aviso. Agora, se falhar, mostra uma mensagem explicando o motivo.</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.7.3</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Correção crítica:</b> os modais de "Esqueci a Senha" e "Novidades" não abriam de fato na tela de login — ficavam escondidos atrás dela por causa de um empate de camada (z-index) visual.</li>
@@ -206,7 +223,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span id="badgeVersaoLogin" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.7.3
+          Versão V1.8.0
         </span>
       </div>
 
@@ -253,7 +270,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span id="badgeVersaoHeader">Versão V1.7.3</span>
+              <span id="badgeVersaoHeader">Versão V1.8.0</span>
             </button>
           </div>
         </div>
@@ -560,11 +577,14 @@
         <!-- GRÁFICO AVANÇADO ESTILO TRADINGVIEW (DIAS, MESES E ANOS) -->
         <div class="p-5 border border-gray-200 dark:border-darkborder rounded-xl bg-gray-50 dark:bg-slate-900 space-y-4">
           <div class="flex justify-between items-center flex-wrap gap-3">
-            <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
-              <i class="fa-solid fa-chart-line text-blue-500"></i> Gráfico Avançado de Cotação (Dias, Meses e Anos)
-            </h4>
+            <div>
+              <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-blue-500"></i> Gráfico Avançado de Cotação (Dias, Meses e Anos)
+              </h4>
+              <p id="precoJustoChartHeader" class="hidden text-xs text-gray-500 dark:text-gray-400 mt-1"></p>
+            </div>
             <div class="flex items-center gap-2 flex-wrap">
-              <select id="tickerGraficoAvancado" onchange="carregarGraficoAvancado()" class="px-3 py-1.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg text-xs outline-none font-bold">
+              <select id="tickerGraficoAvancado" onchange="carregarGraficoAvancado(); carregarTabelaRetornos();" class="px-3 py-1.5 border border-gray-300 dark:border-darkborder bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg text-xs outline-none font-bold">
                 <option value="PETR4">PETR4</option>
                 <option value="KLBN3">KLBN3</option>
                 <option value="SAPR11">SAPR11</option>
@@ -581,9 +601,21 @@
             <i class="fa-solid fa-triangle-exclamation"></i>
             <span>Sem token válido ou API indisponível: exibindo dados <b>simulados</b> apenas para visualização. Configure o token da Brapi em Configurações para ver o histórico real.</span>
           </div>
-          <!-- Container interativo do TradingView Lightweight Charts com tamanho garantido -->
-          <div id="tradingviewChartContainer" class="w-full h-80 rounded-lg overflow-hidden border border-gray-200 dark:border-darkborder bg-white dark:bg-slate-950 relative min-h-[320px]"></div>
+          <!-- Container externo fixo (não é limpo pela lib do gráfico) -->
+          <div id="tradingviewChartOuter" class="w-full h-80 rounded-lg overflow-hidden border border-gray-200 dark:border-darkborder bg-white dark:bg-slate-950 relative min-h-[320px]">
+            <!-- Container interno: a biblioteca do gráfico limpa e recria isso livremente -->
+            <div id="tradingviewChartContainer" class="w-full h-full"></div>
+            <!-- Tooltip flutuante com OHLC + Volume ao passar o mouse -->
+            <div id="tooltipGraficoAvancado" class="hidden absolute z-10 pointer-events-none bg-white dark:bg-slate-800 border border-gray-200 dark:border-darkborder rounded-lg shadow-lg px-3 py-2 text-xs space-y-0.5 text-gray-700 dark:text-gray-200"></div>
+          </div>
           <p class="text-xs text-gray-400 text-center">Arraste para navegar no tempo ou use o seletor acima para alternar o horizonte temporal por dias, meses ou anos.</p>
+
+          <!-- TABELA DE RETORNO POR PERÍODO -->
+          <div class="pt-3 border-t border-gray-200 dark:border-darkborder">
+            <div id="tabelaRetornosPeriodo" class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center text-xs">
+              <!-- Preenchido dinamicamente por carregarTabelaRetornos() -->
+            </div>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -788,7 +820,7 @@
   <script>
     // A versão exibida no app agora vem do version.json (fonte única da verdade).
     // Isso resolve a falha antiga de version.json e a versão nas telas ficarem dessincronizados.
-    let VERSAO_ATUAL = "1.7.3"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
+    let VERSAO_ATUAL = "1.8.0"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
 
     async function carregarVersaoApp() {
       try {
@@ -848,7 +880,9 @@
 
     let tvChart = null;
     let tvSeries = null;
+    let tvVolumeSeries = null;
     let periodoGraficoAtual = '1A';
+    let dadosOHLCVAtual = []; // guarda open/high/low/close/volume por data, usado pelo tooltip
 
     // Monta a URL do proxy CORS no formato atual e correto do corsproxy.io
     // (o formato antigo "?https://..." concatenava querystrings sem codificar e quebrava a requisição)
@@ -1140,6 +1174,7 @@
       if (aba === 'analise') {
         setTimeout(() => {
           inicializarGraficoTradingView();
+          carregarTabelaRetornos();
         }, 150);
       }
 
@@ -1222,11 +1257,22 @@
       const container = document.getElementById('tradingviewChartContainer');
       if (!container) return;
 
+      if (typeof LightweightCharts === 'undefined') {
+        container.innerHTML = `
+          <div class="w-full h-full flex flex-col items-center justify-center gap-2 text-center p-4">
+            <i class="fa-solid fa-triangle-exclamation text-amber-500 text-2xl"></i>
+            <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">Não foi possível carregar a biblioteca do gráfico.</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 max-w-sm">Isso costuma ser bloqueio de rede/firewall ao CDN (jsdelivr.net). Verifique sua conexão ou tente outra rede, e depois recarregue a página.</p>
+          </div>`;
+        return;
+      }
+
       const isDark = document.documentElement.classList.contains('dark');
       
       container.innerHTML = '';
       tvChart = null;
       tvSeries = null;
+      tvVolumeSeries = null;
 
       let larguraReal = container.clientWidth;
       if (!larguraReal || larguraReal < 50) {
@@ -1261,6 +1307,54 @@
         topColor: 'rgba(37, 99, 235, 0.4)',
         bottomColor: 'rgba(37, 99, 235, 0.0)',
         lineWidth: 2,
+      });
+
+      // Série de volume, "espremida" nos 20% inferiores do gráfico via escala de preço própria
+      tvVolumeSeries = tvChart.addHistogramSeries({
+        priceFormat: { type: 'volume' },
+        priceScaleId: 'volume_scale',
+      });
+      tvChart.priceScale('volume_scale').applyOptions({
+        scaleMargins: { top: 0.82, bottom: 0 },
+      });
+
+      // Tooltip customizado com OHLC + Volume ao passar o mouse (a lib não tem tooltip pronto)
+      tvChart.subscribeCrosshairMove((param) => {
+        const tooltip = document.getElementById('tooltipGraficoAvancado');
+        if (!tooltip) return;
+
+        if (!param || !param.time || !param.point || param.point.x < 0 || param.point.y < 0) {
+          tooltip.classList.add('hidden');
+          return;
+        }
+
+        const pontoOHLCV = dadosOHLCVAtual.find(d => d.time === param.time);
+        if (!pontoOHLCV) {
+          tooltip.classList.add('hidden');
+          return;
+        }
+
+        const fmtR$ = (v) => `R$ ${v.toFixed(2).replace('.', ',')}`;
+        const fmtVol = (v) => v.toLocaleString('pt-BR');
+        const dataFormatada = formatarDataOHLCV(pontoOHLCV.time);
+        tooltip.innerHTML = `
+          <div class="font-bold text-gray-900 dark:text-white">${dataFormatada}</div>
+          <div>Abertura: <b>${fmtR$(pontoOHLCV.open)}</b></div>
+          <div>Máxima: <b>${fmtR$(pontoOHLCV.high)}</b></div>
+          <div>Mínima: <b>${fmtR$(pontoOHLCV.low)}</b></div>
+          <div>Fechamento: <b>${fmtR$(pontoOHLCV.close)}</b></div>
+          <div>Volume: <b>${fmtVol(pontoOHLCV.volume)}</b></div>
+        `;
+
+        const container = document.getElementById('tradingviewChartOuter');
+        const larguraContainer = container ? container.clientWidth : 300;
+        let left = param.point.x + 16;
+        if (left + 150 > larguraContainer) {
+          left = param.point.x - 166;
+        }
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = '10px';
+        tooltip.classList.remove('hidden');
       });
 
       window.addEventListener('resize', () => {
@@ -1319,6 +1413,8 @@
       else if (periodoGraficoAtual === '5A') { rangeStr = '5y'; intervalStr = '1wk'; }
 
       let dadosFormatados = [];
+      let dadosVolume = [];
+      dadosOHLCVAtual = [];
       let usandoDadosSimulados = false;
 
       if (token) {
@@ -1332,11 +1428,19 @@
           if (res.ok) {
             const data = await res.json();
             if (data.results && data.results[0] && data.results[0].historicalDataPrice) {
-              const historico = data.results[0].historicalDataPrice;
-              dadosFormatados = historico.map(h => ({
-                time: h.date, 
-                value: h.close
-              })).sort((a, b) => a.time - b.time);
+              const historico = data.results[0].historicalDataPrice.slice().sort((a, b) => a.date - b.date);
+              historico.forEach((h, i) => {
+                const anterior = i > 0 ? historico[i - 1] : h;
+                dadosFormatados.push({ time: h.date, value: h.close });
+                dadosVolume.push({
+                  time: h.date,
+                  value: h.volume || 0,
+                  color: h.close >= anterior.close ? 'rgba(16, 185, 129, 0.6)' : 'rgba(239, 68, 68, 0.6)'
+                });
+                dadosOHLCVAtual.push({
+                  time: h.date, open: h.open, high: h.high, low: h.low, close: h.close, volume: h.volume || 0
+                });
+              });
             }
           }
         } catch (e) {
@@ -1354,29 +1458,156 @@
 
         let precoBase = ticker === 'PETR4' ? 32.00 : (ticker === 'SAPR11' ? 21.50 : 6.20);
         let timestampAtual = Math.floor(hoje.getTime() / 1000) - (qtdDias * 86400);
+        let precoAnterior = precoBase;
 
         for (let i = 0; i < qtdDias; i += (periodoGraficoAtual === '5A' ? 7 : 1)) {
           timestampAtual += (periodoGraficoAtual === '5A' ? 7 * 86400 : 86400);
           let variacao = (Math.sin(i / 10) * 0.8) + ((Math.random() - 0.48) * 0.5);
+          precoAnterior = precoBase;
           precoBase = Math.max(5.00, precoBase + variacao);
-          
+
           let dataObj = new Date(timestampAtual * 1000);
           let dataStr = dataObj.toISOString().split('T')[0];
+          const abertura = precoAnterior;
+          const fechamento = precoBase;
+          const maxima = Math.max(abertura, fechamento) + Math.random() * 0.3;
+          const minima = Math.min(abertura, fechamento) - Math.random() * 0.3;
+          const volumeSimulado = Math.floor(500000 + Math.random() * 4000000);
 
-          dadosFormatados.push({
-            time: dataStr,
-            value: parseFloat(precoBase.toFixed(2))
+          dadosFormatados.push({ time: dataStr, value: parseFloat(fechamento.toFixed(2)) });
+          dadosVolume.push({
+            time: dataStr, value: volumeSimulado,
+            color: fechamento >= abertura ? 'rgba(16, 185, 129, 0.6)' : 'rgba(239, 68, 68, 0.6)'
+          });
+          dadosOHLCVAtual.push({
+            time: dataStr, open: parseFloat(abertura.toFixed(2)), high: parseFloat(maxima.toFixed(2)),
+            low: parseFloat(minima.toFixed(2)), close: parseFloat(fechamento.toFixed(2)), volume: volumeSimulado
           });
         }
       }
 
       tvSeries.setData(dadosFormatados);
+      if (tvVolumeSeries) tvVolumeSeries.setData(dadosVolume);
       tvChart.timeScale().fitContent();
 
       const avisoSimulado = document.getElementById('avisoGraficoSimulado');
       if (avisoSimulado) {
         avisoSimulado.classList.toggle('hidden', !usandoDadosSimulados);
       }
+
+      exibirPrecoJustoChartHeader(ticker);
+    }
+
+    // Brapi retorna 'date' como timestamp Unix em segundos no histórico de preços.
+    // O gráfico simulado (fallback) usa string 'yyyy-mm-dd'. Essa função lida com os dois formatos.
+    function paraDataJS(t) {
+      if (typeof t === 'number') return new Date(t * 1000);
+      return new Date(t);
+    }
+
+    function formatarDataOHLCV(t) {
+      return paraDataJS(t).toLocaleDateString('pt-BR');
+    }
+
+    function exibirPrecoJustoChartHeader(ticker) {
+      const el = document.getElementById('precoJustoChartHeader');
+      if (!el) return;
+      const ativo = carteiraAtivos.find(a => a.ticker === ticker);
+      if (ativo && ativo.precoJusto !== null && ativo.precoJusto !== undefined && !isNaN(ativo.precoJusto)) {
+        const estimadoTxt = ativo.precoJustoEstimado ? ' (estimativa)' : ' (fórmula de Graham)';
+        el.innerHTML = `Preço-Justo: <b>R$ ${ativo.precoJusto.toFixed(2).replace('.', ',')}</b>${estimadoTxt}`;
+        el.classList.remove('hidden');
+      } else {
+        el.innerHTML = `Preço-Justo indisponível para ${ticker} (atualize as cotações na Carteira).`;
+        el.classList.remove('hidden');
+      }
+    }
+
+    // TABELA DE RETORNO POR PERÍODO (independe do zoom do gráfico: sempre busca 1 ano de dados diários)
+    async function carregarTabelaRetornos() {
+      const container = document.getElementById('tabelaRetornosPeriodo');
+      if (!container) return;
+      const ticker = document.getElementById('tickerGraficoAvancado').value || 'PETR4';
+      const token = localStorage.getItem('brapi_token');
+
+      container.innerHTML = '<p class="col-span-full text-xs text-gray-400 py-2">Carregando retornos...</p>';
+
+      let fechamentos = [];
+
+      // Reaproveita os dados já carregados do gráfico se cobrirem pelo menos ~300 dias
+      if (dadosOHLCVAtual.length > 0) {
+        const primeiraData = paraDataJS(dadosOHLCVAtual[0].time);
+        const ultimaData = paraDataJS(dadosOHLCVAtual[dadosOHLCVAtual.length - 1].time);
+        if ((ultimaData - primeiraData) / 86400000 >= 300) {
+          fechamentos = dadosOHLCVAtual.map(d => ({ time: d.time, value: d.close }));
+        }
+      }
+
+      if (fechamentos.length === 0 && token) {
+        try {
+          let urlAlvo = `https://brapi.dev/api/quote/${ticker}?range=1y&interval=1d&token=${token}`;
+          let res = await fetch(corsProxyUrl(urlAlvo));
+          if (!res.ok) {
+            urlAlvo = `https://brapi.dev/api/quote/${ticker}.SA?range=1y&interval=1d&token=${token}`;
+            res = await fetch(corsProxyUrl(urlAlvo));
+          }
+          if (res.ok) {
+            const data = await res.json();
+            if (data.results && data.results[0] && data.results[0].historicalDataPrice) {
+              fechamentos = data.results[0].historicalDataPrice
+                .slice().sort((a, b) => a.date - b.date)
+                .map(h => ({ time: h.date, value: h.close }));
+            }
+          }
+        } catch (e) {
+          console.error("Erro ao buscar histórico para tabela de retornos:", e);
+        }
+      }
+
+      if (fechamentos.length === 0) {
+        container.innerHTML = '<p class="col-span-full text-xs text-gray-400 py-2">Configure o token da Brapi em Configurações para ver os retornos por período.</p>';
+        return;
+      }
+
+      const periodos = [
+        { label: '1 dia', dias: 1 },
+        { label: '1 semana', dias: 7 },
+        { label: '1 mês', dias: 30 },
+        { label: '3 meses', dias: 90 },
+        { label: '6 meses', dias: 180 },
+        { label: '1 ano', dias: 365 }
+      ];
+
+      const ultimo = fechamentos[fechamentos.length - 1];
+      const dataUltimo = paraDataJS(ultimo.time);
+      const dataPrimeiro = paraDataJS(fechamentos[0].time);
+      const diasDisponiveis = (dataUltimo - dataPrimeiro) / 86400000;
+
+      container.innerHTML = periodos.map(p => {
+        // Não calcula o período se não houver histórico suficiente para uma comparação confiável
+        if (p.dias > 1 && diasDisponiveis < p.dias * 0.5) {
+          return `
+            <div class="p-2 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-darkborder">
+              <div class="text-gray-400 text-[11px] uppercase font-semibold">${p.label}</div>
+              <div class="text-gray-300 dark:text-gray-600 font-bold">—</div>
+            </div>`;
+        }
+        const dataAlvo = new Date(dataUltimo);
+        dataAlvo.setDate(dataAlvo.getDate() - p.dias);
+        let referencia = fechamentos[0];
+        for (let i = 0; i < fechamentos.length; i++) {
+          if (paraDataJS(fechamentos[i].time) >= dataAlvo) { referencia = fechamentos[i]; break; }
+        }
+        const retorno = referencia.value ? ((ultimo.value - referencia.value) / referencia.value) * 100 : 0;
+        const positivo = retorno >= 0;
+        const cor = positivo ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500';
+        const sinal = positivo ? '+' : '';
+        return `
+          <div class="p-2 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-darkborder">
+            <div class="text-gray-400 text-[11px] uppercase font-semibold">${p.label}</div>
+            <div class="${cor} font-bold">${sinal}${retorno.toFixed(2)}%</div>
+          </div>`;
+      }).join('');
     }
 
     function converterDataParaObjeto(dataStr) {
