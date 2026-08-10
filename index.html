@@ -21,7 +21,7 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <!-- Biblioteca TradingView Lightweight Charts -->
-  <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.1/dist/standalone/lightweight-charts.standalone.production.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
   <!-- Chart.js para o gráfico de dividendos (Ano -> Mês -> Ativos) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <!-- EmailJS: envio de e-mail direto do navegador, sem backend, usado na recuperação de senha -->
@@ -54,7 +54,14 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.8.0</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.8.1</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Correção crítica:</b> o Gráfico Avançado nunca carregava porque a URL da biblioteca (CDN) tinha um caminho de pasta errado (/standalone/ extra), resultando em erro 404 — não era bloqueio de rede como se suspeitava antes.</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.8.0</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Tooltip no Gráfico Avançado:</b> passe o mouse sobre o gráfico para ver Abertura, Máxima, Mínima, Fechamento e Volume do dia.</li>
@@ -223,7 +230,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span id="badgeVersaoLogin" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.8.0
+          Versão V1.8.1
         </span>
       </div>
 
@@ -270,7 +277,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span id="badgeVersaoHeader">Versão V1.8.0</span>
+              <span id="badgeVersaoHeader">Versão V1.8.1</span>
             </button>
           </div>
         </div>
@@ -820,7 +827,7 @@
   <script>
     // A versão exibida no app agora vem do version.json (fonte única da verdade).
     // Isso resolve a falha antiga de version.json e a versão nas telas ficarem dessincronizados.
-    let VERSAO_ATUAL = "1.8.0"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
+    let VERSAO_ATUAL = "1.8.1"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
 
     async function carregarVersaoApp() {
       try {
