@@ -1,5 +1,9 @@
 # Histórico de Alterações - AnalystPro
 
+## [Versão V1.8.3] - 2026-08-09
+- *Corrigido:* Períodos do Gráfico Avançado ajustados ao plano gratuito da Brapi — botões agora oferecem 5D, 1M e 3M (únicos períodos liberados sem plano pago) em vez de 6M/1A/5A, que sempre caíam em dados simulados por não serem suportados no plano.
+- *Corrigido:* Tabela de Retorno por Período agora busca no máximo 3 meses de histórico (limite do plano gratuito); "6 meses" e "1 ano" mostram "—" nesse plano, em vez de erro.
+
 ## [Versão V1.8.2] - 2026-08-09
 - *Adicionado:* Diagnóstico mais preciso no aviso de dados simulados do Gráfico Avançado — mostra o motivo real (erro HTTP, mensagem da Brapi, falta de token, etc.) em vez de sempre "sem token válido".
 
