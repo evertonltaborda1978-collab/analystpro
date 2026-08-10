@@ -1,5 +1,8 @@
 # Histórico de Alterações - AnalystPro
 
+## [Versão V1.8.2] - 2026-08-09
+- *Adicionado:* Diagnóstico mais preciso no aviso de dados simulados do Gráfico Avançado — mostra o motivo real (erro HTTP, mensagem da Brapi, falta de token, etc.) em vez de sempre "sem token válido".
+
 ## [Versão V1.8.1] - 2026-08-09
 - *Corrigido:* O Gráfico Avançado nunca carregava porque a URL da biblioteca (CDN) tinha um caminho de pasta errado (`/standalone/` extra, inexistente), resultando em erro 404. Não era bloqueio de rede/firewall como se suspeitava nas versões anteriores — a URL corrigida foi confirmada e testada antes de publicar.
 
