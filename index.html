@@ -54,7 +54,15 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.8.2</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.8.3</span>
+          <p class="text-gray-400 text-xs">Agosto de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Períodos do Gráfico Avançado ajustados ao plano gratuito da Brapi:</b> os botões agora oferecem 5D, 1M e 3M (os únicos períodos liberados sem plano pago) em vez de 6M/1A/5A, que sempre caíam em dados simulados.</li>
+            <li><b>Tabela de Retorno por Período</b> ajustada para buscar no máximo 3 meses de histórico (o limite do plano gratuito); "6 meses" e "1 ano" mostram "—" nesse plano, em vez de erro.</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.8.2</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Diagnóstico do Gráfico Avançado:</b> quando cai para dados simulados, o aviso agora mostra o motivo real (erro HTTP, mensagem da Brapi, falta de token, etc.) em vez de sempre dizer genericamente "sem token válido".</li>
@@ -237,7 +245,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span id="badgeVersaoLogin" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.8.2
+          Versão V1.8.3
         </span>
       </div>
 
@@ -284,7 +292,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span id="badgeVersaoHeader">Versão V1.8.2</span>
+              <span id="badgeVersaoHeader">Versão V1.8.3</span>
             </button>
           </div>
         </div>
@@ -604,10 +612,9 @@
                 <option value="SAPR11">SAPR11</option>
               </select>
               <div class="flex bg-white dark:bg-slate-800 border border-gray-300 dark:border-darkborder rounded-lg overflow-hidden text-xs font-semibold">
-                <button onclick="mudarPeriodoGrafico('1M')" id="btn-1M" class="px-3 py-1.5 hover:bg-blue-600 hover:text-white transition">1M</button>
-                <button onclick="mudarPeriodoGrafico('6M')" id="btn-6M" class="px-3 py-1.5 hover:bg-blue-600 hover:text-white transition">6M</button>
-                <button onclick="mudarPeriodoGrafico('1A')" id="btn-1A" class="px-3 py-1.5 hover:bg-blue-600 hover:text-white transition bg-blue-600 text-white">1A</button>
-                <button onclick="mudarPeriodoGrafico('5A')" id="btn-5A" class="px-3 py-1.5 hover:bg-blue-600 hover:text-white transition">5A</button>
+                <button onclick="mudarPeriodoGrafico('5D')" id="btn-5D" class="px-3 py-1.5 hover:bg-blue-600 hover:text-white transition">5D</button>
+                <button onclick="mudarPeriodoGrafico('1M')" id="btn-1M" class="px-3 py-1.5 hover:bg-blue-600 hover:text-white transition bg-blue-600 text-white">1M</button>
+                <button onclick="mudarPeriodoGrafico('3M')" id="btn-3M" class="px-3 py-1.5 hover:bg-blue-600 hover:text-white transition">3M</button>
               </div>
             </div>
           </div>
@@ -834,7 +841,7 @@
   <script>
     // A versão exibida no app agora vem do version.json (fonte única da verdade).
     // Isso resolve a falha antiga de version.json e a versão nas telas ficarem dessincronizados.
-    let VERSAO_ATUAL = "1.8.2"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
+    let VERSAO_ATUAL = "1.8.3"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
 
     async function carregarVersaoApp() {
       try {
@@ -895,7 +902,7 @@
     let tvChart = null;
     let tvSeries = null;
     let tvVolumeSeries = null;
-    let periodoGraficoAtual = '1A';
+    let periodoGraficoAtual = '1M';
     let dadosOHLCVAtual = []; // guarda open/high/low/close/volume por data, usado pelo tooltip
 
     // Monta a URL do proxy CORS no formato atual e correto do corsproxy.io
@@ -1398,7 +1405,7 @@
 
     function mudarPeriodoGrafico(periodo) {
       periodoGraficoAtual = periodo;
-      ['1M', '6M', '1A', '5A'].forEach(p => {
+      ['5D', '1M', '3M'].forEach(p => {
         const btn = document.getElementById(`btn-${p}`);
         if (btn) {
           if (p === periodo) {
@@ -1419,12 +1426,11 @@
       const ticker = document.getElementById('tickerGraficoAvancado').value || 'PETR4';
       const token = localStorage.getItem('brapi_token');
 
-      let rangeStr = '1y';
+      let rangeStr = '1mo';
       let intervalStr = '1d';
-      if (periodoGraficoAtual === '1M') { rangeStr = '1mo'; intervalStr = '1d'; }
-      else if (periodoGraficoAtual === '6M') { rangeStr = '6mo'; intervalStr = '1d'; }
-      else if (periodoGraficoAtual === '1A') { rangeStr = '1y'; intervalStr = '1d'; }
-      else if (periodoGraficoAtual === '5A') { rangeStr = '5y'; intervalStr = '1wk'; }
+      if (periodoGraficoAtual === '5D') { rangeStr = '5d'; intervalStr = '1d'; }
+      else if (periodoGraficoAtual === '1M') { rangeStr = '1mo'; intervalStr = '1d'; }
+      else if (periodoGraficoAtual === '3M') { rangeStr = '3mo'; intervalStr = '1d'; }
 
       let dadosFormatados = [];
       let dadosVolume = [];
@@ -1479,17 +1485,17 @@
       if (dadosFormatados.length === 0) {
         usandoDadosSimulados = true;
         const hoje = new Date();
-        let qtdDias = 365;
+        let qtdDias = 30;
+        if (periodoGraficoAtual === '5D') qtdDias = 5;
         if (periodoGraficoAtual === '1M') qtdDias = 30;
-        if (periodoGraficoAtual === '6M') qtdDias = 180;
-        if (periodoGraficoAtual === '5A') qtdDias = 1825;
+        if (periodoGraficoAtual === '3M') qtdDias = 90;
 
         let precoBase = ticker === 'PETR4' ? 32.00 : (ticker === 'SAPR11' ? 21.50 : 6.20);
         let timestampAtual = Math.floor(hoje.getTime() / 1000) - (qtdDias * 86400);
         let precoAnterior = precoBase;
 
-        for (let i = 0; i < qtdDias; i += (periodoGraficoAtual === '5A' ? 7 : 1)) {
-          timestampAtual += (periodoGraficoAtual === '5A' ? 7 * 86400 : 86400);
+        for (let i = 0; i < qtdDias; i++) {
+          timestampAtual += 86400;
           let variacao = (Math.sin(i / 10) * 0.8) + ((Math.random() - 0.48) * 0.5);
           precoAnterior = precoBase;
           precoBase = Math.max(5.00, precoBase + variacao);
@@ -1569,22 +1575,24 @@
       container.innerHTML = '<p class="col-span-full text-xs text-gray-400 py-2">Carregando retornos...</p>';
 
       let fechamentos = [];
+      let motivoFalhaTabela = null;
 
-      // Reaproveita os dados já carregados do gráfico se cobrirem pelo menos ~300 dias
+      // Reaproveita os dados já carregados do gráfico se cobrirem pelo menos ~80 dias
       if (dadosOHLCVAtual.length > 0) {
         const primeiraData = paraDataJS(dadosOHLCVAtual[0].time);
         const ultimaData = paraDataJS(dadosOHLCVAtual[dadosOHLCVAtual.length - 1].time);
-        if ((ultimaData - primeiraData) / 86400000 >= 300) {
+        if ((ultimaData - primeiraData) / 86400000 >= 80) {
           fechamentos = dadosOHLCVAtual.map(d => ({ time: d.time, value: d.close }));
         }
       }
 
       if (fechamentos.length === 0 && token) {
         try {
-          let urlAlvo = `https://brapi.dev/api/quote/${ticker}?range=1y&interval=1d&token=${token}`;
+          // 3mo é o maior período liberado no plano gratuito da Brapi
+          let urlAlvo = `https://brapi.dev/api/quote/${ticker}?range=3mo&interval=1d&token=${token}`;
           let res = await fetch(corsProxyUrl(urlAlvo));
           if (!res.ok) {
-            urlAlvo = `https://brapi.dev/api/quote/${ticker}.SA?range=1y&interval=1d&token=${token}`;
+            urlAlvo = `https://brapi.dev/api/quote/${ticker}.SA?range=3mo&interval=1d&token=${token}`;
             res = await fetch(corsProxyUrl(urlAlvo));
           }
           if (res.ok) {
@@ -1593,15 +1601,24 @@
               fechamentos = data.results[0].historicalDataPrice
                 .slice().sort((a, b) => a.date - b.date)
                 .map(h => ({ time: h.date, value: h.close }));
+            } else {
+              motivoFalhaTabela = (data && data.message) ? `Brapi: ${data.message}` : 'A Brapi respondeu sem dados de histórico.';
             }
+          } else {
+            let corpoErro = '';
+            try { const j = await res.json(); corpoErro = j.message || j.error || ''; } catch (e2) { /* corpo não era JSON */ }
+            motivoFalhaTabela = `Falha na requisição (HTTP ${res.status})${corpoErro ? ': ' + corpoErro : ''}.`;
           }
         } catch (e) {
           console.error("Erro ao buscar histórico para tabela de retornos:", e);
+          motivoFalhaTabela = 'Erro de rede/conexão ao buscar os dados.';
         }
+      } else if (fechamentos.length === 0) {
+        motivoFalhaTabela = 'Nenhum token da Brapi configurado em Configurações.';
       }
 
       if (fechamentos.length === 0) {
-        container.innerHTML = '<p class="col-span-full text-xs text-gray-400 py-2">Configure o token da Brapi em Configurações para ver os retornos por período.</p>';
+        container.innerHTML = `<p class="col-span-full text-xs text-gray-400 py-2">${motivoFalhaTabela || 'Configure o token da Brapi em Configurações para ver os retornos por período.'}</p>`;
         return;
       }
 
