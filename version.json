@@ -1,3 +1,4 @@
 {
-  "version": "1.8.3"
+  "version": "1.8.4",
+  "changelog": "Correção crítica do erro 401 (Brapi): removido o proxy CORS externo (corsproxy.io), que passou a exigir cadastro/chave própria e estava bloqueando todas as chamadas à Brapi. O app agora chama a Brapi diretamente pelo navegador."
 }
