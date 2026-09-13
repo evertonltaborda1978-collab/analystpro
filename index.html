@@ -54,7 +54,15 @@
       </div>
       <div class="space-y-4 max-h-72 overflow-y-auto pr-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
-          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.8.3</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 text-base">Versão V1.8.4</span>
+          <p class="text-gray-400 text-xs">Setembro de 2026</p>
+          <ul class="list-disc list-inside space-y-1 pt-1">
+            <li><b>Correção crítica do erro 401 (Brapi):</b> removido o proxy CORS externo (corsproxy.io), que passou a exigir cadastro/chave própria e estava bloqueando todas as chamadas à Brapi. Agora o app chama a Brapi diretamente, já que ela libera CORS para uso via navegador.</li>
+            <li><b>Status "Brapi: Online/Offline" mais confiável:</b> deixou de depender de um serviço intermediário instável.</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-300 dark:border-slate-700 pl-3 space-y-1">
+          <span class="font-bold text-gray-500 dark:text-gray-400 text-base">Versão V1.8.3</span>
           <p class="text-gray-400 text-xs">Agosto de 2026</p>
           <ul class="list-disc list-inside space-y-1 pt-1">
             <li><b>Períodos do Gráfico Avançado ajustados ao plano gratuito da Brapi:</b> os botões agora oferecem 5D, 1M e 3M (os únicos períodos liberados sem plano pago) em vez de 6M/1A/5A, que sempre caíam em dados simulados.</li>
@@ -245,7 +253,7 @@
           <i class="fa-solid fa-list-check"></i> Novidades
         </button>
         <span id="badgeVersaoLogin" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-gray-200 dark:border-slate-700 shadow-sm">
-          Versão V1.8.3
+          Versão V1.8.4
         </span>
       </div>
 
@@ -292,7 +300,7 @@
               <span>Brapi: Verificando...</span>
             </div>
             <button onclick="abrirModalChangelog()" class="flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-emerald-400 border border-slate-700 shadow-sm hover:bg-slate-700 transition cursor-pointer" title="Ver Notas da Versão">
-              <span id="badgeVersaoHeader">Versão V1.8.3</span>
+              <span id="badgeVersaoHeader">Versão V1.8.4</span>
             </button>
           </div>
         </div>
@@ -841,7 +849,7 @@
   <script>
     // A versão exibida no app agora vem do version.json (fonte única da verdade).
     // Isso resolve a falha antiga de version.json e a versão nas telas ficarem dessincronizados.
-    let VERSAO_ATUAL = "1.8.3"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
+    let VERSAO_ATUAL = "1.8.4"; // valor de fallback, sobrescrito por carregarVersaoApp() abaixo
 
     async function carregarVersaoApp() {
       try {
@@ -904,12 +912,6 @@
     let tvVolumeSeries = null;
     let periodoGraficoAtual = '1M';
     let dadosOHLCVAtual = []; // guarda open/high/low/close/volume por data, usado pelo tooltip
-
-    // Monta a URL do proxy CORS no formato atual e correto do corsproxy.io
-    // (o formato antigo "?https://..." concatenava querystrings sem codificar e quebrava a requisição)
-    function corsProxyUrl(urlAlvo) {
-      return 'https://corsproxy.io/?url=' + encodeURIComponent(urlAlvo);
-    }
 
     document.addEventListener('DOMContentLoaded', () => {
       carregarVersaoApp();
@@ -1170,7 +1172,10 @@
         return;
       }
       try {
-        const res = await fetch(corsProxyUrl(`https://brapi.dev/api/quote/PETR4?token=${token}`));
+        // Chamada direta à Brapi (sem proxy CORS): a Brapi já libera CORS para uso via navegador.
+        // O corsproxy.io foi removido porque passou a exigir cadastro/chave própria e estava
+        // bloqueando as requisições, mascarado como se fosse erro 401 da Brapi.
+        const res = await fetch(`https://brapi.dev/api/quote/PETR4?token=${token}`);
         if (res.ok) {
           statusContainer.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300";
           statusContainer.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Brapi: Online</span>`;
@@ -1441,11 +1446,12 @@
 
       if (token) {
         try {
+          // Chamada direta à Brapi (sem proxy CORS — ver nota em testarStatusBrapi()).
           let urlAlvo = `https://brapi.dev/api/quote/${ticker}?range=${rangeStr}&interval=${intervalStr}&token=${token}`;
-          let res = await fetch(corsProxyUrl(urlAlvo));
+          let res = await fetch(urlAlvo);
           if (!res.ok) {
             urlAlvo = `https://brapi.dev/api/quote/${ticker}.SA?range=${rangeStr}&interval=${intervalStr}&token=${token}`;
-            res = await fetch(corsProxyUrl(urlAlvo));
+            res = await fetch(urlAlvo);
           }
           if (res.ok) {
             const data = await res.json();
@@ -1476,7 +1482,7 @@
           }
         } catch (e) {
           console.error("Erro ao buscar histórico da Brapi:", e);
-          motivoFalhaGrafico = 'Erro de rede/conexão ao tentar buscar os dados (proxy CORS ou Brapi indisponível no momento).';
+          motivoFalhaGrafico = 'Erro de rede/conexão ao tentar buscar os dados (verifique sua internet ou tente novamente em instantes).';
         }
       } else {
         motivoFalhaGrafico = 'Nenhum token da Brapi configurado em Configurações.';
@@ -1589,11 +1595,12 @@
       if (fechamentos.length === 0 && token) {
         try {
           // 3mo é o maior período liberado no plano gratuito da Brapi
+          // Chamada direta à Brapi (sem proxy CORS — ver nota em testarStatusBrapi()).
           let urlAlvo = `https://brapi.dev/api/quote/${ticker}?range=3mo&interval=1d&token=${token}`;
-          let res = await fetch(corsProxyUrl(urlAlvo));
+          let res = await fetch(urlAlvo);
           if (!res.ok) {
             urlAlvo = `https://brapi.dev/api/quote/${ticker}.SA?range=3mo&interval=1d&token=${token}`;
-            res = await fetch(corsProxyUrl(urlAlvo));
+            res = await fetch(urlAlvo);
           }
           if (res.ok) {
             const data = await res.json();
@@ -2067,11 +2074,12 @@
 
       for (const ticker of todosTickers) {
         try {
+          // Chamada direta à Brapi (sem proxy CORS — ver nota em testarStatusBrapi()).
           let urlAlvo = `https://brapi.dev/api/quote/${ticker}?token=${token}&fundamental=true`;
-          let res = await fetch(corsProxyUrl(urlAlvo));
+          let res = await fetch(urlAlvo);
           if (!res.ok && res.status === 404) {
             urlAlvo = `https://brapi.dev/api/quote/${ticker}.SA?token=${token}&fundamental=true`;
-            res = await fetch(corsProxyUrl(urlAlvo));
+            res = await fetch(urlAlvo);
           }
           if (res.ok) {
             const data = await res.json();
